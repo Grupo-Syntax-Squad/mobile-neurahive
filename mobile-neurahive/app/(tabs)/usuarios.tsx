@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, Text, TextInput, Button } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -10,9 +10,13 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 export default function TabTwoScreen() {
   return (
     <ThemedView>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Chat</ThemedText>
-      </ThemedView>
+      <ThemedText>Seus Usuários</ThemedText>
+      <Image 
+              source={require('../../assets/images/usuarios.png')}
+            />
+            <Button title="Permissões de Usuários"/>
+            <Button title="Acessos"/>
+            <Button title="Criar novo usuário"/>
     </ThemedView>
   );
 }
@@ -24,8 +28,20 @@ const styles = StyleSheet.create({
     left: -35,
     position: 'absolute',
   },
+  inputContainer: {
+    padding: 10,
+    margin: 1
+  },
   titleContainer: {
     flexDirection: 'row',
     gap: 8,
   },
+  header: {
+    backgroundColor: '#FC801F',
+    padding: 30
+  },
+  input: {
+    padding: 10,
+    borderWidth: 1,
+  }
 });
