@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 import React from 'react';
 import { Image } from 'react-native';
 
-export function NewsSection() {
+export function InicialSettings() {
   return (
     <ThemedView style={styles.notasContainer}>
         <ThemedText style={styles.grayText}><Text style={styles.orangeText}>CLIQUE AQUI</Text> E VEJA AS NOTÍCIAS DA ÚLTIMA SESSÃO</ThemedText>
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
       grayText: {
         color: '#8A8888',
         fontWeight: 'bold',
-        width: 100,
       },
       orangeText: {
         color: '#FF9500',

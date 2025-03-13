@@ -1,81 +1,95 @@
 import { Image, StyleSheet, Platform, Button, View, Alert, Text } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import React from 'react';
 import { Link } from 'expo-router';
-import { NewsSection } from '@/components/newsSection'; 
+import { NewsSection } from '@/components/NewsSection';
+import { ConfigurationAlert } from '@/components/ConfigurationAlert';
+import { InicialSettings } from '@/components/InicialSettings';
 
 export default function HomeScreen() {
   return (
-    <ThemedView>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText style={styles.grayText}>Olá, Usuário!</ThemedText>
+    <View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.grayText}>Olá, Usuário!</Text>
         <Image 
         source={require('../../assets/images/apicultora.png')}
-        style={styles.image}
+        style={styles.apicultoraImage}
       />
-        <ThemedText style={styles.grayText}>bem-vindo(a) ao <Text style={styles.orangeText}>NeuraHive!</Text></ThemedText>
-      </ThemedView>
-        <ThemedText>v1.0.0</ThemedText>
-      <ThemedView style={styles.division}>
-      </ThemedView>
-        <ThemedText style={styles.orangeText}>O que você deseja fazer hoje?</ThemedText>
-          <ThemedView style={styles.centeredContainer}>
-            <Link href="/usuarios" style={styles.bigButton}>
-              Usuários
-              <Image source={require('../../assets/images/user-icon.png')}/>
-            </Link>
-            <Link href="/usuarios" style={styles.bigButton}>
-              Permissões
-              <Image source={require('../../assets/images/permission-icon.png')}/>
-            </Link>
-          </ThemedView>
+        <View style={styles.flexColumn}>
+          <Image 
+          source={require('../../assets/images/neurahive-icon.png')}
+          style={styles.neuhiveIcon}
+        />
+          <Text style={styles.grayText}>bem-vindo(a) ao </Text>
+          <Text style={styles.orangeText}>NeuraHive!</Text>
+        </View>
+      </View>
+        <Text>v1.0.0</Text>
+      <View style={styles.division}>
+      </View>
+        <View style={styles.homeOptions}>
+          <Text style={styles.orangeText}>O que você deseja fazer hoje?</Text>
+            <View style={styles.centeredContainer}>
+              <Link href="/usuarios" style={styles.middleButton}>
+                <Image source={require('../../assets/images/settings.png')}/>
+                <Text>Configurações Iniciais</Text>
+              </Link>
+              <Link href="/usuarios" style={styles.middleButton}>
+                <Image source={require('../../assets/images/user-icon.png')}/>
+                <Text>Usuários</Text>
+              </Link>
+              <Link href="/#" style={styles.middleButton}>
+                <Image source={require('../../assets/images/permission-icon.png')}/>
+                <Text>Permissões</Text>
+              </Link>
+            </View>
+        </View>
+        <ConfigurationAlert/>
        <NewsSection />
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 20,
-    gap: 20,
+  ConfigurationAlert: {
+    padding: 20,
+    backgroundColor: '#E1E3E5',
   },
-  bigButton: {
-    width: 100,
-    height: 80,
-    shadowColor: "#000",
-    shadowOffset: { width: 1, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 9,
-    borderRadius: 8,
-    color: '#444444',
-    fontWeight: 'bold',
-    fontSize: 10,
+  flexColumn: {
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+  },
+  homeOptions: {
+    padding: 20
+  },
+  centeredContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+  },
+  middleButton: {
+    flexDirection: 'column', 
+    width: 100, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    textAlign: 'center',
   },
   titleContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    position: 'relative',
+    padding: 20
   },
   grayText: {
     color: '#8A8888',
-    fontWeight: 'bold',
   },
   orangeText: {
     color: '#FF9500',
-    fontWeight: 'bold',
   },
   division: {
     backgroundColor: '#FC801F',
@@ -100,7 +114,13 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
-  image: {
-    
+  apicultoraImage: {
+    position: 'relative',
+    zIndex: 2,
+    marginBottom: -55
+  },
+  neuhiveIcon: {
+    width: 30,
+    height: 30,
   }
 });

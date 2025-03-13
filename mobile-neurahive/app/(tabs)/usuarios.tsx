@@ -1,20 +1,16 @@
 import { StyleSheet, Image, Platform, Text, TextInput, Button, View, TouchableOpacity } from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import React from 'react';
 
 export default function TabTwoScreen() {
   return (
-    <ThemedView>
-      <ThemedText>Seus Usuários</ThemedText>
-      <Image 
-        source={require('../../assets/images/usuarios.png')}
-      />
+    <View>
+      <View style={styles.header}>
+        <Text>Seus Usuários</Text>
+        <Image
+          source={require('../../assets/images/usuarios.png')}
+        />
+      </View>
       <TouchableOpacity style={styles.orangeButton} >
           <Text>Acessos</Text>
         </TouchableOpacity>
@@ -42,7 +38,7 @@ export default function TabTwoScreen() {
           <Text>Detalhes</Text>
         </TouchableOpacity>
       </View>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -83,8 +79,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   header: {
-    backgroundColor: '#FC801F',
-    padding: 30
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {
     padding: 10,
