@@ -30,7 +30,7 @@ export default function HomeScreen() {
         <View style={styles.homeOptions}>
           <Text style={styles.orangeText}>O que você deseja fazer hoje?</Text>
             <View style={styles.centeredContainer}>
-              <Link href="/usuarios" style={styles.middleButton}>
+              <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/settings.png')}/>
                 <Text>Configurações Iniciais</Text>
               </Link>
@@ -41,6 +41,22 @@ export default function HomeScreen() {
               <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/permission-icon.png')}/>
                 <Text>Permissões</Text>
+              </Link>
+              <Link href="/#" style={styles.middleButton}>
+                <Image source={require('../../assets/images/user-icon.png')}/>
+                <Text>Editar Perfil</Text>
+              </Link>
+              <Link href="/#" style={styles.middleButton}>
+                <Image source={require('../../assets/images/base-de-conhecimento.png')}/>
+                <Text>Base de Conhecimento</Text>
+              </Link>
+              <Link href="/#" style={styles.middleButton}>
+                <Image source={require('../../assets/images/quadro.png')}/>
+                <Text>Novo Quadro</Text>
+              </Link>
+              <Link href="/#" style={styles.middleButton}>
+                <Image source={require('../../assets/images/agente.png')}/>
+                <Text>Novo Agente</Text>
               </Link>
             </View>
         </View>
@@ -76,6 +92,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center',
     textAlign: 'center',
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10
   },
   titleContainer: {
     display: 'flex',

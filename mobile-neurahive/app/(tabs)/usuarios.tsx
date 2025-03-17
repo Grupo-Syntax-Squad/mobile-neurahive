@@ -1,6 +1,7 @@
 import { StyleSheet, Image, Platform, Text, TextInput, Button, View, TouchableOpacity } from 'react-native';
 
 import React from 'react';
+import { Link } from 'expo-router';
 
 export default function TabTwoScreen() {
   return (
@@ -17,16 +18,20 @@ export default function TabTwoScreen() {
       <TouchableOpacity style={styles.orangeButton} >
         <Text>Criar Novo Usuário</Text>
       </TouchableOpacity>
+      <Link href="/#" style={styles.middleButton}>
+        <Image source={require('../../assets/images/permission-icon.png')}/>
+        <Text>Permissões dos Usuários</Text>
+      </Link>
       <View style={styles.userContainer}>
         <Text>Usuário</Text>
-        <Text>usuario@email.com</Text>
+        <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
           <Text>Detalhes</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.userContainer}>
         <Text>Usuário</Text>
-        <Text>usuario@email.com</Text>
+        <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
           <Text>Detalhes</Text>
         </TouchableOpacity>
@@ -43,8 +48,19 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
+  middleButton: {
+    flexDirection: 'column', 
+    width: 100, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    textAlign: 'center',
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10
+  },
   userContainer: {
-    flexDirection: 'row',
+    width: 200,
+    flexDirection: 'column',
     justifyContent: 'space-between',
     padding: 10,
     margin: 10,
@@ -87,5 +103,12 @@ const styles = StyleSheet.create({
   input: {
     padding: 10,
     borderWidth: 1,
+  },
+  borderEmail: {
+    borderRadius: 10,
+    borderColor: 'orange',
+    borderWidth: 2,       
+    height: 30,
+    padding: 1
   }
 });
