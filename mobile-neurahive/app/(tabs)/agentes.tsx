@@ -16,15 +16,26 @@ export default function Agentes() {
             <Text>Base de Conhecimento</Text>
         </Link>
         <TouchableOpacity style={styles.orangeButton} >
-            <Text>Criar Novo Usuário</Text>
+            <Text style={styles.WhiteText}>Criar Novo Agente</Text>
         </TouchableOpacity>
-        <View>
-            <Text>Selecione um Agente</Text>
-            <View>
+        <View style={styles.boxContainer}>
+            <View style={styles.box}>
                 <Image 
                     source={require('../../assets/images/apicultora.png')}
                 />
                 <Text>Ive</Text>
+            </View>
+            <View style={styles.box}>
+                <Image 
+                    source={require('../../assets/images/apicultora.png')}
+                />
+                <Text>Bea</Text>
+            </View>
+            <View style={styles.box}>
+                <Image 
+                    source={require('../../assets/images/apicultora.png')}
+                />
+                <Text>Lil</Text>
             </View>
         </View>
     </View>
@@ -32,15 +43,40 @@ export default function Agentes() {
 }
 
 const styles = StyleSheet.create({
+    WhiteText: {
+      color: 'white',
+      textAlign: 'center',
+    },
     middleButton: {
         flexDirection: 'column', 
-        width: 100, 
         justifyContent: 'center', 
         alignItems: 'center',
         textAlign: 'center',
         backgroundColor: 'white',
         padding: 10,
         borderRadius: 10
+      },
+      boxContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        padding: 10,
+        gap: 10,
+      },
+      box: {
+        width: 150,
+        height: 150,
+        backgroundColor: "white",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+
+        elevation: 10,
       },
       orangeButton: {
         backgroundColor: '#FC801F',

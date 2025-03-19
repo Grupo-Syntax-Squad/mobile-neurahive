@@ -1,11 +1,11 @@
-import { StyleSheet, Image, Platform, Text, TextInput, Button, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Platform, Text, TextInput, Button, View, TouchableOpacity, ScrollView } from 'react-native';
 
 import React from 'react';
 import { Link } from 'expo-router';
 
 export default function TabTwoScreen() {
   return (
-    <View>
+    <ScrollView keyboardShouldPersistTaps="handled">
       <View style={styles.header}>
         <Text>Seus Usuários</Text>
         <Image
@@ -13,15 +13,33 @@ export default function TabTwoScreen() {
         />
       </View>
       <TouchableOpacity style={styles.orangeButton} >
-          <Text>Acessos</Text>
+          <Text style={styles.WhiteText}>Acessos</Text>
         </TouchableOpacity>
       <TouchableOpacity style={styles.orangeButton} >
-        <Text>Criar Novo Usuário</Text>
+      <Link href="/users/create">
+        <Text style={styles.WhiteText}>Novo Usuário</Text>
+      </Link>
       </TouchableOpacity>
       <Link href="/#" style={styles.middleButton}>
-        <Image source={require('../../assets/images/permission-icon.png')}/>
         <Text>Permissões dos Usuários</Text>
+        <Image source={require('../../assets/images/permission-icon.png')}/>
       </Link>
+      <View style={styles.userContainer}>
+        <Text>Usuário</Text>
+        <Text style={styles.borderEmail}>usuario@email.com</Text>
+        <TouchableOpacity style={styles.userDetail} >
+        <Link href="/users/1">
+        <Text>Detalhes</Text>
+      </Link>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.userContainer}>
+        <Text>Usuário</Text>
+        <Text style={styles.borderEmail}>usuario@email.com</Text>
+        <TouchableOpacity style={styles.userDetail} >
+          <Text>Detalhes</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
@@ -43,23 +61,26 @@ export default function TabTwoScreen() {
           <Text>Detalhes</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  WhiteText: {
+    color: 'white',
+    textAlign: 'center',
+  },
   middleButton: {
     flexDirection: 'column', 
-    width: 100, 
     justifyContent: 'center', 
     alignItems: 'center',
     textAlign: 'center',
     backgroundColor: 'white',
     padding: 10,
-    borderRadius: 10
+    borderRadius: 10,
+    margin: 10,
   },
   userContainer: {
-    width: 200,
     flexDirection: 'column',
     justifyContent: 'space-between',
     padding: 10,
@@ -109,6 +130,6 @@ const styles = StyleSheet.create({
     borderColor: 'orange',
     borderWidth: 2,       
     height: 30,
-    padding: 1
+    padding: 5
   }
 });

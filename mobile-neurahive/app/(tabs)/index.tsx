@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, Button, View, Alert, Text } from 'react-native';
+import { Image, StyleSheet, Platform, Button, View, Alert, Text, ScrollView } from 'react-native';
 
 import React from 'react';
 import { Link } from 'expo-router';
@@ -8,7 +8,7 @@ import { InicialSettings } from '@/components/InicialSettings';
 
 export default function HomeScreen() {
   return (
-    <View>
+    <ScrollView keyboardShouldPersistTaps="handled">
       <View style={styles.titleContainer}>
         <Text style={styles.grayText}>Olá, Usuário!</Text>
         <Image 
@@ -54,7 +54,7 @@ export default function HomeScreen() {
                 <Image source={require('../../assets/images/quadro.png')}/>
                 <Text>Novo Quadro</Text>
               </Link>
-              <Link href="/#" style={styles.middleButton}>
+              <Link href="/agentes" style={styles.middleButton}>
                 <Image source={require('../../assets/images/agente.png')}/>
                 <Text>Novo Agente</Text>
               </Link>
@@ -62,7 +62,7 @@ export default function HomeScreen() {
         </View>
         <ConfigurationAlert/>
        <NewsSection />
-    </View>
+    </ScrollView>
   );
 }
 
