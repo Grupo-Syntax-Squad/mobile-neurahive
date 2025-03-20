@@ -9,16 +9,6 @@ export default function User() {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSave = () => {
-    console.log('Usuário atualizado:', { name, email, password });
-    alert('Usuário atualizado com sucesso!');
-    router.push('/(tabs)/usuarios');
-  };
-
-  const handleCancel = () => {
-    router.push('/(tabs)/usuarios');
-  };
-
   return (
     <View style={styles.container}>
       <Text>Thiago</Text>
@@ -56,10 +46,10 @@ export default function User() {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+      <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Salvar</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+      <TouchableOpacity style={styles.cancelButton}>
         <Text style={styles.cancelButtonText}>Cancelar</Text>
       </TouchableOpacity>
     </View>

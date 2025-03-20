@@ -1,7 +1,9 @@
-import { StyleSheet, Image, Platform, Text, TextInput, Button, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 
 import React from 'react';
 import { Link } from 'expo-router';
+import { globalStyles } from "../styles/globalStyles";
+
 
 export default function TabTwoScreen() {
   return (
@@ -13,14 +15,16 @@ export default function TabTwoScreen() {
         />
       </View>
       <TouchableOpacity style={styles.orangeButton} >
-          <Text style={styles.WhiteText}>Acessos</Text>
+        <Link href="/accesses/accesses">
+          <Text style={globalStyles.WhiteText}>Acessos</Text>
+        </Link>
         </TouchableOpacity>
       <TouchableOpacity style={styles.orangeButton} >
       <Link href="/users/create">
-        <Text style={styles.WhiteText}>Novo Usuário</Text>
+        <Text style={globalStyles.WhiteText}>Novo Usuário</Text>
       </Link>
       </TouchableOpacity>
-      <Link href="/#" style={styles.middleButton}>
+      <Link href="/#" style={globalStyles.middleButton}>
         <Text>Permissões dos Usuários</Text>
         <Image source={require('../../assets/images/permission-icon.png')}/>
       </Link>
@@ -29,7 +33,7 @@ export default function TabTwoScreen() {
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
         <Link href="/users/1">
-        <Text>Detalhes</Text>
+        <Text style={globalStyles.WhiteText}>Detalhes</Text>
       </Link>
         </TouchableOpacity>
       </View>
@@ -37,28 +41,7 @@ export default function TabTwoScreen() {
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
-          <Text>Detalhes</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.userContainer}>
-        <Text>Usuário</Text>
-        <Text style={styles.borderEmail}>usuario@email.com</Text>
-        <TouchableOpacity style={styles.userDetail} >
-          <Text>Detalhes</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.userContainer}>
-        <Text>Usuário</Text>
-        <Text style={styles.borderEmail}>usuario@email.com</Text>
-        <TouchableOpacity style={styles.userDetail} >
-          <Text>Detalhes</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.userContainer}>
-        <Text>Usuário</Text>
-        <Text>usuario@email.com</Text>
-        <TouchableOpacity style={styles.userDetail} >
-          <Text>Detalhes</Text>
+          <Text style={globalStyles.WhiteText}>Detalhes</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -66,20 +49,6 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
-  WhiteText: {
-    color: 'white',
-    textAlign: 'center',
-  },
-  middleButton: {
-    flexDirection: 'column', 
-    justifyContent: 'center', 
-    alignItems: 'center',
-    textAlign: 'center',
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 10,
-    margin: 10,
-  },
   userContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',

@@ -5,6 +5,7 @@ import { Link } from 'expo-router';
 import { NewsSection } from '@/components/NewsSection';
 import { ConfigurationAlert } from '@/components/ConfigurationAlert';
 import { InicialSettings } from '@/components/InicialSettings';
+import { globalStyles } from "../styles/globalStyles";
 
 export default function HomeScreen() {
   return (
@@ -18,23 +19,23 @@ export default function HomeScreen() {
         <View style={styles.flexColumn}>
           <Image 
           source={require('../../assets/images/neurahive-icon.png')}
-          style={styles.neuhiveIcon}
+          style={globalStyles.neuhiveIcon}
         />
           <Text style={styles.grayText}>bem-vindo(a) ao </Text>
-          <Text style={styles.orangeText}>NeuraHive!</Text>
+          <Text style={globalStyles.orangeText}>NeuraHive!</Text>
         </View>
       </View>
         <Text>v1.0.0</Text>
       <View style={styles.division}>
       </View>
         <View style={styles.homeOptions}>
-          <Text style={styles.orangeText}>O que você deseja fazer hoje?</Text>
+          <Text style={globalStyles.orangeText}>O que você deseja fazer hoje?</Text>
             <View style={styles.centeredContainer}>
               <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/settings.png')}/>
                 <Text>Configurações Iniciais</Text>
               </Link>
-              <Link href="/usuarios" style={styles.middleButton}>
+              <Link href="/users" style={styles.middleButton}>
                 <Image source={require('../../assets/images/user-icon.png')}/>
                 <Text>Usuários</Text>
               </Link>
@@ -42,22 +43,22 @@ export default function HomeScreen() {
                 <Image source={require('../../assets/images/permission-icon.png')}/>
                 <Text>Permissões</Text>
               </Link>
-              <Link href="/#" style={styles.middleButton}>
+              {/* <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/user-icon.png')}/>
                 <Text>Editar Perfil</Text>
-              </Link>
-              <Link href="/#" style={styles.middleButton}>
+              </Link> */}
+              {/* <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/base-de-conhecimento.png')}/>
                 <Text>Base de Conhecimento</Text>
-              </Link>
-              <Link href="/#" style={styles.middleButton}>
+              </Link> */}
+              {/* <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/quadro.png')}/>
                 <Text>Novo Quadro</Text>
-              </Link>
-              <Link href="/agentes" style={styles.middleButton}>
+              </Link> */}
+              {/* <Link href="/agentes" style={styles.middleButton}>
                 <Image source={require('../../assets/images/agente.png')}/>
                 <Text>Novo Agente</Text>
-              </Link>
+              </Link> */}
             </View>
         </View>
         <ConfigurationAlert/>
@@ -82,13 +83,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'center',
     justifyContent: 'space-between',
-
+    gap: 5,
   },
   middleButton: {
-    flexDirection: 'column', 
-    width: 100, 
+    display: 'flex',
+    flexDirection: 'row', 
+    flexWrap: 'wrap',
     justifyContent: 'center', 
     alignItems: 'center',
     textAlign: 'center',
@@ -106,9 +107,6 @@ const styles = StyleSheet.create({
   },
   grayText: {
     color: '#8A8888',
-  },
-  orangeText: {
-    color: '#FF9500',
   },
   division: {
     backgroundColor: '#FC801F',
@@ -138,8 +136,5 @@ const styles = StyleSheet.create({
     zIndex: 2,
     marginBottom: -55
   },
-  neuhiveIcon: {
-    width: 30,
-    height: 30,
-  }
+  
 });
