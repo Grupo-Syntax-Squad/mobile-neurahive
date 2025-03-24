@@ -24,7 +24,7 @@ export default function TabTwoScreen() {
       <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/permissions")}>
         <Text style={globalStyles.WhiteText}>Permissões dos Usuários</Text>
       </TouchableOpacity>
-      <View style={styles.userContainer}>
+      <View style={globalStyles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
@@ -33,7 +33,7 @@ export default function TabTwoScreen() {
           </Link>
         </TouchableOpacity>
       </View>
-      <View style={styles.userContainer}>
+      <View style={globalStyles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
@@ -42,7 +42,7 @@ export default function TabTwoScreen() {
           </Link>
         </TouchableOpacity>
       </View>
-      <View style={styles.userContainer}>
+      <View style={globalStyles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
@@ -56,15 +56,6 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
-  userContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 10,
-    margin: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  
   userDetail: {
     backgroundColor: '#FC801F',
     padding: 10,

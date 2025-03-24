@@ -16,7 +16,7 @@ export default function Agentes() {
             <Image source={require('../../assets/images/base-de-conhecimento.png')}/>
             <Text>Base de Conhecimento</Text>
         </Link>
-        <TouchableOpacity style={styles.orangeButton} >
+        <TouchableOpacity style={globalStyles.orangeButton} >
             <Text style={styles.WhiteText}>Criar Novo Agente</Text>
         </TouchableOpacity>
         <View style={globalStyles.boxContainer}>
@@ -56,12 +56,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         borderRadius: 10
-      },
-      orangeButton: {
-        backgroundColor: '#FC801F',
-        padding: 10,
-        margin: 10,
-        borderRadius: 5,
       },
       header: {
         display: 'flex',

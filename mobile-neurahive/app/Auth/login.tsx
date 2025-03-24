@@ -15,20 +15,24 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <NeurahiveIcon/>
-      <Text style={styles.title}>Faça login em sua conta</Text>
+    <View >
+      <View style={globalStyles.imageContainer}>
+        <NeurahiveIcon />
+      </View>
+      <Text style={globalStyles.textCenter}>Faça login em sua conta</Text>
+      <Text style={globalStyles.formLabel}>E-mail</Text>
       <TextInput
         style={globalStyles.input}
-        placeholder="Email"
+        placeholder="Insira seu endereço de e-mail"
         keyboardType="email-address"
         autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
       />
+      <Text style={globalStyles.formLabel}>Senha</Text>
       <TextInput
         style={globalStyles.input}
-        placeholder="Senha"
+        placeholder="Insira sua senha"
         secureTextEntry
         value={password}
         onChangeText={setPassword}

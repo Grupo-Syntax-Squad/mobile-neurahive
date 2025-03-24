@@ -1,16 +1,15 @@
 import { StyleSheet, Image, Platform, Text, TextInput, Button, View, TouchableOpacity, ScrollView } from 'react-native';
 
+import Checkbox from 'expo-checkbox';
 
 import React, { useState } from 'react';
 import { Link, router } from 'expo-router';
 import { globalStyles } from "../styles/globalStyles";
-import { useRouter } from 'expo-router';
-import OrangeButton from '@/components/orangeButton';
 
 
 export default function Permissions() {
     const [name, setName] = useState("");
-    const [checked, setChecked] = useState(false);
+    const [isChecked, setChecked] = useState(false);
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
@@ -55,6 +54,22 @@ export default function Permissions() {
         <Text style={globalStyles.orangeText}>Selecione os acessos da permissão</Text>
         <Text style={globalStyles.orangeText}>Selecionados: </Text>
       </View>
+      <View style={styles.section}>
+        <Checkbox
+          style={styles.checkbox}
+          value={isChecked}
+          onValueChange={setChecked}
+          color={isChecked ? '#4630EB' : undefined}
+        />
+        <Text>Recursos Humanos</Text>
+        <Checkbox
+          style={styles.checkbox}
+          value={isChecked}
+          onValueChange={setChecked}
+          color={isChecked ? '#4630EB' : undefined}
+        />
+        <Text>Recursos Humanos</Text>
+        </View>
     </View>
     <TouchableOpacity style={globalStyles.orangeButton}>
       <Text style={globalStyles.WhiteText}>Criar Permissão</Text>
@@ -64,5 +79,11 @@ export default function Permissions() {
 }
 
 const styles = StyleSheet.create({
-
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkbox: {
+    margin: 8,
+  },
 });

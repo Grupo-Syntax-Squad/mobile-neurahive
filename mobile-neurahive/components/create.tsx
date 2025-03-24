@@ -22,21 +22,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10
   },
-  userContainer: {
-    width: 200,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 10,
-    margin: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  orangeButton: {
-    backgroundColor: '#FC801F',
-    padding: 10,
-    margin: 10,
-    borderRadius: 5,
-  },
   userDetail: {
     backgroundColor: '#FC801F',
     padding: 10,
