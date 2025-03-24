@@ -1,47 +1,54 @@
-import { StyleSheet, Image, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity, ScrollView, Button } from 'react-native';
 
 import React from 'react';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { globalStyles } from "../styles/globalStyles";
 
 
 export default function TabTwoScreen() {
+  const router = useRouter();
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
       <View style={styles.header}>
         <Text>Seus Usuários</Text>
-        <Image
-          source={require('../../assets/images/usuarios.png')}
-        />
+      <Image source={require('../../assets/images/usuarios.png')}></Image>
       </View>
-      <TouchableOpacity style={styles.orangeButton} >
-        <Link href="/accesses/accesses">
-          <Text style={globalStyles.WhiteText}>Acessos</Text>
-        </Link>
-        </TouchableOpacity>
-      <TouchableOpacity style={styles.orangeButton} >
-      <Link href="/users/create">
-        <Text style={globalStyles.WhiteText}>Novo Usuário</Text>
-      </Link>
+      <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/accesses")}>
+        <Text style={globalStyles.WhiteText}>Acessos</Text>
       </TouchableOpacity>
-      <Link href="/#" style={globalStyles.middleButton}>
-        <Text>Permissões dos Usuários</Text>
-        <Image source={require('../../assets/images/permission-icon.png')}/>
-      </Link>
+
+      <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/users/create")}>
+        <Text style={globalStyles.WhiteText}>Criar novo usuário</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/permissions")}>
+        <Text style={globalStyles.WhiteText}>Permissões dos Usuários</Text>
+      </TouchableOpacity>
       <View style={styles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
-        <Link href="/users/1">
-        <Text style={globalStyles.WhiteText}>Detalhes</Text>
-      </Link>
+          <Link href="/users/1">
+            <Text style={globalStyles.WhiteText}>Detalhes</Text>
+          </Link>
         </TouchableOpacity>
       </View>
       <View style={styles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
-          <Text style={globalStyles.WhiteText}>Detalhes</Text>
+          <Link href="/users/1">
+            <Text style={globalStyles.WhiteText}>Detalhes</Text>
+          </Link>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.userContainer}>
+        <Text>Usuário</Text>
+        <Text style={styles.borderEmail}>usuario@email.com</Text>
+        <TouchableOpacity style={styles.userDetail} >
+          <Link href="/users/1">
+            <Text style={globalStyles.WhiteText}>Detalhes</Text>
+          </Link>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -57,12 +64,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
   },
-  orangeButton: {
-    backgroundColor: '#FC801F',
-    padding: 10,
-    margin: 10,
-    borderRadius: 5,
-  },
+  
   userDetail: {
     backgroundColor: '#FC801F',
     padding: 10,

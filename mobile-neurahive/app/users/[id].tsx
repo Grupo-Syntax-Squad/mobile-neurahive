@@ -1,51 +1,77 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image, Switch } from 'react-native';
 import { useRouter } from 'expo-router';
 import CustomInput from '../../components/CustomInput';
+import { globalStyles } from "../styles/globalStyles";
+import { Picker } from '@react-native-picker/picker';
+
 
 export default function User() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const router = useRouter();
+  const [selectedValue, setSelectedValue] = useState('Escolha uma permissão');
   return (
-    <View style={styles.container}>
-      <Text>Thiago</Text>
-      <Image source={require('../../assets/images/bees-background.png')} />
+    <View style={globalStyles.container}>
+      <View style={globalStyles.imageContainer}>
+      <Text style={globalStyles.textCenter}>Thiago</Text>
+        <Image source={require('../../assets/images/bees-background.png')}/>
+      </View>
       <View style={styles.userDetail}>
         <Text style={styles.userStatus}>Ativo</Text>
         <Text style={styles.DetailContainer}>Criado em: 12/12/2024</Text>
         <Text style={styles.DetailContainer}>Atualizado em: 12/12/2024</Text>
       </View>
+      <Text style={globalStyles.orangeText}>Nome</Text>
       <CustomInput
         placeholder="Nome"
         value={name}
         onChangeText={setName}
       />
+      <Text style={globalStyles.orangeText}>E-mail</Text>
       <CustomInput
         placeholder="E-mail"
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
       />
-      <CustomInput
-        placeholder="Permissão do Usuário"
-        value={email}
-        onChangeText={setEmail}
-      />
+      <Text style={globalStyles.orangeText}>Permissão do Usuário</Text>
+      <Picker style={styles.input}
+        selectedValue={selectedValue}
+        onValueChange={(itemValue) => setSelectedValue(itemValue)}
+      >
+        <Picker.Item label="Recursos Humanos"/>
+        <Picker.Item label="Administrativo"/>
+        <Picker.Item label="Financeiro"/>
+      </Picker>
+      <Text style={globalStyles.orangeText}>Senha</Text>
       <CustomInput
         placeholder="Senha"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
+      <Text style={globalStyles.orangeText}>Repita a Senha</Text>
       <CustomInput
         placeholder="Repita a Senha"
         secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+        value={passwordConfirmation}
+        onChangeText={setPasswordConfirmation}
       />
+      <View style={globalStyles.flexRow}>
+        <Text style={globalStyles.orangeText}>Status</Text>
+        <Switch
+          value={isEnabled}
+          onValueChange={toggleSwitch}
+        />
+      </View>
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Salvar</Text>
       </TouchableOpacity>
@@ -71,7 +97,7 @@ const styles = StyleSheet.create({
   userDetail: {
     flexDirection: 'row',
     gap: 3,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 20,
   },
   container: {

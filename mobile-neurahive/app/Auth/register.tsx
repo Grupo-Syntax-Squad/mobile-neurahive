@@ -24,7 +24,7 @@ const RegisterScreen = () => {
         style={styles.input}
         placeholder="Nome"
         autoCapitalize="none"
-        value={email}
+        value={name}
         onChangeText={setName}
       />
       <TextInput
@@ -46,7 +46,7 @@ const RegisterScreen = () => {
         style={styles.input}
         placeholder="Repita a Senha"
         secureTextEntry
-        value={password}
+        value={passwordConfirmation}
         onChangeText={setPasswordConfirmation}
       />
       <OrangeButton title={'Cadastre-se'} onPress={handleLogin}/>
@@ -79,19 +79,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
   },
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#007bff",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
+
 });
 
 export default RegisterScreen;

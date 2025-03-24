@@ -1,12 +1,10 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Tabs } from "expo-router";
+import { Platform } from "react-native";
+import { HapticTab } from "@/components/HapticTab";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import TabBarBackground from "@/components/ui/TabBarBackground";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -14,7 +12,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'white', 
+        tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'black',
         headerShown: false,
         tabBarButton: HapticTab,
@@ -22,13 +20,14 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
-            backgroundColor: 'orange', 
+            backgroundColor: 'orange',
           },
           default: {
             backgroundColor: 'orange',
           },
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -37,15 +36,14 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="usuarios"
+        name="users"
         options={{
           title: 'Usuários',
           tabBarIcon: ({ color }) => <Icon name="user" size={28} color={color} />,
-
         }}
       />
       <Tabs.Screen
-        name="agentes"
+        name="agents"
         options={{
           title: 'Agentes',
           tabBarIcon: ({ color }) => <Icon name="android" size={28} color={color} />,

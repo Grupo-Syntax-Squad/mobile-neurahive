@@ -1,7 +1,7 @@
-import { Image, StyleSheet, Platform, Button, View, Alert, Text, ScrollView } from 'react-native';
+import { Image, StyleSheet, Platform, Button, View, Alert, Text, ScrollView, TouchableOpacity } from 'react-native';
 
 import React from 'react';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { NewsSection } from '@/components/NewsSection';
 import { ConfigurationAlert } from '@/components/ConfigurationAlert';
 import { InicialSettings } from '@/components/InicialSettings';
@@ -31,18 +31,25 @@ export default function HomeScreen() {
         <View style={styles.homeOptions}>
           <Text style={globalStyles.orangeText}>O que você deseja fazer hoje?</Text>
             <View style={styles.centeredContainer}>
-              <Link href="/#" style={styles.middleButton}>
+              {/* <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/settings.png')}/>
                 <Text>Configurações Iniciais</Text>
-              </Link>
-              <Link href="/users" style={styles.middleButton}>
-                <Image source={require('../../assets/images/user-icon.png')}/>
-                <Text>Usuários</Text>
-              </Link>
-              <Link href="/#" style={styles.middleButton}>
-                <Image source={require('../../assets/images/permission-icon.png')}/>
-                <Text>Permissões</Text>
-              </Link>
+              </Link> */}
+               <TouchableOpacity 
+                  style={styles.middleButton} 
+                  onPress={() => router.push("/users")} 
+                >
+                  <Image source={require('../../assets/images/user-icon.png')} />
+                  <Text>Usuários</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={styles.middleButton} 
+                  onPress={() => router.push("/permissions")}
+                >
+                  <Image source={require('../../assets/images/permission-icon.png')} />
+                  <Text>Permissões</Text>
+                </TouchableOpacity>
               {/* <Link href="/#" style={styles.middleButton}>
                 <Image source={require('../../assets/images/user-icon.png')}/>
                 <Text>Editar Perfil</Text>
@@ -61,7 +68,7 @@ export default function HomeScreen() {
               </Link> */}
             </View>
         </View>
-        <ConfigurationAlert/>
+        {/* <ConfigurationAlert/> */}
        <NewsSection />
     </ScrollView>
   );
@@ -83,7 +90,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     gap: 5,
   },
   middleButton: {

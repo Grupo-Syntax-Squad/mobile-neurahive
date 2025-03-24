@@ -1,5 +1,6 @@
 import { Link } from 'expo-router';
 import { Image, StyleSheet, Platform, Button, View, Alert, Text, TouchableOpacity } from 'react-native';
+import { globalStyles } from '../styles/globalStyles';
 
 
 export default function Agentes() {
@@ -18,20 +19,20 @@ export default function Agentes() {
         <TouchableOpacity style={styles.orangeButton} >
             <Text style={styles.WhiteText}>Criar Novo Agente</Text>
         </TouchableOpacity>
-        <View style={styles.boxContainer}>
-            <View style={styles.box}>
+        <View style={globalStyles.boxContainer}>
+            <View style={globalStyles.box}>
                 <Image 
                     source={require('../../assets/images/apicultora.png')}
                 />
                 <Text>Ive</Text>
             </View>
-            <View style={styles.box}>
+            <View style={globalStyles.box}>
                 <Image 
                     source={require('../../assets/images/apicultora.png')}
                 />
                 <Text>Bea</Text>
             </View>
-            <View style={styles.box}>
+            <View style={globalStyles.box}>
                 <Image 
                     source={require('../../assets/images/apicultora.png')}
                 />
@@ -55,28 +56,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         borderRadius: 10
-      },
-      boxContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        padding: 10,
-        gap: 10,
-      },
-      box: {
-        width: 150,
-        height: 150,
-        backgroundColor: "white",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.3,
-        shadowRadius: 10,
-
-        elevation: 10,
       },
       orangeButton: {
         backgroundColor: '#FC801F',
