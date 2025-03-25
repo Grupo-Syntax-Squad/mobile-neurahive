@@ -9,18 +9,16 @@ export default function TabTwoScreen() {
   const router = useRouter();
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
-      <View style={styles.header}>
+      <View style={globalStyles.header}>
         <Text>Seus Usuários</Text>
       <Image source={require('../../assets/images/usuarios.png')}></Image>
       </View>
       <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/accesses")}>
         <Text style={globalStyles.WhiteText}>Acessos</Text>
       </TouchableOpacity>
-
       <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/users/create")}>
         <Text style={globalStyles.WhiteText}>Criar novo usuário</Text>
       </TouchableOpacity>
-
       <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/permissions")}>
         <Text style={globalStyles.WhiteText}>Permissões dos Usuários</Text>
       </TouchableOpacity>
@@ -64,7 +62,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
   },
-  
   userDetail: {
     backgroundColor: '#FC801F',
     padding: 10,
@@ -86,12 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  
   input: {
     padding: 10,
     borderWidth: 1,

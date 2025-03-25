@@ -1,38 +1,38 @@
 import { Link } from 'expo-router';
-import { Image, StyleSheet, Platform, Button, View, Alert, Text, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../styles/globalStyles';
 
 
 export default function Agentes() {
   return (
     <View>
-        <View style={styles.header}>
+        <View style={globalStyles.header}>
             <Text>Área de Agentes</Text>
             <Image 
                 source={require('../../assets/images/agente1.png')}
             />
         </View>
-        <Link href="/#" style={styles.middleButton}>
+        <Link href="/#" style={globalStyles.middleButton}>
             <Image source={require('../../assets/images/base-de-conhecimento.png')}/>
             <Text>Base de Conhecimento</Text>
         </Link>
-        <TouchableOpacity style={styles.orangeButton} >
-            <Text style={styles.WhiteText}>Criar Novo Agente</Text>
+        <TouchableOpacity style={globalStyles.orangeButton} >
+            <Text style={globalStyles.WhiteText}>Criar Novo Agente</Text>
         </TouchableOpacity>
-        <View style={globalStyles.boxContainer}>
-            <View style={globalStyles.box}>
+        <View style={globalStyles.agentContainer}>
+            <View style={globalStyles.agentBox}>
                 <Image 
                     source={require('../../assets/images/apicultora.png')}
                 />
                 <Text>Ive</Text>
             </View>
-            <View style={globalStyles.box}>
+            <View style={globalStyles.agentBox}>
                 <Image 
                     source={require('../../assets/images/apicultora.png')}
                 />
                 <Text>Bea</Text>
             </View>
-            <View style={globalStyles.box}>
+            <View style={globalStyles.agentBox}>
                 <Image 
                     source={require('../../assets/images/apicultora.png')}
                 />
@@ -44,29 +44,4 @@ export default function Agentes() {
 }
 
 const styles = StyleSheet.create({
-    WhiteText: {
-      color: 'white',
-      textAlign: 'center',
-    },
-    middleButton: {
-        flexDirection: 'column', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        textAlign: 'center',
-        backgroundColor: 'white',
-        padding: 10,
-        borderRadius: 10
-      },
-      orangeButton: {
-        backgroundColor: '#FC801F',
-        padding: 10,
-        margin: 10,
-        borderRadius: 5,
-      },
-      header: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
 });

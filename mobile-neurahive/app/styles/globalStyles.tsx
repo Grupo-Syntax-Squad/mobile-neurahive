@@ -24,6 +24,12 @@ export const globalStyles = StyleSheet.create({
   orangeText: {
       color: '#FF9500',
   },
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   WhiteText: {
       color: 'white',
       textAlign: 'center',
@@ -78,6 +84,20 @@ export const globalStyles = StyleSheet.create({
 
     elevation: 10,
   },
+  agentBox: {
+    width: 150,
+    height: 150,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+
+    elevation: 10,
+  },
   accessBox: {
     width: 200,
     height: 150,
@@ -92,6 +112,14 @@ export const globalStyles = StyleSheet.create({
     padding: 10,
   },
   boxContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    padding: 10,
+    gap: 10,
+  },
+  agentContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
