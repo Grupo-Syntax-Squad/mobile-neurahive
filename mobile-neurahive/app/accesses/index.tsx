@@ -1,10 +1,7 @@
 import { StyleSheet, Image, Platform, Text, TextInput, Button, View, TouchableOpacity, ScrollView } from 'react-native';
 
 import React, { useState } from 'react';
-import { Link, router } from 'expo-router';
 import { globalStyles } from "../styles/globalStyles";
-import OrangeButton from '@/components/orangeButton';
-
 
 export default function Accesses() {
     const [name, setName] = useState("");
@@ -53,14 +50,6 @@ export default function Accesses() {
 }
 
 const styles = StyleSheet.create({
-  userContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 10,
-    margin: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
   headerImage: {
     color: '#808080',
     bottom: -90,

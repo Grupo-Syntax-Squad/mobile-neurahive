@@ -22,7 +22,7 @@ export default function TabTwoScreen() {
       <TouchableOpacity style={globalStyles.orangeButton} onPress={() => router.push("/permissions")}>
         <Text style={globalStyles.WhiteText}>Permissões dos Usuários</Text>
       </TouchableOpacity>
-      <View style={styles.userContainer}>
+      <View style={globalStyles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
@@ -31,7 +31,7 @@ export default function TabTwoScreen() {
           </Link>
         </TouchableOpacity>
       </View>
-      <View style={styles.userContainer}>
+      <View style={globalStyles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >
@@ -40,7 +40,7 @@ export default function TabTwoScreen() {
           </Link>
         </TouchableOpacity>
       </View>
-      <View style={styles.userContainer}>
+      <View style={globalStyles.userContainer}>
         <Text>Usuário</Text>
         <Text style={styles.borderEmail}>usuario@email.com</Text>
         <TouchableOpacity style={styles.userDetail} >

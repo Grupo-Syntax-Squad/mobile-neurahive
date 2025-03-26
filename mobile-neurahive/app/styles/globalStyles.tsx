@@ -1,6 +1,18 @@
 import { StyleSheet } from 'react-native';
 
 export const globalStyles = StyleSheet.create({
+  userContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 10,
+    margin: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  formLabel: {
+    color: '#FF9500',
+    textAlign: 'left'
+  },
   flexRow: {
     display: 'flex',
     flexDirection: 'row',
