@@ -39,7 +39,7 @@ const Login = () => {
       />
       <OrangeButton title={'Entrar'} onPress={handleLogin}/>
       <Text>Ainda não tem conta? 
-        <Link href="/auth/register" style={globalStyles.orangeText}>Cadastre-se</Link>
+        <Link href="/Auth/register" style={globalStyles.orangeText}>Cadastre-se</Link>
       </Text>
     </View>
   );

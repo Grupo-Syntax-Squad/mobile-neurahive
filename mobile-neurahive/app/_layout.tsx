@@ -1,39 +1,21 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+export default function Layout() {
   return (
-    <ThemeProvider value={ DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack initialRouteName="login">
+      <Stack.Screen name="login" options={{ headerShown: false }}/>
+      <Stack.Screen name="index" options={{ headerShown: false }}/>
+      <Stack.Screen name="users" options={{ title: "Usuários" }}/>
+      <Stack.Screen name="agents" options={{ title: "Agents" }}/>
+      <Stack.Screen name="accesses/page" options={{ title: "Acessos" }}/>
+      <Stack.Screen name="Permissions/page" options={{ title: "Permissões" }}/>
+      <Stack.Screen name="Agents/page" options={{ title: "Agentes" }}/>
+      <Stack.Screen name="Agents/[id]" options={{ title: "Agente" }}/>
+      <Stack.Screen name="Chat/page" options={{ title: "Selecione o Agente" }}/>
+      <Stack.Screen name="Chat/[id]" options={{ title: "",}}/>
+      <Stack.Screen name="users/create" options={{ title: "Criar Usuário" }}/>
+      <Stack.Screen name="users/[id]" options={{ title: "Detalhes do Usuário" }}/>
+      <Stack.Screen name="Permissions/[id]" options={{ title: "Permissões" }}/>
+    </Stack>
   );
 }

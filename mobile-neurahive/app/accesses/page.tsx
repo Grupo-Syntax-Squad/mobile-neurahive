@@ -10,7 +10,6 @@ export default function Accesses() {
       console.log("Name:", name);
     };
   
-
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
       <View>

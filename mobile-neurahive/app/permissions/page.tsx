@@ -19,7 +19,7 @@ export default function Permissions() {
             <Text>Total</Text>
             <Text>Usuários: 30</Text>
             <TouchableOpacity style={globalStyles.orangeButton}>
-              <Link href="/permissions/1">
+              <Link href="/Permissions/1">
                 <Text style={globalStyles.WhiteText}>Detalhes</Text>
               </Link>
             </TouchableOpacity>
@@ -28,7 +28,7 @@ export default function Permissions() {
             <Text>Permissão 3</Text>
             <Text>Usuários: 60</Text>
             <TouchableOpacity style={globalStyles.orangeButton}>
-              <Link href="/permissions/1">
+              <Link href="/Permissions/1">
                 <Text style={globalStyles.WhiteText}>Detalhes</Text>
               </Link>
             </TouchableOpacity>
@@ -37,7 +37,7 @@ export default function Permissions() {
             <Text>Acesso X</Text>
             <Text>Usuários: 10</Text>
             <TouchableOpacity style={globalStyles.orangeButton}>
-              <Link href="/permissions/1">
+              <Link href="/Permissions/1">
                 <Text style={globalStyles.WhiteText}>Detalhes</Text>
               </Link>
             </TouchableOpacity>
