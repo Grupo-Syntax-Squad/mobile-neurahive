@@ -5,7 +5,6 @@ export type RootStackParamList = {
     Agents: undefined;
   };
   
-  // Substitua o NativeStackNavigationProp por:
   declare global {
     namespace ReactNavigation {
       interface RootParamList extends RootStackParamList {}

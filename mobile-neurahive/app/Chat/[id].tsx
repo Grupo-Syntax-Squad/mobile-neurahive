@@ -3,7 +3,6 @@ import { Image, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 export default function Chat() {
     return (
       <View style={styles.container}>
-        {/* Header */}
       <View style={styles.header}>
         <Image
           source={{ uri: 'https://cdn-icons-png.flaticon.com/512/4712/4712038.png' }}

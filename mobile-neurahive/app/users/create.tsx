@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
-import { useRouter } from 'expo-router';
 import CustomInput from '../../components/CustomInput';
 import { globalStyles } from "../styles/globalStyles";
 import { Picker } from '@react-native-picker/picker';
@@ -12,9 +11,8 @@ export default function CreateUser() {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [selectedValue, setSelectedValue] = useState('Escolha uma permissão');
-  const router = useRouter();
 
-  const handleSignUp = () => {
+  const handleCreateUser = () => {
     console.log('Usuário cadastrado:', { name, email, password });
     alert('Cadastro realizado com sucesso!');
   };
@@ -61,7 +59,7 @@ export default function CreateUser() {
         value={passwordConfirmation}
         onChangeText={setPasswordConfirmation}
       />
-      <TouchableOpacity style={globalStyles.orangeButton} onPress={() => handleSignUp()}>
+      <TouchableOpacity style={globalStyles.orangeButton} onPress={() => handleCreateUser()}>
         <Text style={globalStyles.WhiteText}>Criar Usuário</Text>
       </TouchableOpacity>
     </View>

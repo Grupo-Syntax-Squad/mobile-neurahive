@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { globalStyles } from "../styles/globalStyles";
-import CustomInput from '../../components/CustomInput';
+import Checkbox from 'expo-checkbox';
 
 export default function Permission() {
+  const [isChecked, setChecked] = useState(false);
   const router = useRouter();
 
   return (
@@ -16,11 +17,44 @@ export default function Permission() {
                 style={globalStyles.input}
                 placeholder="Digite o título da permissão"
                 autoCapitalize="none"
+                value={"Total"}
             />
             <View style={globalStyles.spaceAround}>
-              <Text style={globalStyles.orangeText}>Selecione os acessos da permissão</Text>
-              <Text style={globalStyles.orangeText}>Selecionados: </Text>
-            </View>
+                    <Text style={globalStyles.orangeText}>Selecione os acessos da permissão</Text>
+                    <Text style={globalStyles.orangeText}>Selecionados: </Text>
+                  </View>
+                  <View style={styles.section}>
+                    <Checkbox
+                      style={styles.checkbox}
+                      value={isChecked}
+                      onValueChange={setChecked}
+                      color={isChecked ? '#4630EB' : undefined}
+                    />
+                    <Text>Recursos Humanos</Text>
+                    <Checkbox
+                      style={styles.checkbox}
+                      value={isChecked}
+                      onValueChange={setChecked}
+                      color={isChecked ? '#4630EB' : undefined}
+                    />
+                    <Text>Recursos Humanos</Text>
+                  </View>
+                  <View style={styles.section}>
+                    <Checkbox
+                      style={styles.checkbox}
+                      value={isChecked}
+                      onValueChange={setChecked}
+                      color={isChecked ? '#4630EB' : undefined}
+                    />
+                    <Text>Recursos Humanos</Text>
+                    <Checkbox
+                      style={styles.checkbox}
+                      value={isChecked}
+                      onValueChange={setChecked}
+                      color={isChecked ? '#4630EB' : undefined}
+                    />
+                    <Text>Recursos Humanos</Text>
+                  </View>
           </View>
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Salvar</Text>
@@ -33,6 +67,13 @@ export default function Permission() {
 }
 
 const styles = StyleSheet.create({
+  checkbox: {
+    margin: 8,
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   userStatus: {
     backgroundColor: 'green',
     padding: 5,

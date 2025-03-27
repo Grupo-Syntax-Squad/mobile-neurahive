@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { globalStyles } from "../styles/globalStyles";
-import CustomInput from '../../components/CustomInput';
 
 export default function Permission() {
   const router = useRouter();

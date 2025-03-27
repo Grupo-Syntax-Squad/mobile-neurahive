@@ -111,7 +111,8 @@ export const globalStyles = StyleSheet.create({
     elevation: 10,
   },
   accessBox: {
-    width: 200,
+    width: 180,
+    marginBottom: 5,
     height: 150,
     backgroundColor: "white",
     justifyContent: "center",
