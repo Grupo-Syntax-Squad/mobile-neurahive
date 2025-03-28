@@ -4,6 +4,9 @@ import { router } from 'expo-router';
 import { globalStyles } from "./styles/globalStyles";
 import { NewsSection } from '@/components/NewsSection';
 import { ConfigurationAlert } from '@/components/ConfigurationAlert';
+import { useAuth } from '@/context/authContext';
+import WithRole from '@/components/WithRole';
+import { Role } from '@/enum/Role';
 
 type HomeActionButton = {
   id: string;
@@ -11,6 +14,7 @@ type HomeActionButton = {
   icon: any;
   route: string;
   testID?: string;
+  allowedRoles: number[]
 };
 
 export function HomeScreen() {
@@ -20,44 +24,52 @@ export function HomeScreen() {
       title: 'Usuários',
       icon: require('../assets/images/user-icon.png'),
       route: '/users',
-      testID: 'users-button'
+      testID: 'users-button',
+      allowedRoles: [Role.ADMIN]
     },
     {
       id: '2',
       title: 'Agentes',
       icon: require('../assets/images/user-icon.png'),
       route: '/Agents/page',
-      testID: 'agents-button'
+      testID: 'agents-button',
+      allowedRoles: [Role.ADMIN, Role.CURATOR]
     },
     {
       id: '3',
       title: 'Chat',
       icon: require('../assets/images/chat.png'),
       route: '/Chat/page',
-      testID: 'chat-button'
+      testID: 'chat-button',
+      allowedRoles: [Role.CLIENT]
     },
     {
       id: '4',
       title: 'Configurações Iniciais',
       icon: require('../assets/images/settings.png'),
       route: '/InicialSettings',
-      testID: 'settings-button'
+      testID: 'settings-button',
+      allowedRoles: [Role.ADMIN]
     },
     {
       id: '5',
       title: 'Permissões',
       icon: require('../assets/images/permission-icon.png'),
       route: '/Permissions/page',
-      testID: 'permissions-button'
+      testID: 'permissions-button',
+      allowedRoles: [Role.ADMIN]
     },
     {
       id: '6',
       title: 'Acessos',
       icon: require('../assets/images/permission-icon.png'),
       route: '/accesses/page',
-      testID: 'permissions-button'
+      testID: 'permissions-button',
+      allowedRoles: [Role.ADMIN]
     },
   ];
+
+  const { logout, isAuthenticated } = useAuth();
 
   return (
     <ScrollView 
@@ -80,19 +92,35 @@ export function HomeScreen() {
         </View>
       </View>
       <Text>v1.0.0</Text>
+      {
+        isAuthenticated ? (
+          <ActionButton
+            title={'Logout'}
+            onPress={() => logout()}
+            icon={require('../assets/images/permission-icon.png')}
+          />
+        ) : (
+          <ActionButton
+            title={'Login'}
+            onPress={() => router.push('/Auth/login')}
+            icon={require('../assets/images/permission-icon.png')}
+          />
+        )
+      }
       <View style={styles.division}></View>
 
       <View style={styles.actionsSection}>
         <Text style={styles.sectionTitle}>O que você deseja fazer hoje?</Text>
         <View style={styles.actionsGrid}>
           {actionButtons.map((button) => (
-            <ActionButton
-              key={button.id}
-              title={button.title}
-              icon={button.icon}
-              onPress={() => router.push(button.route as any)}
-              testID={button.testID}
-            />
+            <WithRole allowedRoles={button.allowedRoles} key={button.id}>
+              <ActionButton
+                title={button.title}
+                icon={button.icon}
+                onPress={() => router.push(button.route as any)}
+                testID={button.testID}
+              />
+            </WithRole>
           ))}
         </View>
       </View>

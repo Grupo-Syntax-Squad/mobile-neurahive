@@ -2,6 +2,8 @@ import { StyleSheet, Image, Text, View, TouchableOpacity, ScrollView } from 'rea
 import { Link, useRouter } from 'expo-router';
 import { globalStyles } from "./styles/globalStyles";
 import React from 'react';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import { Role } from '@/enum/Role';
 
 type User = {
   id: string;
@@ -31,40 +33,42 @@ export function Users() {
     },
     { 
       text: 'Permissões dos Usuários', 
-      onPress: () => router.push("/Permissions/page"),
+      onPress: () => router.push("/permissions/page"),
       testID: 'permissions-button'
     }
   ];
 
   return (
-    <ScrollView 
-      keyboardShouldPersistTaps="handled"
-      contentContainerStyle={styles.scrollContainer}
-    >
-      <View style={globalStyles.header}>
-        <Text>Seus Usuários</Text>
-      <Image source={require('../assets/images/usuarios.png')}></Image>
-      </View>
+    <ProtectedRoute allowedRoles={[Role.ADMIN]}>
+      <ScrollView 
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.scrollContainer}
+      >
+        <View style={globalStyles.header}>
+          <Text>Seus Usuários</Text>
+        <Image source={require('../assets/images/usuarios.png')}></Image>
+        </View>
 
-      <View style={styles.actionsContainer}>
-        {actionButtons.map((button, index) => (
-          <TouchableOpacity
-            key={index}
-            style={globalStyles.orangeButton}
-            onPress={button.onPress}
-            testID={button.testID}
-          >
-            <Text style={globalStyles.WhiteText}>{button.text}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+        <View style={styles.actionsContainer}>
+          {actionButtons.map((button, index) => (
+            <TouchableOpacity
+              key={index}
+              style={globalStyles.orangeButton}
+              onPress={button.onPress}
+              testID={button.testID}
+            >
+              <Text style={globalStyles.WhiteText}>{button.text}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <View style={styles.usersList}>
-        {users.map((user) => (
-          <UserCard key={user.id} user={user} />
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.usersList}>
+          {users.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </View>
+      </ScrollView>
+    </ProtectedRoute>
   );
 }
 

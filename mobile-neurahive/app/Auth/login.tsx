@@ -1,17 +1,32 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
-import { Link } from "expo-router";
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { Link, useRouter } from "expo-router";
 import OrangeButton from "@/components/orangeButton";
 import { NeurahiveIcon } from "@/components/NeurahiveIcon";
 import { globalStyles } from "../styles/globalStyles";
+import axios from "axios";
+import * as SecureStore from 'expo-secure-store';
+import { useAuth } from "@/context/authContext";
+
 
 const Login = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
 
-  const handleLogin = () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/login`, { email, password });
+      const token = response.data.access_token
+      await SecureStore.setItem("jwt_token", token);
+      
+      login(token)
+    } catch (error: any) {
+      console.log(error)
+      Alert.alert('Erro ao logar', error.response ? error.response.data : 'Erro desconhecido');
+    }
+    router.replace("/")
   };
 
   return (
