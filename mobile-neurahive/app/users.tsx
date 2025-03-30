@@ -8,24 +8,36 @@ import {
 } from "react-native"
 import { Link, useRouter } from "expo-router"
 import { globalStyles } from "./styles/globalStyles"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import ProtectedRoute from "@/components/ProtectedRoute"
 import { Role } from "@/enum/Role"
-
-type User = {
-    id: string
-    name: string
-    email: string
-}
+import axios from "axios"
+import { User } from "../types/User"
 
 export function Users() {
     const router = useRouter()
+    const [users, setUsers] = useState<User[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
 
-    const users: User[] = [
-        { id: "1", name: "Usuário 1", email: "usuario1@email.com" },
-        { id: "2", name: "Usuário 2", email: "usuario2@email.com" },
-        { id: "3", name: "Usuário 3", email: "usuario3@email.com" },
-    ]
+    const fetchUsers = async () => {
+        try {
+            setLoading(true)
+            const response = await axios.get<User[]>(
+                `${process.env.EXPO_PUBLIC_API_URL}/users`
+            )
+            setUsers(response.data)
+        } catch (err) {
+            setError("Erro ao carregar usuários")
+            console.error("Erro na requisição:", err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchUsers()
+    }, [])
 
     const actionButtons = [
         {
@@ -152,3 +164,16 @@ const styles = StyleSheet.create({
 })
 
 export default Users
+
+export default Users
+
+function setLoading(arg0: boolean) {
+    throw new Error("Function not implemented.")
+}
+function setError(arg0: string) {
+    throw new Error("Function not implemented.")
+}
+
+function setUsers(data: any) {
+    throw new Error("Function not implemented.")
+}

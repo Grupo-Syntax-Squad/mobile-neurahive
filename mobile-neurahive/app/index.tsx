@@ -6,7 +6,7 @@ import {
     ScrollView,
     TouchableOpacity,
 } from "react-native"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { router } from "expo-router"
 import { globalStyles } from "./styles/globalStyles"
 import { NewsSection } from "@/components/NewsSection"
@@ -14,16 +14,7 @@ import { ConfigurationAlert } from "@/components/ConfigurationAlert"
 import { useAuth } from "@/context/authContext"
 import WithRole from "@/components/WithRole"
 import { Role } from "@/enum/Role"
-import * as SecureStore from "expo-secure-store"
-
-type HomeActionButton = {
-    id: string
-    title: string
-    icon: any
-    route: string
-    testID?: string
-    allowedRoles: number[]
-}
+import { HomeActionButton } from "@/types/HomeActionButton"
 
 export function HomeScreen() {
     const { logout, isAuthenticated, login } = useAuth()

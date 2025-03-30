@@ -1,8 +1,31 @@
-import { Link, router } from "expo-router"
+import { Link, router, useRouter } from "expo-router"
 import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native"
 import { globalStyles } from "../styles/globalStyles"
+import { useState } from "react"
+import axios from "axios"
+import { Agent } from "@/types/Agent"
 
 export default function Agents() {
+    const router = useRouter()
+    const [agents, setAgents] = useState<Agent[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
+    const fetchAgents = async () => {
+        try {
+            setLoading(true)
+            const response = await axios.get<Agent[]>(
+                `${process.env.EXPO_PUBLIC_API_URL}/agents`
+            )
+            setAgents(response.data)
+        } catch (err) {
+            setError("Erro ao carregar usuários")
+            console.error("Erro na requisição:", err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
         <View>
             <View style={globalStyles.header}>

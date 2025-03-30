@@ -6,10 +6,15 @@ import {
     TouchableOpacity,
     View,
     Image,
+    Alert,
 } from "react-native"
 import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
 import { Picker } from "@react-native-picker/picker"
+import axios from "axios"
+import * as SecureStore from "expo-secure-store"
+import { router } from "expo-router"
+import { User } from "@/types/User"
 
 export default function CreateUser() {
     const [name, setName] = useState("")
@@ -18,9 +23,28 @@ export default function CreateUser() {
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
     const [selectedValue, setSelectedValue] = useState("Escolha uma permissão")
 
-    const handleCreateUser = () => {
-        console.log("Usuário cadastrado:", { name, email, password })
-        alert("Cadastro realizado com sucesso!")
+    const handleCreateUser = async () => {
+        try {
+            const response = await axios.post(
+                `${process.env.EXPO_PUBLIC_API_URL}/users`,
+                {
+                    name,
+                    email,
+                    password,
+                }
+            )
+
+            Alert.alert("Sucesso", "Usuário criado com sucesso!")
+            router.replace("/users")
+        } catch (error: any) {
+            console.log(error)
+            Alert.alert(
+                "Erro ao criar usuário",
+                error.response
+                    ? error.response.data.message || error.response.data
+                    : "Erro desconhecido"
+            )
+        }
     }
 
     return (

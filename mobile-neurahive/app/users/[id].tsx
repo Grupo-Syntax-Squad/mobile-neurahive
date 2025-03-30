@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
     StyleSheet,
     Text,
@@ -11,10 +11,12 @@ import {
     Platform,
     Alert,
 } from "react-native"
-import { useRouter } from "expo-router"
+import { useLocalSearchParams, useRouter } from "expo-router"
 import { Picker } from "@react-native-picker/picker"
 import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
+import axios from "axios"
+import * as SecureStore from "expo-secure-store"
 
 const FormField: React.FC<{ label: string; children: React.ReactNode }> = ({
     label,
@@ -37,24 +39,93 @@ type UserData = {
 
 const UserForm: React.FC = () => {
     const router = useRouter()
+    const { id } = useLocalSearchParams()
+    const [isLoading, setIsLoading] = useState(true)
 
     const [user, setUser] = useState<UserData>({
-        name: "Thiago",
-        email: "thiago@email.com",
+        name: "",
+        email: "",
         permission: "Escolha uma permissão",
         status: false,
-        createdAt: "12/12/2024",
-        updatedAt: "12/12/2024",
+        createdAt: "",
+        updatedAt: "",
     })
 
     const [password, setPassword] = useState("")
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                if (id && id !== "new") {
+                    const response = await axios.get(
+                        `${process.env.EXPO_PUBLIC_API_URL}/users/${id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${await SecureStore.getItemAsync(
+                                    "jwt_token"
+                                )}`,
+                            },
+                        }
+                    )
+                    setUser(response.data)
+                }
+            } catch (error: any) {
+                Alert.alert(
+                    "Erro",
+                    "Não foi possível carregar os dados do usuário"
+                )
+                console.error(error)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchUser()
+    }, [id])
+
     const toggleStatus = () =>
         setUser((prev) => ({ ...prev, status: !prev.status }))
 
-    const handleSave = () => {
-        Alert.alert("Usuário salvo com sucesso!")
+    const handleSave = async () => {
+        if (password !== passwordConfirmation) {
+            Alert.alert("Erro", "As senhas não coincidem")
+            return
+        }
+
+        try {
+            if (id === "new") {
+                await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, {
+                    ...user,
+                    password,
+                })
+                Alert.alert("Sucesso", "Usuário criado com sucesso!")
+            } else {
+                await axios.put(
+                    `${process.env.EXPO_PUBLIC_API_URL}/users/${id}`,
+                    {
+                        ...user,
+                        password: password || undefined,
+                    }
+                )
+                Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
+            }
+            router.back()
+        } catch (error: any) {
+            Alert.alert(
+                "Erro",
+                error.response?.data?.message || "Erro ao salvar usuário"
+            )
+            console.error(error)
+        }
+    }
+
+    if (isLoading && id !== "new") {
+        return (
+            <View style={styles.container}>
+                <Text>Carregando...</Text>
+            </View>
+        )
     }
 
     const handleCancel = () => {
@@ -189,6 +260,13 @@ const UserForm: React.FC = () => {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
+        padding: 20,
+    },
     scrollContainer: {
         padding: 20,
         paddingBottom: 40,
@@ -273,5 +351,3 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 })
-
-export default UserForm
