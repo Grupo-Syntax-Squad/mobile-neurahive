@@ -18,7 +18,7 @@ export default function Accesses() {
     const visibleAccesses = showMore ? accessData : accessData.slice(0, 4);
 
     const handleCreateAccess = () => {
-        console.log("Novo acesso criado:", accessTitle);
+        console.log("Novo grupo criado:", accessTitle);
     };
 
     return (
@@ -30,7 +30,7 @@ export default function Accesses() {
                 <Text style={globalStyles.orangeText}>Título</Text>
                 <TextInput
                     style={globalStyles.input}
-                    placeholder="Digite o título do acesso"
+                    placeholder="Digite o título do grupo"
                     value={accessTitle}
                     onChangeText={setAccessTitle}
                     autoCapitalize="none"
@@ -41,13 +41,13 @@ export default function Accesses() {
                 style={[globalStyles.orangeButton, styles.createButton]}
                 onPress={handleCreateAccess}
             >
-                <Text style={globalStyles.WhiteText}>Criar acesso</Text>
+                <Text style={globalStyles.WhiteText}>Criar grupo</Text>
             </TouchableOpacity>
 
             <View style={styles.divider} />
 
             <View style={styles.accessHeader}>
-                <Text style={globalStyles.orangeText}>Seus acessos</Text>
+                <Text style={globalStyles.orangeText}>Seus grupos</Text>
                 <TouchableOpacity onPress={() => setShowMore(!showMore)}>
                     <Text style={styles.showMoreText}>
                         {showMore ? "Mostrar menos" : "Exibir mais"}

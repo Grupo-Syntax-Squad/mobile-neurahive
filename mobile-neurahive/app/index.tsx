@@ -8,8 +8,7 @@ import { useAuth } from '@/context/authContext';
 import WithRole from '@/components/WithRole';
 import { Role } from '@/enum/Role';
 import { HomeActionButton } from '@/types/HomeActionButton';
-
-
+import { MaterialIcons } from '@expo/vector-icons';
 
 export function HomeScreen() {
   const actionButtons: HomeActionButton[] = [
@@ -70,6 +69,24 @@ export function HomeScreen() {
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={styles.scrollContainer}
     >
+    
+      <View style={styles.logoutContainer}>
+        {
+          isAuthenticated ? (
+            <TouchableOpacity style={styles.logoutButton} onPress={() => logout()}>
+              <MaterialIcons name="logout" size={24} color="white" />
+              <Text style={globalStyles.WhiteText}>Sair</Text>
+            </TouchableOpacity>
+          ) : (
+            <ActionButton
+              title={'Login'}
+              onPress={() => router.push('/Auth/login')}
+              icon={require('../assets/images/permission-icon.png')}
+            />
+          )
+      }
+      </View>
+    
       <View style={styles.titleContainer}>
         <Text style={styles.grayText}>Olá, Usuário!</Text>
         <Image 
@@ -83,24 +100,10 @@ export function HomeScreen() {
           />
           <Text style={styles.grayText}>bem-vindo(a) ao </Text>
           <Text style={globalStyles.orangeText}>NeuraHive!</Text>
+          
         </View>
       </View>
       <Text>v1.0.0</Text>
-      {
-        isAuthenticated ? (
-          <ActionButton
-            title={'Logout'}
-            onPress={() => logout()}
-            icon={require('../assets/images/permission-icon.png')}
-          />
-        ) : (
-          <ActionButton
-            title={'Login'}
-            onPress={() => router.push('/Auth/login')}
-            icon={require('../assets/images/permission-icon.png')}
-          />
-        )
-      }
       <View style={styles.division}></View>
 
       <View style={styles.actionsSection}>
@@ -143,6 +146,10 @@ const ActionButton: React.FC<{
 );
 
 const styles = StyleSheet.create({
+  logoutContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
   flexColumn: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -200,6 +207,17 @@ const styles = StyleSheet.create({
     color: '#8A8888',
     fontSize: 12,
     marginVertical: 5,
+  },
+  logoutButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    margin: 10,
+    backgroundColor: '#ff0000',
+    padding: 10,
+    borderRadius: 100,
+    alignItems: 'center',
+    color: 'white',
+    width: 70,
   },
   divider: {
     height: 9,
