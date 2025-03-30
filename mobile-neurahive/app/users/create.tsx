@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { router } from 'expo-router';
-
+import { User } from '@/types/User';
 
 export default function CreateUser() {
   const [name, setName] = useState('');

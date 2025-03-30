@@ -7,15 +7,9 @@ import { ConfigurationAlert } from '@/components/ConfigurationAlert';
 import { useAuth } from '@/context/authContext';
 import WithRole from '@/components/WithRole';
 import { Role } from '@/enum/Role';
+import { HomeActionButton } from '@/types/HomeActionButton';
 
-type HomeActionButton = {
-  id: string;
-  title: string;
-  icon: any;
-  route: string;
-  testID?: string;
-  allowedRoles: number[]
-};
+
 
 export function HomeScreen() {
   const actionButtons: HomeActionButton[] = [

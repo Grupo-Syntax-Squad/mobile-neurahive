@@ -13,7 +13,7 @@ const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const { login, token } = useAuth();
 
   const handleLogin = async () => {
     try {
