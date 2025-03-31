@@ -39,7 +39,12 @@ export default function Agents() {
                 <Text>Base de Conhecimento</Text>
             </Link>
             <TouchableOpacity style={globalStyles.orangeButton}>
-                <Text style={globalStyles.WhiteText}>Criar Novo Agente</Text>
+                <Text
+                    style={globalStyles.WhiteText}
+                    onPress={() => router.replace("/Agents/create")}
+                >
+                    Criar Novo Agente
+                </Text>
             </TouchableOpacity>
             <View style={globalStyles.agentContainer}>
                 <TouchableOpacity

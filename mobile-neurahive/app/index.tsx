@@ -6,7 +6,7 @@ import {
     ScrollView,
     TouchableOpacity,
 } from "react-native"
-import React from "react"
+import React, { useEffect } from "react"
 import { router } from "expo-router"
 import { globalStyles } from "./styles/globalStyles"
 import { NewsSection } from "@/components/NewsSection"
@@ -15,6 +15,7 @@ import { useAuth } from "@/context/authContext"
 import WithRole from "@/components/WithRole"
 import { Role } from "@/enum/Role"
 import { HomeActionButton } from "@/types/HomeActionButton"
+import * as SecureStore from "expo-secure-store"
 
 export function HomeScreen() {
     const { logout, isAuthenticated, login } = useAuth()
@@ -71,7 +72,6 @@ export function HomeScreen() {
 
     useEffect(() => {
         const verify_token = async () => {
-            console.log(Role.ADMIN, Role.CLIENT, Role.CURATOR)
             const token = await SecureStore.getItem("jwt_token")
             if (token) login(token)
             else router.replace("/Auth/login")

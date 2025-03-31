@@ -163,4 +163,14 @@ export const globalStyles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
     },
+    bold: {
+        fontWeight: "bold",
+    },
+    textMuted: {
+        color: "#6B6E71B2",
+    },
+    textError: {
+        color: "red",
+        fontSize: 13,
+    },
 })

@@ -49,6 +49,10 @@ export default function Layout() {
                     options={{ title: "Agente" }}
                 />
                 <Stack.Screen
+                    name="Agents/create"
+                    options={{ title: "Nova agente de IA" }}
+                />
+                <Stack.Screen
                     name="Chat/page"
                     options={{ title: "Selecione o Agente" }}
                 />
