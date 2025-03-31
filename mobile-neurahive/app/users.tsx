@@ -11,21 +11,23 @@ import { globalStyles } from "./styles/globalStyles"
 import React, { useEffect, useState } from "react"
 import ProtectedRoute from "@/components/ProtectedRoute"
 import { Role } from "@/enum/Role"
-import axios from "axios"
 import { User } from "../types/User"
+import { useAxios } from "@/hooks/useAxios"
 
 export function Users() {
     const router = useRouter()
     const [users, setUsers] = useState<User[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const { get } = useAxios();
 
     const fetchUsers = async () => {
         try {
             setLoading(true)
-            const response = await axios.get<User[]>(
-                `${process.env.EXPO_PUBLIC_API_URL}/users`
+            const response = await get(
+                `/users/`
             )
+            console.log(response.data)
             setUsers(response.data)
         } catch (err) {
             setError("Erro ao carregar usuários")
@@ -99,8 +101,9 @@ const UserCard: React.FC<{ user: User }> = ({ user }) => (
     <View style={styles.userContainer}>
         <Text style={styles.userName}>{user.name}</Text>
         <Text style={styles.userEmail}>{user.email}</Text>
+        <Text style={styles.userName}>{user.id}</Text>
         <TouchableOpacity style={styles.userDetailButton}>
-            <Link href={`/users/${user.id}`}>
+            <Link href={{pathname: '/users/[id]', params: {id: user.id}}}>
                 <Text style={globalStyles.WhiteText}>Detalhes</Text>
             </Link>
         </TouchableOpacity>
@@ -164,16 +167,3 @@ const styles = StyleSheet.create({
 })
 
 export default Users
-
-export default Users
-
-function setLoading(arg0: boolean) {
-    throw new Error("Function not implemented.")
-}
-function setError(arg0: string) {
-    throw new Error("Function not implemented.")
-}
-
-function setUsers(data: any) {
-    throw new Error("Function not implemented.")
-}
