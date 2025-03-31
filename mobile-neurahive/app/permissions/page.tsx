@@ -1,13 +1,19 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from 'react-native';
-import Checkbox from 'expo-checkbox';
-import React, { useState } from 'react';
-import { Link } from 'expo-router';
-import { globalStyles } from "../styles/globalStyles";
+import {
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    TouchableOpacity,
+    ScrollView,
+} from "react-native"
+import Checkbox from "expo-checkbox"
+import React, { useState } from "react"
+import { globalStyles } from "../styles/globalStyles"
 
 export default function Permissions() {
-    const [permissionTitle, setPermissionTitle] = useState("");
-    const [selectedAccesses, setSelectedAccesses] = useState<string[]>([]);
-    
+    const [permissionTitle, setPermissionTitle] = useState("")
+    const [selectedAccesses, setSelectedAccesses] = useState<string[]>([])
+
     const accesses = [
         "Recursos Humanos",
         "Estoque",
@@ -17,19 +23,21 @@ export default function Permissions() {
         "SAC",
         "Financeiro",
         "Comercial",
-        "Manutenção"
-    ];
+        "Manutenção",
+    ]
 
     const toggleAccess = (access: string) => {
         if (selectedAccesses.includes(access)) {
-            setSelectedAccesses(selectedAccesses.filter(item => item !== access));
+            setSelectedAccesses(
+                selectedAccesses.filter((item) => item !== access)
+            )
         } else {
-            setSelectedAccesses([...selectedAccesses, access]);
+            setSelectedAccesses([...selectedAccesses, access])
         }
-    };
+    }
 
     return (
-        <ScrollView 
+        <ScrollView
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.scrollContainer}
         >
@@ -43,8 +51,12 @@ export default function Permissions() {
             />
 
             <View style={styles.accessSection}>
-                <Text style={globalStyles.orangeText}>Selecione os acessos da permissão</Text>
-                <Text style={styles.selectedText}>Selecionados: {selectedAccesses.length}</Text>
+                <Text style={globalStyles.orangeText}>
+                    Selecione os acessos da permissão
+                </Text>
+                <Text style={styles.selectedText}>
+                    Selecionados: {selectedAccesses.length}
+                </Text>
             </View>
 
             <View style={styles.accessList}>
@@ -53,22 +65,28 @@ export default function Permissions() {
                         <Checkbox
                             value={selectedAccesses.includes(access)}
                             onValueChange={() => toggleAccess(access)}
-                            color={selectedAccesses.includes(access) ? '#4630EB' : undefined}
+                            color={
+                                selectedAccesses.includes(access)
+                                    ? "#4630EB"
+                                    : undefined
+                            }
                         />
                         <Text style={styles.accessText}>{access}</Text>
                     </View>
                 ))}
             </View>
 
-            <TouchableOpacity style={[globalStyles.orangeButton, styles.createButton]}>
+            <TouchableOpacity
+                style={[globalStyles.orangeButton, styles.createButton]}
+            >
                 <Text style={globalStyles.WhiteText}>Criar Permissão</Text>
             </TouchableOpacity>
         </ScrollView>
-    );
+    )
 }
 const styles = StyleSheet.create({
     boxTitle: {
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginBottom: 5,
     },
     boxText: {
@@ -76,24 +94,24 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 1,
-        backgroundColor: '#ccc',
+        backgroundColor: "#ccc",
         marginVertical: 20,
     },
     accessSection: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginBottom: 15,
     },
     selectedText: {
-        color: '#666',
+        color: "#666",
     },
     accessList: {
         marginBottom: 20,
     },
     accessItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         marginBottom: 10,
     },
     accessText: {
@@ -106,4 +124,4 @@ const styles = StyleSheet.create({
     scrollContainer: {
         padding: 20,
     },
-});
+})
