@@ -7,27 +7,24 @@ import {
     ScrollView,
 } from "react-native"
 import { Link, useRouter } from "expo-router"
-import { globalStyles } from "./styles/globalStyles"
 import React, { useEffect, useState } from "react"
 import ProtectedRoute from "@/components/ProtectedRoute"
 import { Role } from "@/enum/Role"
-import { User } from "../types/User"
-import { useAxios } from "@/hooks/useAxios"
+import { useAxios } from "@/context/axiosContext"
+import { globalStyles } from "../styles/globalStyles"
+import { User } from "@/types/User"
 
 export function Users() {
     const router = useRouter()
     const [users, setUsers] = useState<User[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const { get } = useAxios();
+    const { get } = useAxios()
 
     const fetchUsers = async () => {
         try {
             setLoading(true)
-            const response = await get(
-                `/users/`
-            )
-            console.log(response.data)
+            const response = await get(`/users/`)
             setUsers(response.data)
         } catch (err) {
             setError("Erro ao carregar usuários")
@@ -39,6 +36,7 @@ export function Users() {
 
     useEffect(() => {
         fetchUsers()
+        console.log(users)
     }, [])
 
     const actionButtons = [
@@ -68,7 +66,7 @@ export function Users() {
                 <View style={globalStyles.header}>
                     <Text>Seus Usuários</Text>
                     <Image
-                        source={require("../assets/images/usuarios.png")}
+                        source={require("../../assets/images/usuarios.png")}
                     ></Image>
                 </View>
 
@@ -103,7 +101,7 @@ const UserCard: React.FC<{ user: User }> = ({ user }) => (
         <Text style={styles.userEmail}>{user.email}</Text>
         <Text style={styles.userName}>{user.id}</Text>
         <TouchableOpacity style={styles.userDetailButton}>
-            <Link href={{pathname: '/users/[id]', params: {id: user.id}}}>
+            <Link href={{ pathname: "/users/[id]", params: { id: user.id } }}>
                 <Text style={globalStyles.WhiteText}>Detalhes</Text>
             </Link>
         </TouchableOpacity>

@@ -97,8 +97,8 @@ export const globalStyles = StyleSheet.create({
         elevation: 10,
     },
     agentBox: {
-        width: 150,
-        height: 150,
+        width: "100%",
+        height: 50,
         backgroundColor: "white",
         justifyContent: "center",
         alignItems: "center",
