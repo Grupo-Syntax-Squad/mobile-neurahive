@@ -10,13 +10,14 @@ import {
     KeyboardAvoidingView,
     Platform,
     Alert,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from "react-native"
 import { useLocalSearchParams, useRouter } from "expo-router"
-import { Picker } from "@react-native-picker/picker"
 import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
-import axios from "axios"
-import * as SecureStore from "expo-secure-store"
+import { useAxios } from "@/hooks/useAxios"
+import Checkbox from "expo-checkbox"
 
 const FormField: React.FC<{ label: string; children: React.ReactNode }> = ({
     label,
@@ -29,26 +30,36 @@ const FormField: React.FC<{ label: string; children: React.ReactNode }> = ({
 )
 
 type UserData = {
+    id: number
     name: string
     email: string
-    permission: string
-    status: boolean
+    role: number[]
+    enabled: boolean
     createdAt: string
     updatedAt: string
+    password: string
 }
 
-const UserForm: React.FC = () => {
+const UserDetails: React.FC = () => {
     const router = useRouter()
+    const { get, put } = useAxios()
     const { id } = useLocalSearchParams()
     const [isLoading, setIsLoading] = useState(true)
 
+    const [roles, setRoles] = useState({
+        admin: false,
+        curator: false,
+    })
+
     const [user, setUser] = useState<UserData>({
+        id: Number(id),
         name: "",
         email: "",
-        permission: "Escolha uma permissão",
-        status: false,
+        role: [],
+        enabled: false,
         createdAt: "",
         updatedAt: "",
+        password: ""
     })
 
     const [password, setPassword] = useState("")
@@ -57,19 +68,14 @@ const UserForm: React.FC = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                if (id && id !== "new") {
-                    const response = await axios.get(
-                        `${process.env.EXPO_PUBLIC_API_URL}/users/${id}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${await SecureStore.getItemAsync(
-                                    "jwt_token"
-                                )}`,
-                            },
-                        }
-                    )
-                    setUser(response.data)
+                if (id) {
+                    const response = await get(`/users/${id}`)
+                    setUser(response.data[0])
+                    const userRoles: number[] = response.data[0].role
+                    setRoles({admin: userRoles.includes(1), curator: userRoles.includes(2)})
+                    setIsLoading(false)
                 }
+
             } catch (error: any) {
                 Alert.alert(
                     "Erro",
@@ -85,7 +91,15 @@ const UserForm: React.FC = () => {
     }, [id])
 
     const toggleStatus = () =>
-        setUser((prev) => ({ ...prev, status: !prev.status }))
+        setUser((prev) => ({ ...prev, enabled: !prev.enabled }))
+
+    const getRoles = () => {
+        const selectedRoles: number[] = []
+        if (roles.admin) selectedRoles.push(1)
+        if (roles.curator) selectedRoles.push(2)
+        selectedRoles.push(3)
+        return selectedRoles
+    }
 
     const handleSave = async () => {
         if (password !== passwordConfirmation) {
@@ -94,23 +108,16 @@ const UserForm: React.FC = () => {
         }
 
         try {
-            if (id === "new") {
-                await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, {
-                    ...user,
-                    password,
-                })
-                Alert.alert("Sucesso", "Usuário criado com sucesso!")
-            } else {
-                await axios.put(
-                    `${process.env.EXPO_PUBLIC_API_URL}/users/${id}`,
-                    {
-                        ...user,
-                        password: password || undefined,
-                    }
-                )
-                Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
-            }
-            router.back()
+            console.log(user)
+            await put(`/users/`, {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: getRoles(),
+                password: password
+            })
+            Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
+            router.replace('/users')
         } catch (error: any) {
             Alert.alert(
                 "Erro",
@@ -132,129 +139,130 @@ const UserForm: React.FC = () => {
         router.back()
     }
 
-    const permissionOptions = [
-        "Recursos Humanos",
-        "Administrativo",
-        "Financeiro",
-    ]
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{ flex: 1 }}
         >
-            <ScrollView
-                contentContainerStyle={styles.scrollContainer}
-                keyboardShouldPersistTaps="handled"
-            >
-                <View style={styles.avatarSection}>
-                    <Text style={globalStyles.textCenter}>{user.name}</Text>
-                    <View style={globalStyles.imageContainer}>
-                        <Image
-                            source={require("../../assets/images/bees-background.png")}
-                        />
-                    </View>
-                </View>
-
-                <View style={styles.userMeta}>
-                    <Text style={styles.metaItem}>
-                        Atualizado em: {user.updatedAt}
-                    </Text>
-                    <Text style={styles.metaItem}>
-                        Criado em: {user.createdAt}
-                    </Text>
-                    <Text
-                        style={[
-                            styles.metaItem,
-                            user.status
-                                ? styles.activeStatus
-                                : styles.inactiveStatus,
-                        ]}
-                    >
-                        {user.status ? "Ativo" : "Inativo"}
-                    </Text>
-                </View>
-
-                <FormField label="Nome">
-                    <CustomInput
-                        placeholder="Nome"
-                        value={user.name}
-                        onChangeText={(text) =>
-                            setUser((prev) => ({ ...prev, name: text }))
-                        }
-                    />
-                </FormField>
-
-                <FormField label="E-mail">
-                    <CustomInput
-                        placeholder="E-mail"
-                        keyboardType="email-address"
-                        value={user.email}
-                        onChangeText={(text) =>
-                            setUser((prev) => ({ ...prev, email: text }))
-                        }
-                    />
-                </FormField>
-
-                <FormField label="Permissão do Usuário">
-                    <Picker
-                        selectedValue={user.permission}
-                        onValueChange={(itemValue) =>
-                            setUser((prev) => ({
-                                ...prev,
-                                permission: itemValue,
-                            }))
-                        }
-                        style={styles.picker}
-                    >
-                        {permissionOptions.map((option, index) => (
-                            <Picker.Item
-                                key={index}
-                                label={option}
-                                value={option}
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <ScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <View style={styles.avatarSection}>
+                        <Text style={globalStyles.textCenter}>{user.name}</Text>
+                        <View style={globalStyles.imageContainer}>
+                            <Image
+                                source={require("../../assets/images/bees-background.png")}
                             />
-                        ))}
-                    </Picker>
-                </FormField>
+                        </View>
+                    </View>
 
-                <FormField label="Senha">
-                    <CustomInput
-                        placeholder="Senha"
-                        secureTextEntry
-                        value={password}
-                        onChangeText={setPassword}
-                    />
-                </FormField>
+                    <View style={styles.userMeta}>
+                        <Text style={styles.metaItem}>
+                            Atualizado em: {user.updatedAt}
+                        </Text>
+                        <Text style={styles.metaItem}>
+                            Criado em: {user.createdAt}
+                        </Text>
+                        <Text
+                            style={[
+                                styles.metaItem,
+                                user.enabled
+                                    ? styles.activeStatus
+                                    : styles.inactiveStatus,
+                            ]}
+                        >
+                            {user.enabled ? "Ativo" : "Inativo"}
+                        </Text>
+                    </View>
 
-                <FormField label="Repita a Senha">
-                    <CustomInput
-                        placeholder="Repita a Senha"
-                        secureTextEntry
-                        value={passwordConfirmation}
-                        onChangeText={setPasswordConfirmation}
-                    />
-                </FormField>
+                    <FormField label="Nome">
+                        <CustomInput
+                            placeholder="Nome"
+                            value={user.name}
+                            onChangeText={(text) =>
+                                setUser((prev) => ({ ...prev, name: text }))
+                            }
+                        />
+                    </FormField>
 
-                <View style={styles.switchContainer}>
-                    <Text style={globalStyles.orangeText}>Status</Text>
-                    <Switch value={user.status} onValueChange={toggleStatus} />
-                </View>
+                    <FormField label="E-mail">
+                        <CustomInput
+                            placeholder="E-mail"
+                            keyboardType="email-address"
+                            value={user.email}
+                            onChangeText={(text) =>
+                                setUser((prev) => ({ ...prev, email: text }))
+                            }
+                        />
+                    </FormField>
 
-                <View style={styles.actionsContainer}>
-                    <TouchableOpacity
-                        onPress={handleSave}
-                        style={styles.saveButton}
-                    >
-                        <Text style={styles.saveButtonText}>Salvar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={handleCancel}
-                        style={styles.cancelButton}
-                    >
-                        <Text style={styles.cancelButtonText}>Cancelar</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+                    <FormField label="Permissões do Usuário">
+                        <View style={[styles.checkboxContainer, styles.marginTop10]}>
+                            <Checkbox
+                                style={styles.checkbox}
+                                value={roles.admin}
+                                onValueChange={(value) =>
+                                    setRoles({ ...roles, admin: value })
+                                }
+                                color={roles.admin ? "#4630EB" : undefined}
+                            />
+                            <Text style={styles.checkboxLabel}>Administrador</Text>
+                        </View>
+                        <View style={styles.checkboxContainer}>
+                            <Checkbox
+                                style={styles.checkbox}
+                                value={roles.curator}
+                                onValueChange={(value) =>
+                                    setRoles({ ...roles, curator: value })
+                                }
+                                color={roles.curator ? "#4630EB" : undefined}
+                            />
+                            <Text style={styles.checkboxLabel}>Curador</Text>
+                        </View>
+                    </FormField>
+                    
+
+                    <FormField label="Senha">
+                        <CustomInput
+                            placeholder="Senha"
+                            secureTextEntry
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                    </FormField>
+
+                    <FormField label="Repita a Senha">
+                        <CustomInput
+                            placeholder="Repita a Senha"
+                            secureTextEntry
+                            value={passwordConfirmation}
+                            onChangeText={setPasswordConfirmation}
+                        />
+                    </FormField>
+
+                    <View style={styles.switchContainer}>
+                        <Text style={globalStyles.orangeText}>Status</Text>
+                        <Switch value={user.enabled} onValueChange={toggleStatus} />
+                    </View>
+
+                    <View style={styles.actionsContainer}>
+                        <TouchableOpacity
+                            onPress={handleSave}
+                            style={styles.saveButton}
+                        >
+                            <Text style={styles.saveButtonText}>Salvar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={handleCancel}
+                            style={styles.cancelButton}
+                        >
+                            <Text style={styles.cancelButtonText}>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     )
 }
@@ -266,6 +274,25 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#f5f5f5",
         padding: 20,
+    },
+    checkboxContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 8,
+    },
+    checkbox: {
+        width: 20,
+        height: 20,
+        borderWidth: 1,
+        borderColor: "#000",
+        borderRadius: 4,
+        marginRight: 10,
+    },
+    checkboxLabel: {
+        fontSize: 14,
+    },
+    marginTop10: {
+        marginTop: 10
     },
     scrollContainer: {
         padding: 20,
@@ -351,3 +378,5 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 })
+
+export default UserDetails

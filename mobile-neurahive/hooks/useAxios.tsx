@@ -11,8 +11,8 @@ export const useAxios = () => {
         headers: { Authorization: `Bearer ${token}` },
     })
 
-    const get = (url: string, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.get(url, config)
+    const get = async (url: string, config?: AxiosRequestConfig<any> | undefined) => {
+        return (await client.get(url, config)).data
     }
     const post = (
         url: string,
