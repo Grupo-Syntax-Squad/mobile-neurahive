@@ -27,7 +27,6 @@ export function Users() {
             const response = await get(
                 `/users/`
             )
-            console.log(response.data)
             setUsers(response.data)
         } catch (err) {
             setError("Erro ao carregar usuários")

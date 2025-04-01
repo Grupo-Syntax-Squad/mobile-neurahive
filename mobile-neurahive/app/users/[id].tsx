@@ -18,16 +18,7 @@ import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
 import { useAxios } from "@/hooks/useAxios"
 import Checkbox from "expo-checkbox"
-
-const FormField: React.FC<{ label: string; children: React.ReactNode }> = ({
-    label,
-    children,
-}) => (
-    <View style={styles.formField}>
-        <Text style={globalStyles.orangeText}>{label}</Text>
-        {children}
-    </View>
-)
+import FormField from "@/components/FormField"
 
 type UserData = {
     id: number
@@ -327,10 +318,7 @@ const styles = StyleSheet.create({
     inactiveStatus: {
         backgroundColor: "#dc3545",
     },
-    formField: {
-        marginBottom: 15,
-        width: "100%",
-    },
+
     picker: {
         width: "100%",
         height: 50,

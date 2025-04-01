@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
     StyleSheet,
     Text,
@@ -10,27 +10,48 @@ import {
 } from "react-native"
 import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
-import { Picker } from "@react-native-picker/picker"
-import axios from "axios"
-import * as SecureStore from "expo-secure-store"
 import { router } from "expo-router"
-import { User } from "@/types/User"
+import FormField from "@/components/FormField"
+import Checkbox from "expo-checkbox"
+import { Agent } from "@/types/Agent"
+import { useAxios } from "@/hooks/useAxios"
 
 export default function CreateUser() {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
-    const [selectedValue, setSelectedValue] = useState("Escolha uma permissão")
+    const [agents, setAgents] = useState<Agent[]>([])
+    const { get, post } = useAxios()
+    const[selectedAgents, setSelectedAgents] = useState<number[]>([])
+    const [roles, setRoles] = useState({
+        admin: false,
+        curator: false,
+    })
+
+    useEffect(() => {
+        const fetchAgents = async () => {
+            const response = await get("/agents/")
+            console.log(response.data)
+        }
+    }, [])
+
+    const getRoles = () => {
+        const selectedRoles: number[] = []
+        if (roles.admin) selectedRoles.push(1)
+        if (roles.curator) selectedRoles.push(2)
+        selectedRoles.push(3)
+        return selectedRoles
+    }
 
     const handleCreateUser = async () => {
         try {
-            const response = await axios.post(
-                `${process.env.EXPO_PUBLIC_API_URL}/users`,
-                {
-                    name,
-                    email,
-                    password,
+            const response = await post(
+                `/users`, {
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: getRoles()
                 }
             )
 
@@ -68,16 +89,54 @@ export default function CreateUser() {
                 value={email}
                 onChangeText={setEmail}
             />
-            <Text style={globalStyles.orangeText}>Permissão do Usuário</Text>
-            <Picker
-                style={styles.input}
-                selectedValue={selectedValue}
-                onValueChange={(itemValue) => setSelectedValue(itemValue)}
-            >
-                <Picker.Item label="Recursos Humanos" />
-                <Picker.Item label="Administrativo" />
-                <Picker.Item label="Financeiro" />
-            </Picker>
+            <FormField label="Permissões do Usuário">
+                        <View style={[styles.checkboxContainer, styles.marginTop10]}>
+                            <Checkbox
+                                style={styles.checkbox}
+                                value={roles.admin}
+                                onValueChange={(value) =>
+                                    setRoles({ ...roles, admin: value })
+                                }
+                                color={roles.admin ? "#4630EB" : undefined}
+                            />
+                            <Text style={styles.checkboxLabel}>Administrador</Text>
+                        </View>
+                        <View style={styles.checkboxContainer}>
+                            <Checkbox
+                                style={styles.checkbox}
+                                value={roles.curator}
+                                onValueChange={(value) =>
+                                    setRoles({ ...roles, curator: value })
+                                }
+                                color={roles.curator ? "#4630EB" : undefined}
+                            />
+                            <Text style={styles.checkboxLabel}>Curador</Text>
+                        </View>
+                    </FormField>
+            {/*<FormField label="Agentes">
+                <View style={[styles.checkboxContainer, styles.marginTop10]}>
+                    { agents.map((agent) => {
+                        return <>
+                            <Checkbox
+                                style={styles.checkbox}
+                                value={selectedAgents?.includes(agent.id)}
+                                onValueChange={(value) => 
+                                    setSelectedAgents((prevItems) => {
+                                        if(prevItems.includes(agent.id)) {
+                                            return prevItems.filter(element => element !== agent.id)
+                                        } else {
+                                            return [...prevItems, agent.id];
+                                        }
+                                    })
+                                }
+                                color={selectedAgents?.includes(agent.id) ? "#4630EB" : undefined}
+                            />
+                            <Text style={styles.checkboxLabel}>{agent.name}</Text>
+                        </>
+                    })}
+                </View>
+            </FormField>
+            */}
             <Text style={globalStyles.orangeText}>Senha</Text>
             <CustomInput
                 placeholder="Senha"
@@ -130,5 +189,24 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 18,
         fontWeight: "bold",
+    },
+    checkboxContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 8,
+    },
+    checkbox: {
+        width: 20,
+        height: 20,
+        borderWidth: 1,
+        borderColor: "#000",
+        borderRadius: 4,
+        marginRight: 10,
+    },
+    checkboxLabel: {
+        fontSize: 14,
+    },
+    marginTop10: {
+        marginTop: 10
     },
 })
