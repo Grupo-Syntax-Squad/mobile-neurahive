@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import {
     StyleSheet,
     Text,
-    TextInput,
     TouchableOpacity,
     View,
     Image,
@@ -35,7 +34,7 @@ export default function CreateUser() {
             )
 
             Alert.alert("Sucesso", "Usuário criado com sucesso!")
-            router.replace("/users")
+            router.replace("/users/page")
         } catch (error: any) {
             console.log(error)
             Alert.alert(

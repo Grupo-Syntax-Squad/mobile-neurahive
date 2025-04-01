@@ -1,30 +1,48 @@
-import { Link, router, useRouter } from "expo-router"
-import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native"
+import { Link, useRouter } from "expo-router"
+import {
+    Image,
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    Alert,
+} from "react-native"
 import { globalStyles } from "../styles/globalStyles"
-import { useState } from "react"
-import axios from "axios"
-import { Agent } from "@/types/Agent"
+import { useEffect, useState } from "react"
+import { useAxios } from "@/context/axiosContext"
+import {
+    GetAgentResponse,
+    GetAgentResponseKeys,
+} from "@/interfaces/Services/Agent"
 
 export default function Agents() {
     const router = useRouter()
-    const [agents, setAgents] = useState<Agent[]>([])
+    const [agents, setAgents] = useState<GetAgentResponse[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-
+    const { get } = useAxios()
     const fetchAgents = async () => {
+        setLoading(true)
         try {
-            setLoading(true)
-            const response = await axios.get<Agent[]>(
-                `${process.env.EXPO_PUBLIC_API_URL}/agents`
-            )
-            setAgents(response.data)
-        } catch (err) {
-            setError("Erro ao carregar usuários")
-            console.error("Erro na requisição:", err)
+            const response = (await get("/agents/")).data
+            setAgents(response)
+        } catch (error) {
+            Alert.alert("Consultar agentes", "Erro ao consultar agentes")
         } finally {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        fetchAgents()
+    }, [])
+
+    if (loading)
+        return (
+            <View>
+                <Text>Consultando agentes...</Text>
+            </View>
+        )
 
     return (
         <View>
@@ -32,12 +50,12 @@ export default function Agents() {
                 <Text>Área de Agentes</Text>
                 <Image source={require("../../assets/images/agente1.png")} />
             </View>
-            <Link href="/#" style={globalStyles.middleButton}>
+            {/* <Link href="/#" style={globalStyles.middleButton}>
                 <Image
                     source={require("../../assets/images/base-de-conhecimento.png")}
                 />
                 <Text>Base de Conhecimento</Text>
-            </Link>
+            </Link> */}
             <TouchableOpacity style={globalStyles.orangeButton}>
                 <Text
                     style={globalStyles.WhiteText}
@@ -47,15 +65,20 @@ export default function Agents() {
                 </Text>
             </TouchableOpacity>
             <View style={globalStyles.agentContainer}>
-                <TouchableOpacity
-                    style={globalStyles.agentBox}
-                    onPress={() => router.push("/Agents/[id]")}
-                >
-                    <Image
-                        source={require("../../assets/images/apicultora.png")}
-                    />
-                    <Text>Ive</Text>
-                </TouchableOpacity>
+                {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
+                {agents.map((agent) => (
+                    <TouchableOpacity
+                        style={globalStyles.agentBox}
+                        onPress={() =>
+                            router.push(
+                                `/Agents/[${agent[GetAgentResponseKeys.ID]}]`
+                            )
+                        }
+                        key={agent[GetAgentResponseKeys.ID]}
+                    >
+                        <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
         </View>
     )

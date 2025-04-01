@@ -16,8 +16,8 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router"
 import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
-import { useAxios } from "@/hooks/useAxios"
 import Checkbox from "expo-checkbox"
+import { useAxios } from "@/context/axiosContext"
 
 const FormField: React.FC<{ label: string; children: React.ReactNode }> = ({
     label,
@@ -59,7 +59,7 @@ const UserDetails: React.FC = () => {
         enabled: false,
         createdAt: "",
         updatedAt: "",
-        password: ""
+        password: "",
     })
 
     const [password, setPassword] = useState("")
@@ -72,10 +72,12 @@ const UserDetails: React.FC = () => {
                     const response = await get(`/users/${id}`)
                     setUser(response.data[0])
                     const userRoles: number[] = response.data[0].role
-                    setRoles({admin: userRoles.includes(1), curator: userRoles.includes(2)})
+                    setRoles({
+                        admin: userRoles.includes(1),
+                        curator: userRoles.includes(2),
+                    })
                     setIsLoading(false)
                 }
-
             } catch (error: any) {
                 Alert.alert(
                     "Erro",
@@ -114,10 +116,10 @@ const UserDetails: React.FC = () => {
                 name: user.name,
                 email: user.email,
                 role: getRoles(),
-                password: password
+                password: password,
             })
             Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
-            router.replace('/users')
+            router.replace("/users/")
         } catch (error: any) {
             Alert.alert(
                 "Erro",
@@ -199,7 +201,12 @@ const UserDetails: React.FC = () => {
                     </FormField>
 
                     <FormField label="Permissões do Usuário">
-                        <View style={[styles.checkboxContainer, styles.marginTop10]}>
+                        <View
+                            style={[
+                                styles.checkboxContainer,
+                                styles.marginTop10,
+                            ]}
+                        >
                             <Checkbox
                                 style={styles.checkbox}
                                 value={roles.admin}
@@ -208,7 +215,9 @@ const UserDetails: React.FC = () => {
                                 }
                                 color={roles.admin ? "#4630EB" : undefined}
                             />
-                            <Text style={styles.checkboxLabel}>Administrador</Text>
+                            <Text style={styles.checkboxLabel}>
+                                Administrador
+                            </Text>
                         </View>
                         <View style={styles.checkboxContainer}>
                             <Checkbox
@@ -222,7 +231,6 @@ const UserDetails: React.FC = () => {
                             <Text style={styles.checkboxLabel}>Curador</Text>
                         </View>
                     </FormField>
-                    
 
                     <FormField label="Senha">
                         <CustomInput
@@ -244,7 +252,10 @@ const UserDetails: React.FC = () => {
 
                     <View style={styles.switchContainer}>
                         <Text style={globalStyles.orangeText}>Status</Text>
-                        <Switch value={user.enabled} onValueChange={toggleStatus} />
+                        <Switch
+                            value={user.enabled}
+                            onValueChange={toggleStatus}
+                        />
                     </View>
 
                     <View style={styles.actionsContainer}>
@@ -258,7 +269,9 @@ const UserDetails: React.FC = () => {
                             onPress={handleCancel}
                             style={styles.cancelButton}
                         >
-                            <Text style={styles.cancelButtonText}>Cancelar</Text>
+                            <Text style={styles.cancelButtonText}>
+                                Cancelar
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -292,7 +305,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     marginTop10: {
-        marginTop: 10
+        marginTop: 10,
     },
     scrollContainer: {
         padding: 20,
