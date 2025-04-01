@@ -16,9 +16,11 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router"
 import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
-import { useAxios } from "@/hooks/useAxios"
 import Checkbox from "expo-checkbox"
+import { useAxios } from "@/context/axiosContext"
 import FormField from "@/components/FormField"
+import MultiSelect from "@/components/MultiSelect"
+import { Agent } from "@/types/Agent"
 
 type UserData = {
     id: number
@@ -29,6 +31,7 @@ type UserData = {
     createdAt: string
     updatedAt: string
     password: string
+    agents: Agent[]
 }
 
 const UserDetails: React.FC = () => {
@@ -41,6 +44,8 @@ const UserDetails: React.FC = () => {
         admin: false,
         curator: false,
     })
+    const [agents, setAgents] = useState<Agent[]>([])
+    const[selectedAgents, setSelectedAgents] = useState<number[]>([])
 
     const [user, setUser] = useState<UserData>({
         id: Number(id),
@@ -50,23 +55,33 @@ const UserDetails: React.FC = () => {
         enabled: false,
         createdAt: "",
         updatedAt: "",
-        password: ""
+        password: "",
+        agents:[]
     })
 
     const [password, setPassword] = useState("")
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
 
     useEffect(() => {
+        const fetchAgents = async () => {
+            const response = await get("/agents/")
+            console.log(response.data)
+            setAgents(response.data)
+        }
+        fetchAgents()
         const fetchUser = async () => {
             try {
                 if (id) {
                     const response = await get(`/users/${id}`)
-                    setUser(response.data[0])
-                    const userRoles: number[] = response.data[0].role
-                    setRoles({admin: userRoles.includes(1), curator: userRoles.includes(2)})
+                    setUser(response.data)
+                    const userRoles: number[] = response.data.role
+                    setRoles({
+                        admin: userRoles.includes(1),
+                        curator: userRoles.includes(2),
+                    })                    
+                    setSelectedAgents(user.agents.map(agent => agent.id))
                     setIsLoading(false)
                 }
-
             } catch (error: any) {
                 Alert.alert(
                     "Erro",
@@ -105,10 +120,11 @@ const UserDetails: React.FC = () => {
                 name: user.name,
                 email: user.email,
                 role: getRoles(),
-                password: password
+                password: password,
+                agents: selectedAgents
             })
             Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
-            router.replace('/users')
+            router.replace("/users/")
         } catch (error: any) {
             Alert.alert(
                 "Erro",
@@ -190,7 +206,12 @@ const UserDetails: React.FC = () => {
                     </FormField>
 
                     <FormField label="Permissões do Usuário">
-                        <View style={[styles.checkboxContainer, styles.marginTop10]}>
+                        <View
+                            style={[
+                                styles.checkboxContainer,
+                                styles.marginTop10,
+                            ]}
+                        >
                             <Checkbox
                                 style={styles.checkbox}
                                 value={roles.admin}
@@ -199,7 +220,9 @@ const UserDetails: React.FC = () => {
                                 }
                                 color={roles.admin ? "#4630EB" : undefined}
                             />
-                            <Text style={styles.checkboxLabel}>Administrador</Text>
+                            <Text style={styles.checkboxLabel}>
+                                Administrador
+                            </Text>
                         </View>
                         <View style={styles.checkboxContainer}>
                             <Checkbox
@@ -213,7 +236,10 @@ const UserDetails: React.FC = () => {
                             <Text style={styles.checkboxLabel}>Curador</Text>
                         </View>
                     </FormField>
-                    
+                    <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
+                    <ScrollView style={{ flex: 1 }}>
+                        <MultiSelect data={agents} selectedItems={selectedAgents} setSelectedItems={setSelectedAgents}></MultiSelect>
+                    </ScrollView>
 
                     <FormField label="Senha">
                         <CustomInput
@@ -235,7 +261,10 @@ const UserDetails: React.FC = () => {
 
                     <View style={styles.switchContainer}>
                         <Text style={globalStyles.orangeText}>Status</Text>
-                        <Switch value={user.enabled} onValueChange={toggleStatus} />
+                        <Switch
+                            value={user.enabled}
+                            onValueChange={toggleStatus}
+                        />
                     </View>
 
                     <View style={styles.actionsContainer}>
@@ -249,7 +278,9 @@ const UserDetails: React.FC = () => {
                             onPress={handleCancel}
                             style={styles.cancelButton}
                         >
-                            <Text style={styles.cancelButtonText}>Cancelar</Text>
+                            <Text style={styles.cancelButtonText}>
+                                Cancelar
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -283,7 +314,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     marginTop10: {
-        marginTop: 10
+        marginTop: 10,
     },
     scrollContainer: {
         padding: 20,

@@ -2,14 +2,18 @@ import { Alert, Button, StyleSheet, Switch, Text, View } from "react-native"
 import { globalStyles } from "../styles/globalStyles"
 import CustomInput from "@/components/CustomInput"
 import { useState } from "react"
-import { Picker } from "@react-native-picker/picker"
 import * as DocumentPicker from "expo-document-picker"
-import { DocumentSelect } from "@/components/DocumentSelect"
 import { Access, AccessKeys } from "@/interfaces/Services/Access"
 import {
     KnowledgeBase,
     KnowledgeBaseKeys,
 } from "@/interfaces/Services/KnowledgeBase"
+import { useAxios } from "@/context/axiosContext"
+import {
+    PostAgentRequest,
+    PostAgentRequestKeys,
+} from "@/interfaces/Services/Agent"
+import { router } from "expo-router"
 
 enum FormKeys {
     NAME = "name",
@@ -92,6 +96,7 @@ export default function CreateAgent() {
         useState<KnowledgeBase[]>(MockKnowledgeBase)
     const [formErrors, setFormErrors] =
         useState<Record<FormKeys, string>>(defaultFormErrors)
+    const { post } = useAxios()
 
     const setName = (value: string): void => {
         setForm({ ...form, [FormKeys.NAME]: value })
@@ -114,18 +119,27 @@ export default function CreateAgent() {
         if (!form[FormKeys.NAME])
             customFormErrors[FormKeys.NAME] = "O nome do agente é obrigatório"
         else customFormErrors[FormKeys.NAME] = ""
-        console.log("Form errors:", customFormErrors)
         setFormErrors({ ...formErrors, ...customFormErrors })
         return customFormErrors
     }
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const customFormErrors = validateForm()
-
         if (Object.values(customFormErrors).some((value) => value !== "")) {
             return
         }
-
-        console.log("SUBMIT") // TODO: Make request to backend
+        try {
+            const request: PostAgentRequest = {
+                [PostAgentRequestKeys.NAME]: form[FormKeys.NAME],
+            }
+            await post("/agents/", request)
+        } catch (error) {
+            Alert.alert(
+                "Cadastrar agente",
+                "Erro ao cadastrar agente tente novamente"
+            )
+        } finally {
+            router.replace("/Agents/page")
+        }
     }
 
     const handlePickDocument = async () => {
@@ -159,7 +173,7 @@ export default function CreateAgent() {
                 onChangeText={setName}
                 error={formErrors[FormKeys.NAME]}
             />
-            <Text style={[globalStyles.orangeText, styles.inputText]}>
+            {/* <Text style={[globalStyles.orangeText, styles.inputText]}>
                 Acesso
             </Text>
             <Picker
@@ -232,7 +246,7 @@ export default function CreateAgent() {
                     label="Selecione o nível de cordialidade"
                     value={undefined}
                 />
-            </Picker>
+            </Picker> */}
             <View style={globalStyles.orangeButton} onTouchStart={handleSubmit}>
                 <Text style={[globalStyles.WhiteText, styles.inputText]}>
                     Criar

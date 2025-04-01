@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react"
 import {
     StyleSheet,
     Text,
-    TextInput,
     TouchableOpacity,
     View,
     Image,
     Alert,
+    SafeAreaView,
+    ScrollView,
 } from "react-native"
 import CustomInput from "../../components/CustomInput"
 import { globalStyles } from "../styles/globalStyles"
@@ -14,7 +15,8 @@ import { router } from "expo-router"
 import FormField from "@/components/FormField"
 import Checkbox from "expo-checkbox"
 import { Agent } from "@/types/Agent"
-import { useAxios } from "@/hooks/useAxios"
+import { useAxios } from "@/context/axiosContext"
+import MultiSelect from "@/components/MultiSelect"
 
 export default function CreateUser() {
     const [name, setName] = useState("")
@@ -33,7 +35,9 @@ export default function CreateUser() {
         const fetchAgents = async () => {
             const response = await get("/agents/")
             console.log(response.data)
+            setAgents(response.data)
         }
+        fetchAgents()
     }, [])
 
     const getRoles = () => {
@@ -51,12 +55,13 @@ export default function CreateUser() {
                     name: name,
                     email: email,
                     password: password,
-                    role: getRoles()
+                    role: getRoles(),
+                    selectedAgents
                 }
             )
 
             Alert.alert("Sucesso", "Usuário criado com sucesso!")
-            router.replace("/users")
+            router.replace("/users/page")
         } catch (error: any) {
             console.log(error)
             Alert.alert(
@@ -90,53 +95,33 @@ export default function CreateUser() {
                 onChangeText={setEmail}
             />
             <FormField label="Permissões do Usuário">
-                        <View style={[styles.checkboxContainer, styles.marginTop10]}>
-                            <Checkbox
-                                style={styles.checkbox}
-                                value={roles.admin}
-                                onValueChange={(value) =>
-                                    setRoles({ ...roles, admin: value })
-                                }
-                                color={roles.admin ? "#4630EB" : undefined}
-                            />
-                            <Text style={styles.checkboxLabel}>Administrador</Text>
-                        </View>
-                        <View style={styles.checkboxContainer}>
-                            <Checkbox
-                                style={styles.checkbox}
-                                value={roles.curator}
-                                onValueChange={(value) =>
-                                    setRoles({ ...roles, curator: value })
-                                }
-                                color={roles.curator ? "#4630EB" : undefined}
-                            />
-                            <Text style={styles.checkboxLabel}>Curador</Text>
-                        </View>
-                    </FormField>
-            {/*<FormField label="Agentes">
                 <View style={[styles.checkboxContainer, styles.marginTop10]}>
-                    { agents.map((agent) => {
-                        return <>
-                            <Checkbox
-                                style={styles.checkbox}
-                                value={selectedAgents?.includes(agent.id)}
-                                onValueChange={(value) => 
-                                    setSelectedAgents((prevItems) => {
-                                        if(prevItems.includes(agent.id)) {
-                                            return prevItems.filter(element => element !== agent.id)
-                                        } else {
-                                            return [...prevItems, agent.id];
-                                        }
-                                    })
-                                }
-                                color={selectedAgents?.includes(agent.id) ? "#4630EB" : undefined}
-                            />
-                            <Text style={styles.checkboxLabel}>{agent.name}</Text>
-                        </>
-                    })}
+                    <Checkbox
+                        style={styles.checkbox}
+                        value={roles.admin}
+                        onValueChange={(value) =>
+                            setRoles({ ...roles, admin: value })
+                        }
+                        color={roles.admin ? "#4630EB" : undefined}
+                    />
+                    <Text style={styles.checkboxLabel}>Administrador</Text>
+                </View>
+                <View style={styles.checkboxContainer}>
+                    <Checkbox
+                        style={styles.checkbox}
+                        value={roles.curator}
+                        onValueChange={(value) =>
+                            setRoles({ ...roles, curator: value })
+                        }
+                        color={roles.curator ? "#4630EB" : undefined}
+                    />
+                    <Text style={styles.checkboxLabel}>Curador</Text>
                 </View>
             </FormField>
-            */}
+            <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
+            <ScrollView style={{ flex: 1 }}>
+                <MultiSelect data={agents} selectedItems={selectedAgents} setSelectedItems={setSelectedAgents}></MultiSelect>
+            </ScrollView>
             <Text style={globalStyles.orangeText}>Senha</Text>
             <CustomInput
                 placeholder="Senha"
