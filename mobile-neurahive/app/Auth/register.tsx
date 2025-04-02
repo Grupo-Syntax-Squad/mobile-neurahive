@@ -13,6 +13,7 @@ import { Link } from "expo-router"
 import OrangeButton from "@/components/orangeButton"
 import { NeurahiveIcon } from "@/components/NeurahiveIcon"
 import { globalStyles } from "../styles/globalStyles"
+import Checkbox from "expo-checkbox"
 
 const RegisterScreen = () => {
     const [formData, setFormData] = useState({
@@ -26,6 +27,9 @@ const RegisterScreen = () => {
         email: "",
         password: "",
         passwordConfirmation: "",
+    })
+    const [acceptTermos, setacceptTermos] = useState({
+        accept: false,
     })
 
     const handleChange = (name: string, value: string) => {
@@ -150,6 +154,17 @@ const RegisterScreen = () => {
                     ) : null}
                 </View>
 
+                <View style={globalStyles.flexRow}>
+                    <Checkbox
+                        style={styles.checkbox}
+                        value={acceptTermos.accept}
+                        onValueChange={(value) =>
+                        setacceptTermos({ ...acceptTermos, accept: value })}
+                        color={acceptTermos.accept ? "#4630EB" : undefined}
+                    />
+                    <Text>Eu concordo com os <Link href="/Terms/page" style={styles.link}>Termos de Uso</Link></Text>
+                </View>
+
                 {/* Botão de Cadastro */}
                 <View style={styles.registerButton}>
                     <OrangeButton
@@ -184,6 +199,17 @@ const styles = StyleSheet.create({
     logoContainer: {
         alignItems: "center",
         marginBottom: 32,
+    },
+    checkbox: {
+        width: 20,
+        height: 20,
+        borderWidth: 1,
+        borderColor: "#000",
+        borderRadius: 4,
+        marginRight: 10,
+    },
+    link: {
+        color: 'blue'
     },
     title: {
         fontSize: 20,
