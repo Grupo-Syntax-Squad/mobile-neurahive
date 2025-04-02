@@ -64,6 +64,10 @@ export default function Layout() {
                         name="Chat/page"
                         options={{ title: "Selecione o Agente" }}
                     />
+                    <Stack.Screen
+                        name="Terms/page"
+                        options={{ title: "Termos de uso" }}
+                    />
                     <Stack.Screen name="Chat/[id]" options={{ title: "" }} />
                 </Stack>
             </AxiosProvider>
