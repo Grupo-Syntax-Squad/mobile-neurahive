@@ -166,5 +166,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-
+.expo
 app-example
