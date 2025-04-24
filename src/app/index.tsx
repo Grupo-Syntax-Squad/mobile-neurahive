@@ -36,14 +36,14 @@ export function HomeScreen() {
             testID: "agents-button",
             allowedRoles: [Role.ADMIN, Role.CURATOR, Role.CLIENT],
         },
-        // {
-        //     id: "3",
-        //     title: "Chat",
-        //     icon: require("../assets/images/chat.png"),
-        //     route: "/Chat/page",
-        //     testID: "chat-button",
-        //     allowedRoles: [Role.CLIENT],
-        // },
+        {
+            id: "3",
+            title: "Chat",
+            icon: require("../assets/images/chat.png"),
+            route: "/Chat/page",
+            testID: "chat-button",
+            allowedRoles: [Role.ADMIN],
+        },
         // {
         //     id: "4",
         //     title: "Configurações Iniciais",

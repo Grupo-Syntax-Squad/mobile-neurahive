@@ -1,6 +1,7 @@
 import { AuthProvider } from "@/context/authContext"
 import { AxiosProvider } from "@/context/axiosContext"
 import { Stack } from "expo-router"
+import { Image, View, Text } from "react-native";
 
 export default function Layout() {
     return (
@@ -64,7 +65,35 @@ export default function Layout() {
                         name="Chat/page"
                         options={{ title: "Selecione o Agente" }}
                     />
-                    <Stack.Screen name="Chat/[id]" options={{ title: "" }} />
+                    <Stack.Screen 
+                        name="Chat/[id]" 
+                        options={({ route }) => ({
+                            headerTitle: () => (
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image
+                                source={{ uri: "https://cdn-icons-png.flaticon.com/512/4712/4712038.png" }}
+                                style={{ 
+                                    width: 30, 
+                                    height: 30, 
+                                    borderRadius: 15, 
+                                    marginRight: 10 
+                                }}
+                                />
+                                <Text style={{ 
+                                color: 'white', 
+                                fontSize: 18, 
+                                fontWeight: 'bold' 
+                                }}>
+                                {route.params?.agentName || 'Agente'}
+                                </Text>
+                            </View>
+                            ),
+                            headerStyle: {
+                            backgroundColor: '#FCAF1F',
+                            },
+                            headerTintColor: '#fff',
+                        })}
+                        />
                 </Stack>
             </AxiosProvider>
         </AuthProvider>
