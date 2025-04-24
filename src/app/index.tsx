@@ -42,7 +42,7 @@ export function HomeScreen() {
             icon: require("../assets/images/chat.png"),
             route: "/Chat/page",
             testID: "chat-button",
-            allowedRoles: [Role.ADMIN],
+            allowedRoles: [Role.CLIENT],
         },
         // {
         //     id: "4",
