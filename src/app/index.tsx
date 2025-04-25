@@ -16,6 +16,8 @@ import WithRole from "@/components/WithRole"
 import { Role } from "@/enum/Role"
 import { HomeActionButton } from "@/types/HomeActionButton"
 import * as SecureStore from "expo-secure-store"
+import { Division } from "@/components/Division"
+import { MaterialIcons } from '@expo/vector-icons';
 
 export function HomeScreen() {
     const { logout, isAuthenticated, login } = useAuth()
@@ -42,7 +44,7 @@ export function HomeScreen() {
             icon: require("../assets/images/chat.png"),
             route: "/Chat/page",
             testID: "chat-button",
-            allowedRoles: [Role.CLIENT],
+            allowedRoles: [Role.ADMIN],
         },
         // {
         //     id: "4",
@@ -102,11 +104,11 @@ export function HomeScreen() {
             </View>
             <Text>v1.0.0</Text>
             {isAuthenticated ? (
-                <ActionButton
-                    title={"Logout"}
-                    onPress={() => logout()}
-                    icon={require("../assets/images/permission-icon.png")}
-                />
+                <TouchableOpacity
+                    style={styles.logoutButton}
+                    onPress={() => logout()}>
+                    <MaterialIcons name="exit-to-app" size={24} color="white" />
+                </TouchableOpacity>
             ) : (
                 <ActionButton
                     title={"Login"}
@@ -114,8 +116,7 @@ export function HomeScreen() {
                     icon={require("../assets/images/permission-icon.png")}
                 />
             )}
-            <View style={styles.division}></View>
-
+            <Division/>
             <View style={styles.actionsSection}>
                 <Text style={styles.sectionTitle}>
                     O que você deseja fazer hoje?
@@ -160,16 +161,20 @@ const ActionButton: React.FC<{
 )
 
 const styles = StyleSheet.create({
+    logoutButton: {
+        position: 'absolute',
+        top: 10, 
+        right: 20,
+        padding: 10,
+        backgroundColor: 'red',
+        borderRadius: 5,
+    },
     flexColumn: {
         flexDirection: "column",
         alignItems: "center",
     },
     grayText: {
         color: "#8A8888",
-    },
-    division: {
-        backgroundColor: "#FC801F",
-        padding: 9,
     },
     scrollContainer: {
         paddingBottom: 30,

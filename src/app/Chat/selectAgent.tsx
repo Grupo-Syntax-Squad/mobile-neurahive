@@ -16,7 +16,7 @@ import {
 } from "@/interfaces/Services/Agent"
 import { Division } from "@/components/Division"
 
-export default function Agents() {
+export default function Chats() {
     const router = useRouter()
     const [agents, setAgents] = useState<GetAgentResponse[]>([])
     const [loading, setLoading] = useState(true)
@@ -48,38 +48,24 @@ export default function Agents() {
     return (
         <View>
             <Division/>
-            <View style={globalStyles.header}>
-                <Text>Área de Agentes</Text>
-                <Image source={require("../../assets/images/agente1.png")} />
-            </View>
-            {/* <Link href="/#" style={globalStyles.middleButton}>
-                <Image
-                    source={require("../../assets/images/base-de-conhecimento.png")}
-                />
-                <Text>Base de Conhecimento</Text>
-            </Link> */}
-            <TouchableOpacity style={globalStyles.orangeButton}>
-                <Text
-                    style={globalStyles.WhiteText}
-                    onPress={() => router.replace("/Agents/create")}
-                >
-                    Criar Novo Agente
-                </Text>
-            </TouchableOpacity>
             <View style={globalStyles.agentContainer}>
                 {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
                 {agents.map((agent) => (
                     <TouchableOpacity
-                        style={globalStyles.agentBox}
-                        onPress={() =>
-                            router.push(
-                                `/Agents/[${agent[GetAgentResponseKeys.ID]}]`
-                            )
-                        }
-                        key={agent[GetAgentResponseKeys.ID]}
-                    >
-                        <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
-                    </TouchableOpacity>
+                    style={globalStyles.agentBox}
+                    onPress={() =>
+                        router.push({
+                            pathname: "/Chat/[id]",
+                            params: { 
+                                id: agent[GetAgentResponseKeys.ID],
+                                agentName: agent[GetAgentResponseKeys.NAME] 
+                            }
+                        })
+                    }
+                    key={agent[GetAgentResponseKeys.ID]}
+                >
+                    <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
+                </TouchableOpacity>
                 ))}
             </View>
         </View>

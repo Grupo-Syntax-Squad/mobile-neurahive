@@ -13,6 +13,7 @@ import { Role } from "@/enum/Role"
 import { useAxios } from "@/context/axiosContext"
 import { globalStyles } from "../styles/globalStyles"
 import { User } from "@/types/User"
+import { Division } from "@/components/Division"
 
 export function Users() {
     const router = useRouter()
@@ -59,10 +60,11 @@ export function Users() {
 
     return (
         <ProtectedRoute allowedRoles={[Role.ADMIN]}>
+            <Division/>
             <ScrollView
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.scrollContainer}
-            >
+                >
                 <View style={globalStyles.header}>
                     <Text>Seus Usuários</Text>
                     <Image

@@ -16,13 +16,13 @@ import {
       return (
         <View style={styles.container}>
               <View style={styles.messagesContainer}>
-                  <View style={[styles.message, styles.iaMessage]}>
+                  {/* <View style={[styles.message, styles.iaMessage]}>
                       <Text style={styles.iaText}>Olá! Como posso te ajudar?</Text>
                   </View>
   
                   <View style={[styles.message, styles.myMessage]}>
                       <Text style={styles.myText}>Oi! Quero ajuda com....</Text>
-                  </View>
+                  </View> */}
               </View>
               
               {/* Barra de chat */}

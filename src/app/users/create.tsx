@@ -17,6 +17,7 @@ import Checkbox from "expo-checkbox"
 import { Agent } from "@/types/Agent"
 import { useAxios } from "@/context/axiosContext"
 import MultiSelect from "@/components/MultiSelect"
+import { Division } from "@/components/Division"
 
 export default function CreateUser() {
     const [name, setName] = useState("")
@@ -74,6 +75,8 @@ export default function CreateUser() {
     }
 
     return (
+        <>
+        <Division/>
         <View style={globalStyles.container}>
             <Text style={globalStyles.textCenter}>Novo Usuário</Text>
             <View style={globalStyles.imageContainer}>
@@ -143,6 +146,7 @@ export default function CreateUser() {
                 <Text style={globalStyles.WhiteText}>Criar Usuário</Text>
             </TouchableOpacity>
         </View>
+        </>
     )
 }
 

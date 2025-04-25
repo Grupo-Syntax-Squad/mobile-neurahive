@@ -33,7 +33,7 @@ export default function Layout() {
                         options={{ title: "Acessos" }}
                     />
                     <Stack.Screen
-                        name="Permissions/page"
+                        name="permissions/page"
                         options={{ title: "Permissões dos Usuários" }}
                     />
                     <Stack.Screen
@@ -64,6 +64,10 @@ export default function Layout() {
                     <Stack.Screen
                         name="Chat/page"
                         options={{ title: "Selecione o Agente" }}
+                    />
+                    <Stack.Screen
+                        name="Chat/selectAgent"
+                        options={{ title: "Conversas" }}
                     />
                     <Stack.Screen 
                         name="Chat/[id]" 
