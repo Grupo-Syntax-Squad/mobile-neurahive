@@ -44,7 +44,14 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
         body: any,
         config?: AxiosRequestConfig<any> | undefined
     ) => {
-        return client.post(url, body, config)
+        const mergedConfig = {
+            headers: {
+              ...client.defaults.headers.common,
+              ...config?.headers
+            },
+            ...config
+        }        
+        return client.post(url, body, mergedConfig)
     }
 
     const put = (
