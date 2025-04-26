@@ -1,6 +1,6 @@
-import { Link, router } from "expo-router"
-import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native"
-import { globalStyles } from "../styles/globalStyles"
+import { router } from "expo-router"
+import { Image, View, Text, TouchableOpacity } from "react-native"
+import globalStyles from "../styles/globalStyles"
 
 export default function Agentes() {
     return (
@@ -10,14 +10,10 @@ export default function Agentes() {
                     style={globalStyles.agentBox}
                     onPress={() => router.push("/Chat/[id]")}
                 >
-                    <Image
-                        source={require("../../assets/images/apicultora.png")}
-                    />
+                    <Image source={require("../../assets/images/apicultora.png")} />
                     <Text>Ive</Text>
                 </TouchableOpacity>
             </View>
         </View>
     )
 }
-
-const styles = StyleSheet.create({})

@@ -1,17 +1,10 @@
-import {
-    StyleSheet,
-    Image,
-    Text,
-    View,
-    TouchableOpacity,
-    ScrollView,
-} from "react-native"
+import { StyleSheet, Image, Text, View, TouchableOpacity, ScrollView } from "react-native"
 import { Link, useRouter } from "expo-router"
 import React, { useEffect, useState } from "react"
 import ProtectedRoute from "@/components/ProtectedRoute"
 import { Role } from "@/enum/Role"
 import { useAxios } from "@/context/axiosContext"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import { User } from "@/types/User"
 
 export function Users() {
@@ -65,9 +58,7 @@ export function Users() {
             >
                 <View style={globalStyles.header}>
                     <Text>Seus Usuários</Text>
-                    <Image
-                        source={require("../../assets/images/usuarios.png")}
-                    ></Image>
+                    <Image source={require("../../assets/images/usuarios.png")}></Image>
                 </View>
 
                 <View style={styles.actionsContainer}>
@@ -78,9 +69,7 @@ export function Users() {
                             onPress={button.onPress}
                             testID={button.testID}
                         >
-                            <Text style={globalStyles.WhiteText}>
-                                {button.text}
-                            </Text>
+                            <Text style={globalStyles.WhiteText}>{button.text}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>

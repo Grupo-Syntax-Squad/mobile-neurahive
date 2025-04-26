@@ -12,7 +12,7 @@ import {
 import { Link } from "expo-router"
 import OrangeButton from "@/components/orangeButton"
 import { NeurahiveIcon } from "@/components/NeurahiveIcon"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 
 const RegisterScreen = () => {
     const [formData, setFormData] = useState({
@@ -98,30 +98,20 @@ const RegisterScreen = () => {
                         value={formData.name}
                         onChangeText={(text) => handleChange("name", text)}
                     />
-                    {errors.name ? (
-                        <Text style={styles.errorText}>{errors.name}</Text>
-                    ) : null}
+                    {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
                     <Text style={globalStyles.formLabel}>E-mail</Text>
                     <TextInput
-                        style={[
-                            styles.input,
-                            errors.email && styles.inputError,
-                        ]}
+                        style={[styles.input, errors.email && styles.inputError]}
                         placeholder="Email"
                         keyboardType="email-address"
                         autoCapitalize="none"
                         value={formData.email}
                         onChangeText={(text) => handleChange("email", text)}
                     />
-                    {errors.email ? (
-                        <Text style={styles.errorText}>{errors.email}</Text>
-                    ) : null}
+                    {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
                     <Text style={globalStyles.formLabel}>Senha</Text>
                     <TextInput
-                        style={[
-                            styles.input,
-                            errors.password && styles.inputError,
-                        ]}
+                        style={[styles.input, errors.password && styles.inputError]}
                         placeholder="Senha"
                         secureTextEntry
                         value={formData.password}
@@ -132,30 +122,20 @@ const RegisterScreen = () => {
                     ) : null}
                     <Text style={globalStyles.formLabel}>Confirme a Senha</Text>
                     <TextInput
-                        style={[
-                            styles.input,
-                            errors.passwordConfirmation && styles.inputError,
-                        ]}
+                        style={[styles.input, errors.passwordConfirmation && styles.inputError]}
                         placeholder="Repita a Senha"
                         secureTextEntry
                         value={formData.passwordConfirmation}
-                        onChangeText={(text) =>
-                            handleChange("passwordConfirmation", text)
-                        }
+                        onChangeText={(text) => handleChange("passwordConfirmation", text)}
                     />
                     {errors.passwordConfirmation ? (
-                        <Text style={styles.errorText}>
-                            {errors.passwordConfirmation}
-                        </Text>
+                        <Text style={styles.errorText}>{errors.passwordConfirmation}</Text>
                     ) : null}
                 </View>
 
                 {/* Botão de Cadastro */}
                 <View style={styles.registerButton}>
-                    <OrangeButton
-                        title="Cadastre-se"
-                        onPress={handleRegister}
-                    />
+                    <OrangeButton title="Cadastre-se" onPress={handleRegister} />
                 </View>
 
                 {/* Link para Login */}

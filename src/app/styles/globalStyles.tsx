@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native"
 
-export const globalStyles = StyleSheet.create({
+const globalStyles = StyleSheet.create({
     userContainer: {
         flexDirection: "column",
         justifyContent: "space-between",
@@ -174,3 +174,5 @@ export const globalStyles = StyleSheet.create({
         fontSize: 13,
     },
 })
+
+export default globalStyles

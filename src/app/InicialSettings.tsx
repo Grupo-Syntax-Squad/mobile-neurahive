@@ -1,12 +1,4 @@
-import {
-    Image,
-    StyleSheet,
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    Switch,
-} from "react-native"
+import { Image, StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch } from "react-native"
 import React from "react"
 import { NavigationProp, useNavigation } from "@react-navigation/native"
 import { RootStackParamList } from "./navigation/types"
@@ -33,10 +25,7 @@ export default function InicialSettings() {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
     return (
-        <ScrollView
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={styles.container}
-        >
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.title}>
                     Olá Usuário, vamos configurar o sistema antes de prosseguir?
@@ -50,30 +39,22 @@ export default function InicialSettings() {
                         onChangeText={setAcesso}
                     />
                     <Text style={styles.description}>
-                        O Acesso será utilizado para definir a área de atuação
-                        dos agentes e as permissões para acessá-los, você poderá
-                        criar novos acessos posteriormente.
+                        O Acesso será utilizado para definir a área de atuação dos agentes e as
+                        permissões para acessá-los, você poderá criar novos acessos posteriormente.
                     </Text>
                 </View>
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Chat e Iterações</Text>
                     <View style={styles.sectionSwitch}>
-                        <Text style={styles.subtitle}>
-                            Limpar conversas inativas?
-                        </Text>
-                        <Switch
-                            value={isEnabled}
-                            onValueChange={toggleSwitch}
-                        />
+                        <Text style={styles.subtitle}>Limpar conversas inativas?</Text>
+                        <Switch value={isEnabled} onValueChange={toggleSwitch} />
                     </View>
                     <View style={styles.checkboxContainer}>
                         <Checkbox
                             style={styles.checkbox}
                             value={clearChats.week}
-                            onValueChange={(value) =>
-                                setClearChats({ ...clearChats, week: value })
-                            }
+                            onValueChange={(value) => setClearChats({ ...clearChats, week: value })}
                             color={clearChats.week ? "#4630EB" : undefined}
                         />
                         <Text style={styles.checkboxLabel}>após 1 semana</Text>
@@ -95,21 +76,14 @@ export default function InicialSettings() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Backup</Text>
                     <View style={styles.sectionSwitch}>
-                        <Text style={styles.subtitle}>
-                            Fazer um backup dos chats?
-                        </Text>
-                        <Switch
-                            value={isEnabled}
-                            onValueChange={toggleSwitch}
-                        />
+                        <Text style={styles.subtitle}>Fazer um backup dos chats?</Text>
+                        <Switch value={isEnabled} onValueChange={toggleSwitch} />
                     </View>
                     <View style={styles.checkboxContainer}>
                         <Checkbox
                             style={styles.checkbox}
                             value={backup.weekly}
-                            onValueChange={(value) =>
-                                setBackup({ ...backup, weekly: value })
-                            }
+                            onValueChange={(value) => setBackup({ ...backup, weekly: value })}
                             color={backup.weekly ? "#4630EB" : undefined}
                         />
                         <Text style={styles.checkboxLabel}>semanalmente</Text>
@@ -118,9 +92,7 @@ export default function InicialSettings() {
                         <Checkbox
                             style={styles.checkbox}
                             value={backup.monthly}
-                            onValueChange={(value) =>
-                                setBackup({ ...backup, monthly: value })
-                            }
+                            onValueChange={(value) => setBackup({ ...backup, monthly: value })}
                             color={backup.monthly ? "#4630EB" : undefined}
                         />
                         <Text style={styles.checkboxLabel}>mensalmente</Text>
@@ -128,31 +100,22 @@ export default function InicialSettings() {
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>
-                        Base de conhecimento
-                    </Text>
+                    <Text style={styles.sectionTitle}>Base de conhecimento</Text>
                     <View style={styles.checkboxContainer}>
                         <Text style={styles.checkboxLabel}>
                             Carregue o arquivo de temas e respostas
                         </Text>
                     </View>
-                    <Text style={styles.fileInfo}>
-                        formatos válidos: tls.csv
-                    </Text>
+                    <Text style={styles.fileInfo}>formatos válidos: tls.csv</Text>
                     <Text style={styles.description}>
-                        A Base de conhecimento é de onde estas agentes irão se
-                        basear para fornecer respostas para os usuários,
-                        carregue uma base válida para continuar, você poderá
-                        carregar novas posteriormente.
+                        A Base de conhecimento é de onde estas agentes irão se basear para fornecer
+                        respostas para os usuários, carregue uma base válida para continuar, você
+                        poderá carregar novas posteriormente.
                     </Text>
                 </View>
 
-                <TouchableOpacity
-                    style={[globalStyles.orangeButton, styles.saveButton]}
-                >
-                    <Text style={globalStyles.WhiteText}>
-                        Salvar e Prosseguir
-                    </Text>
+                <TouchableOpacity style={[globalStyles.orangeButton, styles.saveButton]}>
+                    <Text style={globalStyles.WhiteText}>Salvar e Prosseguir</Text>
                 </TouchableOpacity>
 
                 <View style={styles.footer}>
