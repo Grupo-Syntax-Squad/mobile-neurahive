@@ -5,7 +5,7 @@ import { RootStackParamList } from "./navigation/types"
 import CustomInput from "@/components/CustomInput"
 import { useState } from "react"
 import Checkbox from "expo-checkbox"
-import { globalStyles } from "./styles/globalStyles"
+import globalStyles from "./styles/globalStyles"
 
 export default function InicialSettings() {
     const [acesso, setAcesso] = useState("")

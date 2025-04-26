@@ -2,7 +2,7 @@ import { StyleSheet, Text } from "react-native"
 
 import React from "react"
 import { Image } from "react-native"
-import { globalStyles } from "../app/styles/globalStyles"
+import globalStyles from "../app/styles/globalStyles"
 
 export function NeurahiveIcon() {
     return (

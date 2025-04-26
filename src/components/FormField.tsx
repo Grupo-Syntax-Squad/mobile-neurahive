@@ -1,4 +1,4 @@
-import { globalStyles } from "@/app/styles/globalStyles"
+import globalStyles from "@/app/styles/globalStyles"
 import { View, StyleSheet, Text } from "react-native"
 
 const FormField: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (

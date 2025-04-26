@@ -1,4 +1,4 @@
-import { globalStyles } from "@/app/styles/globalStyles"
+import globalStyles from "@/app/styles/globalStyles"
 import { GestureResponderEvent, StyleSheet, Text, View } from "react-native"
 
 interface Props {
