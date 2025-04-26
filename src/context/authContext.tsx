@@ -1,10 +1,4 @@
-import React, {
-    createContext,
-    useContext,
-    useState,
-    ReactNode,
-    useEffect,
-} from "react"
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react"
 import Token from "../types/token"
 import UsuarioAuth from "../types/userAuth"
 import { decode } from "base-64"

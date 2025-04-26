@@ -3,10 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 import { useAuth } from "./authContext"
 
 interface Props {
-    get: (
-        url: string,
-        config?: AxiosRequestConfig<any> | undefined
-    ) => Promise<any>
+    get: (url: string, config?: AxiosRequestConfig<any> | undefined) => Promise<any>
     post: (
         url: string,
         body: any,
@@ -32,33 +29,19 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
         headers: { Authorization: `Bearer ${token}` },
     })
 
-    const get = async (
-        url: string,
-        config?: AxiosRequestConfig<any> | undefined
-    ) => {
+    const get = async (url: string, config?: AxiosRequestConfig<any> | undefined) => {
         return (await client.get(url, config)).data
     }
 
-    const post = (
-        url: string,
-        body: any,
-        config?: AxiosRequestConfig<any> | undefined
-    ) => {
+    const post = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
         return client.post(url, body, config)
     }
 
-    const put = (
-        url: string,
-        body: any,
-        config?: AxiosRequestConfig<any> | undefined
-    ) => {
+    const put = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
         return client.put(url, body, config)
     }
 
-    const deletar = (
-        url: string,
-        config?: AxiosRequestConfig<any> | undefined
-    ) => {
+    const deletar = (url: string, config?: AxiosRequestConfig<any> | undefined) => {
         return client.delete(url)
     }
 
@@ -78,7 +61,6 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAxios = () => {
     const context = useContext(AxiosContext)
-    if (!context)
-        throw new Error("useAxios can only be used inside of AxiosProvider")
+    if (!context) throw new Error("useAxios can only be used inside of AxiosProvider")
     return context
 }

@@ -1,4 +1,5 @@
 # mobile-neurahive
+
 How to run the application?
 
 After cloning the directory, make sure you are inside the 'mobile-neurahive' directory of the same name.
@@ -16,7 +17,7 @@ npm install
 ```
 
 You need to ensure that Expo CLI is installed globally on your system. To do this, run the following command in the terminal
-   
+
 ```bash
 npm install -g expo-cli
 ```

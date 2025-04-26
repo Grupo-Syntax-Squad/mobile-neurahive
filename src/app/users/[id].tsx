@@ -15,7 +15,7 @@ import {
 } from "react-native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import CustomInput from "../../components/CustomInput"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import Checkbox from "expo-checkbox"
 import { useAxios } from "@/context/axiosContext"
 import FormField from "@/components/FormField"
@@ -45,7 +45,7 @@ const UserDetails: React.FC = () => {
         curator: false,
     })
     const [agents, setAgents] = useState<Agent[]>([])
-    const[selectedAgents, setSelectedAgents] = useState<number[]>([])
+    const [selectedAgents, setSelectedAgents] = useState<number[]>([])
 
     const [user, setUser] = useState<UserData>({
         id: Number(id),
@@ -56,7 +56,7 @@ const UserDetails: React.FC = () => {
         createdAt: "",
         updatedAt: "",
         password: "",
-        agents:[]
+        agents: [],
     })
 
     const [password, setPassword] = useState("")
@@ -78,15 +78,12 @@ const UserDetails: React.FC = () => {
                     setRoles({
                         admin: userRoles.includes(1),
                         curator: userRoles.includes(2),
-                    })                    
-                    setSelectedAgents(user.agents.map(agent => agent.id))
+                    })
+                    setSelectedAgents(user.agents.map((agent) => agent.id))
                     setIsLoading(false)
                 }
             } catch (error: any) {
-                Alert.alert(
-                    "Erro",
-                    "Não foi possível carregar os dados do usuário"
-                )
+                Alert.alert("Erro", "Não foi possível carregar os dados do usuário")
                 console.error(error)
             } finally {
                 setIsLoading(false)
@@ -96,8 +93,7 @@ const UserDetails: React.FC = () => {
         fetchUser()
     }, [id])
 
-    const toggleStatus = () =>
-        setUser((prev) => ({ ...prev, enabled: !prev.enabled }))
+    const toggleStatus = () => setUser((prev) => ({ ...prev, enabled: !prev.enabled }))
 
     const getRoles = () => {
         const selectedRoles: number[] = []
@@ -121,15 +117,12 @@ const UserDetails: React.FC = () => {
                 email: user.email,
                 role: getRoles(),
                 password: password,
-                agents: selectedAgents
+                agents: selectedAgents,
             })
             Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
             router.replace("/users/")
         } catch (error: any) {
-            Alert.alert(
-                "Erro",
-                error.response?.data?.message || "Erro ao salvar usuário"
-            )
+            Alert.alert("Erro", error.response?.data?.message || "Erro ao salvar usuário")
             console.error(error)
         }
     }
@@ -159,25 +152,17 @@ const UserDetails: React.FC = () => {
                     <View style={styles.avatarSection}>
                         <Text style={globalStyles.textCenter}>{user.name}</Text>
                         <View style={globalStyles.imageContainer}>
-                            <Image
-                                source={require("../../assets/images/bees-background.png")}
-                            />
+                            <Image source={require("../../assets/images/bees-background.png")} />
                         </View>
                     </View>
 
                     <View style={styles.userMeta}>
-                        <Text style={styles.metaItem}>
-                            Atualizado em: {user.updatedAt}
-                        </Text>
-                        <Text style={styles.metaItem}>
-                            Criado em: {user.createdAt}
-                        </Text>
+                        <Text style={styles.metaItem}>Atualizado em: {user.updatedAt}</Text>
+                        <Text style={styles.metaItem}>Criado em: {user.createdAt}</Text>
                         <Text
                             style={[
                                 styles.metaItem,
-                                user.enabled
-                                    ? styles.activeStatus
-                                    : styles.inactiveStatus,
+                                user.enabled ? styles.activeStatus : styles.inactiveStatus,
                             ]}
                         >
                             {user.enabled ? "Ativo" : "Inativo"}
@@ -188,9 +173,7 @@ const UserDetails: React.FC = () => {
                         <CustomInput
                             placeholder="Nome"
                             value={user.name}
-                            onChangeText={(text) =>
-                                setUser((prev) => ({ ...prev, name: text }))
-                            }
+                            onChangeText={(text) => setUser((prev) => ({ ...prev, name: text }))}
                         />
                     </FormField>
 
@@ -199,38 +182,25 @@ const UserDetails: React.FC = () => {
                             placeholder="E-mail"
                             keyboardType="email-address"
                             value={user.email}
-                            onChangeText={(text) =>
-                                setUser((prev) => ({ ...prev, email: text }))
-                            }
+                            onChangeText={(text) => setUser((prev) => ({ ...prev, email: text }))}
                         />
                     </FormField>
 
                     <FormField label="Permissões do Usuário">
-                        <View
-                            style={[
-                                styles.checkboxContainer,
-                                styles.marginTop10,
-                            ]}
-                        >
+                        <View style={[styles.checkboxContainer, styles.marginTop10]}>
                             <Checkbox
                                 style={styles.checkbox}
                                 value={roles.admin}
-                                onValueChange={(value) =>
-                                    setRoles({ ...roles, admin: value })
-                                }
+                                onValueChange={(value) => setRoles({ ...roles, admin: value })}
                                 color={roles.admin ? "#4630EB" : undefined}
                             />
-                            <Text style={styles.checkboxLabel}>
-                                Administrador
-                            </Text>
+                            <Text style={styles.checkboxLabel}>Administrador</Text>
                         </View>
                         <View style={styles.checkboxContainer}>
                             <Checkbox
                                 style={styles.checkbox}
                                 value={roles.curator}
-                                onValueChange={(value) =>
-                                    setRoles({ ...roles, curator: value })
-                                }
+                                onValueChange={(value) => setRoles({ ...roles, curator: value })}
                                 color={roles.curator ? "#4630EB" : undefined}
                             />
                             <Text style={styles.checkboxLabel}>Curador</Text>
@@ -238,7 +208,11 @@ const UserDetails: React.FC = () => {
                     </FormField>
                     <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
                     <ScrollView style={{ flex: 1 }}>
-                        <MultiSelect data={agents} selectedItems={selectedAgents} setSelectedItems={setSelectedAgents}></MultiSelect>
+                        <MultiSelect
+                            data={agents}
+                            selectedItems={selectedAgents}
+                            setSelectedItems={setSelectedAgents}
+                        ></MultiSelect>
                     </ScrollView>
 
                     <FormField label="Senha">
@@ -261,26 +235,15 @@ const UserDetails: React.FC = () => {
 
                     <View style={styles.switchContainer}>
                         <Text style={globalStyles.orangeText}>Status</Text>
-                        <Switch
-                            value={user.enabled}
-                            onValueChange={toggleStatus}
-                        />
+                        <Switch value={user.enabled} onValueChange={toggleStatus} />
                     </View>
 
                     <View style={styles.actionsContainer}>
-                        <TouchableOpacity
-                            onPress={handleSave}
-                            style={styles.saveButton}
-                        >
+                        <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
                             <Text style={styles.saveButtonText}>Salvar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={handleCancel}
-                            style={styles.cancelButton}
-                        >
-                            <Text style={styles.cancelButtonText}>
-                                Cancelar
-                            </Text>
+                        <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
+                            <Text style={styles.cancelButtonText}>Cancelar</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

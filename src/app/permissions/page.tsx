@@ -1,14 +1,7 @@
-import {
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-    TouchableOpacity,
-    ScrollView,
-} from "react-native"
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from "react-native"
 import Checkbox from "expo-checkbox"
 import React, { useState } from "react"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 
 export default function Permissions() {
     const [permissionTitle, setPermissionTitle] = useState("")
@@ -28,9 +21,7 @@ export default function Permissions() {
 
     const toggleAccess = (access: string) => {
         if (selectedAccesses.includes(access)) {
-            setSelectedAccesses(
-                selectedAccesses.filter((item) => item !== access)
-            )
+            setSelectedAccesses(selectedAccesses.filter((item) => item !== access))
         } else {
             setSelectedAccesses([...selectedAccesses, access])
         }
@@ -51,12 +42,8 @@ export default function Permissions() {
             />
 
             <View style={styles.accessSection}>
-                <Text style={globalStyles.orangeText}>
-                    Selecione os acessos da permissão
-                </Text>
-                <Text style={styles.selectedText}>
-                    Selecionados: {selectedAccesses.length}
-                </Text>
+                <Text style={globalStyles.orangeText}>Selecione os acessos da permissão</Text>
+                <Text style={styles.selectedText}>Selecionados: {selectedAccesses.length}</Text>
             </View>
 
             <View style={styles.accessList}>
@@ -65,20 +52,14 @@ export default function Permissions() {
                         <Checkbox
                             value={selectedAccesses.includes(access)}
                             onValueChange={() => toggleAccess(access)}
-                            color={
-                                selectedAccesses.includes(access)
-                                    ? "#4630EB"
-                                    : undefined
-                            }
+                            color={selectedAccesses.includes(access) ? "#4630EB" : undefined}
                         />
                         <Text style={styles.accessText}>{access}</Text>
                     </View>
                 ))}
             </View>
 
-            <TouchableOpacity
-                style={[globalStyles.orangeButton, styles.createButton]}
-            >
+            <TouchableOpacity style={[globalStyles.orangeButton, styles.createButton]}>
                 <Text style={globalStyles.WhiteText}>Criar Permissão</Text>
             </TouchableOpacity>
         </ScrollView>

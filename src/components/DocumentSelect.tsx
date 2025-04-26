@@ -1,4 +1,4 @@
-import { globalStyles } from "@/app/styles/globalStyles"
+import globalStyles from "@/app/styles/globalStyles"
 import { GestureResponderEvent, StyleSheet, Text, View } from "react-native"
 
 interface Props {
@@ -8,13 +8,9 @@ interface Props {
 export const DocumentSelect = ({ ...rest }: Props) => {
     return (
         <View style={styles.container} {...rest}>
-            <Text style={globalStyles.textMuted}>
-                Carregue o arquivo de temas e respostas
-            </Text>
+            <Text style={globalStyles.textMuted}>Carregue o arquivo de temas e respostas</Text>
             {/* Ícone upload */}
-            <Text style={globalStyles.orangeText}>
-                formatos válidos .xls .csv
-            </Text>
+            <Text style={globalStyles.orangeText}>formatos válidos .xls .csv</Text>
         </View>
     )
 }
