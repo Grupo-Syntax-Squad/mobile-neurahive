@@ -120,7 +120,8 @@ export default function CreateAgent() {
     const fetchKnowledgeBases = async () => {
         try{
             const response = await get('/knowledge-base')
-            setKnowledgeBases(response)            
+            console.log(response.data)
+            setKnowledgeBases(response.data)            
         } catch (err) {
             console.log("Erro ao buscar bases de conhecimento:", err)
         }
@@ -128,7 +129,7 @@ export default function CreateAgent() {
 
     useEffect(() => {
         fetchKnowledgeBases()
-    }, [])
+    }, [form[FormKeys.EXISTENT_KNOWLEDGE]])
 
 
     const validateForm = () => {
@@ -204,7 +205,6 @@ export default function CreateAgent() {
             </View>
             {!form[FormKeys.EXISTENT_KNOWLEDGE] && (
                 <DocumentSelect 
-                    setKnowledgeBase={() => setKnowledgeBase}
                     uploadedFile={uploadedFile}
                     setUploadedFile={setUploadedFile}
                 />

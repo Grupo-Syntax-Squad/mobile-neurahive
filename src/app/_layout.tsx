@@ -54,7 +54,7 @@ export default function Layout() {
                     />
                     <Stack.Screen
                         name="Agents/[id]"
-                        options={{ title: "Agente" }}
+                        options={{ title: "Editar Agente" }}
                     />
                     <Stack.Screen
                         name="Agents/create"

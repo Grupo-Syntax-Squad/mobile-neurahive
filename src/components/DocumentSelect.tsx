@@ -2,22 +2,22 @@ import { globalStyles } from "@/app/styles/globalStyles"
 import { useState } from "react"
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import * as DocumentPicker from "expo-document-picker"
-import { useAxios } from "@/context/axiosContext"
 import { UploadingOverlay } from "./UploadingOverlay"
 import { Feather } from '@expo/vector-icons'
 import { UploadedFile } from "@/types/UploadedFile"
+import { useAuth } from "@/context/authContext"
+import * as FileSystem from 'expo-file-system';
 
 interface Props {
     onPress?: () => void
-    setKnowledgeBase?: (knowledgeBase: number | null) => void
     uploadedFile?: UploadedFile
     setUploadedFile?: (uploadedFile: UploadedFile | undefined) => void
 }
 
-export const DocumentSelect = ({ uploadedFile, setUploadedFile, setKnowledgeBase, ...rest }: Props) => {
+export const DocumentSelect = ({ uploadedFile, setUploadedFile, ...rest }: Props) => {
     const [uploading, setUploading] = useState<boolean>(false)
     
-    const { post } = useAxios()
+    const { token } = useAuth()
 
     const handlePickDocument = async () => {
         if(uploading) return
@@ -27,7 +27,6 @@ export const DocumentSelect = ({ uploadedFile, setUploadedFile, setKnowledgeBase
                 multiple: false,
                 copyToCacheDirectory: true,
             })
-            console.log(result)
             
             if (result.assets) {
                 const file = result.assets[0]
@@ -41,28 +40,25 @@ export const DocumentSelect = ({ uploadedFile, setUploadedFile, setKnowledgeBase
         }
     }
 
-    const uploadDocument = async (file: DocumentPicker.DocumentPickerAsset) => {
-
-        const fileType = file.mimeType === "text/comma-separated-values" ?  "text/csv" : file.mimeType
-
-        const fileBlob = {
-            uri: file.uri,
-            name: file.name,
-            type: fileType,
-        }
-
-        const formData = new FormData()
-        formData.append("file", fileBlob as any)
-
+    const uploadDocument = async (file: DocumentPicker.DocumentPickerAsset) => {       
         try{
-            setUploading(true)
-            const response = await post('/knowledge-base', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            console.log(response)
-            setUploadedFile?.(response.data)
+            setUploading(true)    
+            const response = await FileSystem.uploadAsync(
+                `${process.env.EXPO_PUBLIC_API_URL}/knowledge-base`,
+                file.uri, {
+                    fieldName: 'file',
+                    httpMethod: 'POST',
+                    uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    parameters: {
+                        "name": file.name
+                    }
+                }
+            )
+            const json = JSON.parse(response.body)
+            setUploadedFile?.(json)
         } catch (err) {
             console.log("Erro na requisição:", err)
         } finally {
@@ -84,7 +80,6 @@ export const DocumentSelect = ({ uploadedFile, setUploadedFile, setKnowledgeBase
                     <Text style={globalStyles.textMuted}>
                         Carregue o arquivo de temas e respostas
                     </Text>
-                    {/* Ícone upload */}
                     <Text style={globalStyles.orangeText}>
                         formatos válidos .csv .txt
                     </Text>

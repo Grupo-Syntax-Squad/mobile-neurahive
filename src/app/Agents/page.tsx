@@ -66,19 +66,23 @@ export default function Agents() {
             </TouchableOpacity>
             <View style={globalStyles.agentContainer}>
                 {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
-                {agents.map((agent) => (
-                    <TouchableOpacity
-                        style={globalStyles.agentBox}
-                        onPress={() =>
-                            router.push(
-                                `/Agents/[${agent[GetAgentResponseKeys.ID]}]`
-                            )
-                        }
-                        key={agent[GetAgentResponseKeys.ID]}
-                    >
-                        <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
-                    </TouchableOpacity>
-                ))}
+                {agents.map((agent) => {
+                    console.log(agent)
+                    return (
+                        <TouchableOpacity
+                            style={globalStyles.agentBox}
+                            onPress={() =>
+                                router.push(
+                                    `/Agents/${agent[GetAgentResponseKeys.ID]}`
+                                )
+                            }
+                            key={agent[GetAgentResponseKeys.ID]}
+                        >
+                            <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
+                        </TouchableOpacity>
+                    )
+                }
+                )}
             </View>
         </View>
     )
