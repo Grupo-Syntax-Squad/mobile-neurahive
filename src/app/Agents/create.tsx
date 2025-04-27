@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, Switch, Text, View } from "react-native"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import CustomInput from "@/components/CustomInput"
 import { useEffect, useState } from "react"
 
@@ -9,10 +9,7 @@ import {
     KnowledgeBaseKeys,
 } from "@/interfaces/Services/KnowledgeBase"
 import { useAxios } from "@/context/axiosContext"
-import {
-    PostAgentRequest,
-    PostAgentRequestKeys,
-} from "@/interfaces/Services/Agent"
+import { PostAgentRequest, PostAgentRequestKeys } from "@/interfaces/Services/Agent"
 import { router } from "expo-router"
 import { Picker } from "@react-native-picker/picker"
 import { DocumentSelect } from "@/components/DocumentSelect"
@@ -134,8 +131,7 @@ export default function CreateAgent() {
 
     const validateForm = () => {
         let customFormErrors: Partial<Record<FormKeys, string>> = {}
-        if (!form[FormKeys.NAME])
-            customFormErrors[FormKeys.NAME] = "O nome do agente é obrigatório"
+        if (!form[FormKeys.NAME]) customFormErrors[FormKeys.NAME] = "O nome do agente é obrigatório"
         else customFormErrors[FormKeys.NAME] = ""
         setFormErrors({ ...formErrors, ...customFormErrors })
         return customFormErrors
@@ -154,10 +150,7 @@ export default function CreateAgent() {
             }
             await post("/agents/", request)
         } catch (error) {
-            Alert.alert(
-                "Cadastrar agente",
-                "Erro ao cadastrar agente tente novamente"
-            )
+            Alert.alert("Cadastrar agente", "Erro ao cadastrar agente tente novamente")
         } finally {
             router.replace("/Agents/page")
         }
@@ -165,9 +158,7 @@ export default function CreateAgent() {
 
     return (
         <View style={globalStyles.container}>
-            <Text style={[globalStyles.orangeText, styles.inputText]}>
-                Nome
-            </Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>Nome</Text>
             <CustomInput
                 placeholder="Digite o nome do agente"
                 value={form[FormKeys.NAME]}
@@ -241,9 +232,7 @@ export default function CreateAgent() {
                 numberOfLines={3}
             />
             <View style={globalStyles.orangeButton} onTouchStart={handleSubmit}>
-                <Text style={[globalStyles.WhiteText, styles.inputText]}>
-                    Criar
-                </Text>
+                <Text style={[globalStyles.WhiteText, styles.inputText]}>Criar</Text>
             </View>
         </View>
     )

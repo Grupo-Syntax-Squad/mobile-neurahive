@@ -9,7 +9,7 @@ import {
 } from "react-native"
 import { router, useLocalSearchParams } from "expo-router"
 import CustomInput from "../../components/CustomInput"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import { Picker } from "@react-native-picker/picker"
 import { useAxios } from "@/context/axiosContext"
 import { KnowledgeBase } from "@/interfaces/Services/KnowledgeBase"

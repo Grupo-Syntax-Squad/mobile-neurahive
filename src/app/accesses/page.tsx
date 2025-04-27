@@ -1,13 +1,6 @@
-import {
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-    TouchableOpacity,
-    ScrollView,
-} from "react-native"
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from "react-native"
 import React, { useState } from "react"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 
 export default function Accesses() {
     const [accessTitle, setAccessTitle] = useState("")
@@ -77,9 +70,7 @@ export default function Accesses() {
                                 <Text style={styles.permissionsDetail}>
                                     Permissões: {access.permissions}
                                 </Text>
-                                <Text style={styles.agentsDetail}>
-                                    Agentes: {access.agents}
-                                </Text>
+                                <Text style={styles.agentsDetail}>Agentes: {access.agents}</Text>
                             </>
                         ) : null}
                     </View>

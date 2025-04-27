@@ -1,4 +1,4 @@
-import { globalStyles } from "@/app/styles/globalStyles"
+import globalStyles from "@/app/styles/globalStyles"
 import { useState } from "react"
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import * as DocumentPicker from "expo-document-picker"

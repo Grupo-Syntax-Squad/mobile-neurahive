@@ -10,7 +10,7 @@ import {
     ScrollView,
 } from "react-native"
 import CustomInput from "../../components/CustomInput"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import { router } from "expo-router"
 import FormField from "@/components/FormField"
 import Checkbox from "expo-checkbox"
@@ -25,7 +25,7 @@ export default function CreateUser() {
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
     const [agents, setAgents] = useState<Agent[]>([])
     const { get, post } = useAxios()
-    const[selectedAgents, setSelectedAgents] = useState<number[]>([])
+    const [selectedAgents, setSelectedAgents] = useState<number[]>([])
     const [roles, setRoles] = useState({
         admin: false,
         curator: false,
@@ -50,15 +50,13 @@ export default function CreateUser() {
 
     const handleCreateUser = async () => {
         try {
-            const response = await post(
-                `/users`, {
-                    name: name,
-                    email: email,
-                    password: password,
-                    role: getRoles(),
-                    selectedAgents
-                }
-            )
+            const response = await post(`/users`, {
+                name: name,
+                email: email,
+                password: password,
+                role: getRoles(),
+                selectedAgents,
+            })
 
             Alert.alert("Sucesso", "Usuário criado com sucesso!")
             router.replace("/users/page")
@@ -77,16 +75,10 @@ export default function CreateUser() {
         <View style={globalStyles.container}>
             <Text style={globalStyles.textCenter}>Novo Usuário</Text>
             <View style={globalStyles.imageContainer}>
-                <Image
-                    source={require("../../assets/images/bees-background.png")}
-                />
+                <Image source={require("../../assets/images/bees-background.png")} />
             </View>
             <Text style={globalStyles.orangeText}>Nome</Text>
-            <CustomInput
-                placeholder="Nome"
-                value={name}
-                onChangeText={setName}
-            />
+            <CustomInput placeholder="Nome" value={name} onChangeText={setName} />
             <Text style={globalStyles.orangeText}>E-mail</Text>
             <CustomInput
                 placeholder="E-mail"
@@ -99,9 +91,7 @@ export default function CreateUser() {
                     <Checkbox
                         style={styles.checkbox}
                         value={roles.admin}
-                        onValueChange={(value) =>
-                            setRoles({ ...roles, admin: value })
-                        }
+                        onValueChange={(value) => setRoles({ ...roles, admin: value })}
                         color={roles.admin ? "#4630EB" : undefined}
                     />
                     <Text style={styles.checkboxLabel}>Administrador</Text>
@@ -110,9 +100,7 @@ export default function CreateUser() {
                     <Checkbox
                         style={styles.checkbox}
                         value={roles.curator}
-                        onValueChange={(value) =>
-                            setRoles({ ...roles, curator: value })
-                        }
+                        onValueChange={(value) => setRoles({ ...roles, curator: value })}
                         color={roles.curator ? "#4630EB" : undefined}
                     />
                     <Text style={styles.checkboxLabel}>Curador</Text>
@@ -120,7 +108,11 @@ export default function CreateUser() {
             </FormField>
             <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
             <ScrollView style={{ flex: 1 }}>
-                <MultiSelect data={agents} selectedItems={selectedAgents} setSelectedItems={setSelectedAgents}></MultiSelect>
+                <MultiSelect
+                    data={agents}
+                    selectedItems={selectedAgents}
+                    setSelectedItems={setSelectedAgents}
+                ></MultiSelect>
             </ScrollView>
             <Text style={globalStyles.orangeText}>Senha</Text>
             <CustomInput
@@ -136,10 +128,7 @@ export default function CreateUser() {
                 value={passwordConfirmation}
                 onChangeText={setPasswordConfirmation}
             />
-            <TouchableOpacity
-                style={globalStyles.orangeButton}
-                onPress={() => handleCreateUser()}
-            >
+            <TouchableOpacity style={globalStyles.orangeButton} onPress={() => handleCreateUser()}>
                 <Text style={globalStyles.WhiteText}>Criar Usuário</Text>
             </TouchableOpacity>
         </View>
@@ -192,6 +181,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     marginTop10: {
-        marginTop: 10
+        marginTop: 10,
     },
 })
