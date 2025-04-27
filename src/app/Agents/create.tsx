@@ -1,16 +1,24 @@
-import { Alert, Button, StyleSheet, Switch, Text, View } from "react-native"
+import { Alert, StyleSheet, Switch, Text, View } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import CustomInput from "@/components/CustomInput"
-import { useState } from "react"
-import * as DocumentPicker from "expo-document-picker"
-import { Access, AccessKeys } from "@/interfaces/Services/Access"
-import { KnowledgeBase, KnowledgeBaseKeys } from "@/interfaces/Services/KnowledgeBase"
+import { useEffect, useState } from "react"
+
+//import { Access, AccessKeys } from "@/interfaces/Services/Access"
+import {
+    KnowledgeBase,
+    KnowledgeBaseKeys,
+} from "@/interfaces/Services/KnowledgeBase"
 import { useAxios } from "@/context/axiosContext"
 import { PostAgentRequest, PostAgentRequestKeys } from "@/interfaces/Services/Agent"
 import { router } from "expo-router"
+import { Picker } from "@react-native-picker/picker"
+import { DocumentSelect } from "@/components/DocumentSelect"
+import { UploadedFile } from "@/types/UploadedFile"
 
 enum FormKeys {
     NAME = "name",
+    THEME = "theme",
+    BEHAVIOR = "behavior",
     ACCESS = "access",
     EXISTENT_KNOWLEDGE = "existentKnowledge",
     KNOWLEDGE_BASE_NAME = "knowledge_base_name",
@@ -20,6 +28,8 @@ enum FormKeys {
 
 interface Form {
     [FormKeys.NAME]: string
+    [FormKeys.THEME]: string
+    [FormKeys.BEHAVIOR]: string
     [FormKeys.ACCESS]?: number
     [FormKeys.EXISTENT_KNOWLEDGE]: boolean
     [FormKeys.KNOWLEDGE_BASE_NAME]?: string
@@ -29,6 +39,8 @@ interface Form {
 
 const defaultForm: Form = {
     [FormKeys.NAME]: "",
+    [FormKeys.THEME]: "",
+    [FormKeys.BEHAVIOR]: "",
     [FormKeys.ACCESS]: undefined,
     [FormKeys.EXISTENT_KNOWLEDGE]: false,
     [FormKeys.KNOWLEDGE_BASE_NAME]: undefined,
@@ -36,43 +48,28 @@ const defaultForm: Form = {
     [FormKeys.KNOWLEDGE_BASE_ID]: undefined,
 }
 
-const MockAccess: Access[] = [
-    {
-        [AccessKeys.ID]: 1,
-        [AccessKeys.NAME]: "Recursos humanos",
-    },
-    {
-        [AccessKeys.ID]: 2,
-        [AccessKeys.NAME]: "Estoque",
-    },
-    {
-        [AccessKeys.ID]: 3,
-        [AccessKeys.NAME]: "TI",
-    },
-    {
-        [AccessKeys.ID]: 4,
-        [AccessKeys.NAME]: "Vendas",
-    },
-    {
-        [AccessKeys.ID]: 5,
-        [AccessKeys.NAME]: "Administrativo",
-    },
-]
-
-const MockKnowledgeBase: KnowledgeBase[] = [
-    {
-        [KnowledgeBaseKeys.ID]: 1,
-        [KnowledgeBaseKeys.NAME]: "Turnos",
-    },
-    {
-        [KnowledgeBaseKeys.ID]: 2,
-        [KnowledgeBaseKeys.NAME]: "Feriados",
-    },
-    {
-        [KnowledgeBaseKeys.ID]: 3,
-        [KnowledgeBaseKeys.NAME]: "Responsabilidades",
-    },
-]
+// const MockAccess: Access[] = [
+//     {
+//         [AccessKeys.ID]: 1,
+//         [AccessKeys.NAME]: "Recursos humanos",
+//     },
+//     {
+//         [AccessKeys.ID]: 2,
+//         [AccessKeys.NAME]: "Estoque",
+//     },
+//     {
+//         [AccessKeys.ID]: 3,
+//         [AccessKeys.NAME]: "TI",
+//     },
+//     {
+//         [AccessKeys.ID]: 4,
+//         [AccessKeys.NAME]: "Vendas",
+//     },
+//     {
+//         [AccessKeys.ID]: 5,
+//         [AccessKeys.NAME]: "Administrativo",
+//     },
+// ]
 
 const defaultFormErrors: Record<FormKeys, string> = {
     [FormKeys.ACCESS]: "",
@@ -81,22 +78,33 @@ const defaultFormErrors: Record<FormKeys, string> = {
     [FormKeys.KNOWLEDGE_BASE_NAME]: "",
     [FormKeys.KNOWLEDGE_BASE_URI]: "",
     [FormKeys.NAME]: "",
+    [FormKeys.THEME]: "",
+    [FormKeys.BEHAVIOR]: "",
 }
 
 export default function CreateAgent() {
+    const [uploadedFile, setUploadedFile] = useState<UploadedFile>()
     const [form, setForm] = useState<Form>(defaultForm)
-    const [accesses, setAccesses] = useState<Access[]>(MockAccess)
-    const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>(MockKnowledgeBase)
-    const [formErrors, setFormErrors] = useState<Record<FormKeys, string>>(defaultFormErrors)
-    const { post } = useAxios()
+    //const [accesses, setAccesses] = useState<Access[]>(MockAccess)
+    const [knowledgeBases, setKnowledgeBases] =
+        useState<KnowledgeBase[]>([])
+    const [formErrors, setFormErrors] =
+        useState<Record<FormKeys, string>>(defaultFormErrors)
+    const { get, post } = useAxios()
 
     const setName = (value: string): void => {
         setForm({ ...form, [FormKeys.NAME]: value })
     }
-
-    const setAccess = (value: number | undefined): void => {
-        setForm({ ...form, [FormKeys.ACCESS]: value })
+    const setTheme = (value: string): void => {
+        setForm({ ...form, [FormKeys.THEME]: value })
     }
+    const setBehavior = (value: string): void => {
+        setForm({ ...form, [FormKeys.BEHAVIOR]: value })
+    }
+
+    // const setAccess = (value: number | undefined): void => {
+    //     setForm({ ...form, [FormKeys.ACCESS]: value })
+    // }
 
     const setExistentKnowledgeBase = (value: boolean): void => {
         setForm({ ...form, [FormKeys.EXISTENT_KNOWLEDGE]: value })
@@ -105,6 +113,21 @@ export default function CreateAgent() {
     const setKnowledgeBase = (value: number): void => {
         setForm({ ...form, [FormKeys.KNOWLEDGE_BASE_ID]: value })
     }
+
+    const fetchKnowledgeBases = async () => {
+        try{
+            const response = await get('/knowledge-base')
+            console.log(response.data)
+            setKnowledgeBases(response.data)            
+        } catch (err) {
+            console.log("Erro ao buscar bases de conhecimento:", err)
+        }
+    }
+
+    useEffect(() => {
+        fetchKnowledgeBases()
+    }, [form[FormKeys.EXISTENT_KNOWLEDGE]])
+
 
     const validateForm = () => {
         let customFormErrors: Partial<Record<FormKeys, string>> = {}
@@ -121,6 +144,9 @@ export default function CreateAgent() {
         try {
             const request: PostAgentRequest = {
                 [PostAgentRequestKeys.NAME]: form[FormKeys.NAME],
+                [PostAgentRequestKeys.THEME]: form[FormKeys.THEME],
+                [PostAgentRequestKeys.BEHAVIOR]: form[FormKeys.BEHAVIOR] ? form[FormKeys.BEHAVIOR] : undefined,
+                [PostAgentRequestKeys.KNOWLEDGE_BASE_ID]: form[FormKeys.KNOWLEDGE_BASE_ID] ? form[FormKeys.KNOWLEDGE_BASE_ID] : undefined
             }
             await post("/agents/", request)
         } catch (error) {
@@ -128,27 +154,7 @@ export default function CreateAgent() {
         } finally {
             router.replace("/Agents/page")
         }
-    }
-
-    const handlePickDocument = async () => {
-        try {
-            const result = await DocumentPicker.getDocumentAsync({
-                type: "/",
-                multiple: false,
-            })
-
-            if (result.assets) {
-                const file = result.assets[0]
-                setForm({
-                    ...form,
-                    [FormKeys.KNOWLEDGE_BASE_NAME]: file.name,
-                    [FormKeys.KNOWLEDGE_BASE_URI]: file.uri,
-                })
-            }
-        } catch (error) {
-            Alert.alert("Carregar documento", "Erro ao carregar documento")
-        }
-    }
+    }    
 
     return (
         <View style={globalStyles.container}>
@@ -159,26 +165,17 @@ export default function CreateAgent() {
                 onChangeText={setName}
                 error={formErrors[FormKeys.NAME]}
             />
-            {/* <Text style={[globalStyles.orangeText, styles.inputText]}>
-                Acesso
+
+            <Text style={[globalStyles.orangeText, styles.inputText]}>
+                Tema
             </Text>
-            <Picker
-                style={styles.input}
-                selectedValue={form[FormKeys.ACCESS]}
-                onValueChange={(value) => setAccess(value)}
-            >
-                <Picker.Item
-                    label="Selecione o acesso ao agente"
-                    value={undefined}
-                />
-                {accesses.map((access) => (
-                    <Picker.Item
-                        key={access[AccessKeys.ID]}
-                        label={access[AccessKeys.NAME]}
-                        value={access[AccessKeys.ID]}
-                    />
-                ))}
-            </Picker>
+            <CustomInput
+                placeholder="Digite o tema do agente"
+                value={form[FormKeys.THEME]}
+                onChangeText={setTheme}
+                error={formErrors[FormKeys.THEME]}
+            />
+            
             <Text style={[globalStyles.orangeText, styles.inputText]}>
                 Base de conhecimento
             </Text>
@@ -198,7 +195,10 @@ export default function CreateAgent() {
                 />
             </View>
             {!form[FormKeys.EXISTENT_KNOWLEDGE] && (
-                <DocumentSelect onTouchStart={handlePickDocument} />
+                <DocumentSelect 
+                    uploadedFile={uploadedFile}
+                    setUploadedFile={setUploadedFile}
+                />
             )}
             {form[FormKeys.EXISTENT_KNOWLEDGE] && (
                 <Picker
@@ -220,19 +220,17 @@ export default function CreateAgent() {
                 </Picker>
             )}
             <Text style={[globalStyles.orangeText, styles.inputText]}>
-                Cordialidade do agente{" "}
+                Comportamento do agente{" "}
                 <Text style={globalStyles.textMuted}>(Opcional)</Text>
             </Text>
-            <Picker
-                style={styles.input}
-                selectedValue={undefined}
-                onValueChange={(value) => console.log("Nível de cordialidade")}
-            >
-                <Picker.Item
-                    label="Selecione o nível de cordialidade"
-                    value={undefined}
-                />
-            </Picker> */}
+            <CustomInput
+                placeholder="Digite o comportamento do agente"
+                value={form[FormKeys.BEHAVIOR]}
+                onChangeText={setBehavior}
+                error={formErrors[FormKeys.BEHAVIOR]}
+                multiline
+                numberOfLines={3}
+            />
             <View style={globalStyles.orangeButton} onTouchStart={handleSubmit}>
                 <Text style={[globalStyles.WhiteText, styles.inputText]}>Criar</Text>
             </View>

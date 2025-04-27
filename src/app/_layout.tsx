@@ -30,7 +30,7 @@ export default function Layout() {
                     <Stack.Screen name="users/[id]" options={{ title: "Detalhes do Usuário" }} />
                     <Stack.Screen name="permissions/[id]" options={{ title: "Permissões" }} />
                     <Stack.Screen name="Agents/page" options={{ title: "Agentes" }} />
-                    <Stack.Screen name="Agents/[id]" options={{ title: "Agente" }} />
+                    <Stack.Screen name="Agents/[id]" options={{ title: "Editar Agente" }} />
                     <Stack.Screen name="Agents/create" options={{ title: "Nova agente de IA" }} />
                     <Stack.Screen name="Chat/page" options={{ title: "Selecione o Agente" }} />
                     <Stack.Screen name="Chat/[id]" options={{ title: "" }} />

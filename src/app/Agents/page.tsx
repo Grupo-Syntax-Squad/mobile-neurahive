@@ -1,4 +1,4 @@
-import { Link, useRouter } from "expo-router"
+import { useRouter } from "expo-router"
 import { Image, StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"

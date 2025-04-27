@@ -1,74 +1,156 @@
-import React, { useState } from "react"
-import { StyleSheet, Text, TouchableOpacity, View, Image, Switch } from "react-native"
-import { useRouter } from "expo-router"
+import React, { useEffect, useState } from "react"
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Switch,
+    Alert,
+} from "react-native"
+import { router, useLocalSearchParams } from "expo-router"
 import CustomInput from "../../components/CustomInput"
 import globalStyles from "../styles/globalStyles"
 import { Picker } from "@react-native-picker/picker"
+import { useAxios } from "@/context/axiosContext"
+import { KnowledgeBase } from "@/interfaces/Services/KnowledgeBase"
+import { DocumentSelect } from "@/components/DocumentSelect"
+import { UploadedFile } from "@/types/UploadedFile"
+
+type AgentData = {
+    name: string
+    theme: string
+    behavior: string
+    knowledge_base_id?: number
+}
 
 export default function Agent() {
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [passwordConfirmation, setPasswordConfirmation] = useState("")
+    const { id } = useLocalSearchParams()
+    const { get, put } = useAxios()
+    
+    //const [isEnabled, setIsEnabled] = useState<boolean>()
+    const [uploadedFile, setUploadedFile] = useState<UploadedFile>()
+    const [useExistingKnowledge, setUseExistingKnowledge] = useState<boolean>(true)
+    const [knowledgeBases, setKnowledgebases] = useState<KnowledgeBase[]>([])
+    const [agentData, setAgentData] = useState<AgentData>({
+        name: '',
+        theme: '',
+        behavior: ''
+    })
 
-    const [isEnabled, setIsEnabled] = useState(false)
+    //const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
+    const toggleUseExistingKnowledge = () => {
+        setUseExistingKnowledge(!useExistingKnowledge)
+    }
+    
+    const fetchAgent = async () => {
+        const response = await get(`/agents/${id}`)
+        setAgentData(response.data)
+    }
+    const fetchKnowledgeBases = async () => {
+        const response = await get(`/knowledge-base`)
+        setKnowledgebases(response.data)
+    }
 
-    const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
+    const handleSave = async () => {
+        try {
+            await put(`/agents/${id}`, agentData)
+            Alert.alert("Sucesso", "Agente atualizado com sucesso!")
+            router.replace("/Agents/")
+        } catch (error: any) {
+            Alert.alert(
+                "Erro",
+                error.response?.data?.message || "Erro ao salvar agente"
+            )
+            console.error(error)
+        }
+    }
 
-    const router = useRouter()
-    const [selectedValue, setSelectedValue] = useState("Escolha uma permissão")
+    const handleCancel = () => {
+        router.back()
+    }
+    
+    useEffect(() => {
+        fetchAgent()
+        fetchKnowledgeBases()
+    }, [])
+
     return (
         <View style={globalStyles.container}>
-            <View style={globalStyles.imageContainer}>
-                <Text style={globalStyles.textCenter}>Thiago</Text>
-                <Image source={require("../../assets/images/bees-background.png")} />
-            </View>
-            <View style={styles.userDetail}>
-                <Text style={styles.userStatus}>Ativo</Text>
-                <Text style={styles.DetailContainer}>Criado em: 12/12/2024</Text>
-                <Text style={styles.DetailContainer}>Atualizado em: 12/12/2024</Text>
-            </View>
             <Text style={globalStyles.orangeText}>Nome</Text>
-            <CustomInput placeholder="Nome" value={name} onChangeText={setName} />
-            <Text style={globalStyles.orangeText}>E-mail</Text>
             <CustomInput
-                placeholder="E-mail"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
+                placeholder="Nome"
+                value={agentData.name}
+                onChangeText={(text) =>
+                    setAgentData((prev) => ({ ...prev, name: text }))
+                }
             />
-            <Text style={globalStyles.orangeText}>Permissão do Usuário</Text>
-            <Picker
-                style={styles.input}
-                selectedValue={selectedValue}
-                onValueChange={(itemValue) => setSelectedValue(itemValue)}
+            <Text style={globalStyles.orangeText}>Tema</Text>
+            <CustomInput
+                placeholder="Tema"
+                value={agentData.theme}
+                onChangeText={(text) =>
+                    setAgentData((prev) => ({ ...prev, theme: text }))
+                }
+            />
+            <Text style={globalStyles.orangeText}>Comportamento</Text>
+            <CustomInput
+                placeholder="Comportamento"
+                value={agentData.behavior}
+                multiline
+                numberOfLines={3}
+                onChangeText={(text) =>
+                    setAgentData((prev) => ({ ...prev, behavior: text }))
+                }
+            />
+            <Text style={globalStyles.orangeText}>Base de conhecimento</Text>
+            <View
+                style={[
+                    globalStyles.flexRow,
+                    styles.gap_10,
+                    styles.align_center,
+                ]}
             >
-                <Picker.Item label="Recursos Humanos" />
-                <Picker.Item label="Administrativo" />
-                <Picker.Item label="Financeiro" />
-            </Picker>
-            <Text style={globalStyles.orangeText}>Senha</Text>
-            <CustomInput
-                placeholder="Senha"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-            />
-            <Text style={globalStyles.orangeText}>Repita a Senha</Text>
-            <CustomInput
-                placeholder="Repita a Senha"
-                secureTextEntry
-                value={passwordConfirmation}
-                onChangeText={setPasswordConfirmation}
-            />
-            <View style={globalStyles.flexRow}>
+                <Text>Utilizar base de conhecimento já existente?</Text>
+                <Switch
+                    value={useExistingKnowledge}
+                    onValueChange={toggleUseExistingKnowledge}
+                    thumbColor="#FF9500"
+                    trackColor={{ true: "#FF9500", false: "#aaa" }}
+                />
+            </View>
+            {!useExistingKnowledge && (
+                <DocumentSelect 
+                    uploadedFile={uploadedFile}
+                    setUploadedFile={setUploadedFile}
+                />
+            )}
+            {useExistingKnowledge && (
+                            <Picker
+                                style={styles.input}
+                                selectedValue={agentData.knowledge_base_id}
+                                onValueChange={(value) => setAgentData((prev) => ({ ...prev, knowledgeBaseId: value}))}
+                            >
+                                <Picker.Item
+                                    label="Selecione a base de conhecimento"
+                                    value={undefined}
+                                />
+                                {knowledgeBases.map((knowledgeBase) => (
+                                    <Picker.Item
+                                        key={knowledgeBase.id}
+                                        label={knowledgeBase.name}
+                                        value={knowledgeBase.id}
+                                    />
+                                ))}
+                            </Picker>
+                        )}
+            {/* <View style={globalStyles.flexRow}>
                 <Text style={globalStyles.orangeText}>Status</Text>
                 <Switch value={isEnabled} onValueChange={toggleSwitch} />
-            </View>
-            <TouchableOpacity style={styles.saveButton}>
+            </View> */}
+            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Salvar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton}>
+            <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
             </TouchableOpacity>
         </View>
@@ -141,5 +223,11 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 18,
         fontWeight: "bold",
+    },
+    gap_10: {
+        gap: 10,
+    },
+    align_center: {
+        alignItems: "center",
     },
 })
