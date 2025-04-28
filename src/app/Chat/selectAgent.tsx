@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router"
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native"
+import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
 import { useAxios } from "@/context/axiosContext"
@@ -82,16 +82,21 @@ export default function Chats() {
                 {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
                 {agents.map((agent) => (
                     <TouchableOpacity
-                        style={globalStyles.agentBox}
+                        style={[globalStyles.agentBox, { flexDirection: "row", alignItems: "center" }]}
                         onPress={() => handleAgentPress(
                             agent[GetAgentResponseKeys.ID].toString(),
                             agent[GetAgentResponseKeys.NAME]
                         )}
                         key={agent[GetAgentResponseKeys.ID]}
                     >
+                        <Image
+                            source={require("../../assets/images/agente4.png")}
+                            style={{ width: 50, height: 50, borderRadius: 25, marginRight: 10 }}
+                        />
                         <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
                     </TouchableOpacity>
                 ))}
+
             </View>
         </View>
     )

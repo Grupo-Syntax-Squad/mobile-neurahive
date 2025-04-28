@@ -5,6 +5,7 @@ import {
     Text,
     TouchableOpacity,
     Alert,
+    Image,
     ScrollView
 } from "react-native"
 import globalStyles from "../styles/globalStyles"
@@ -55,16 +56,22 @@ export default function NewChat() {
                 </TouchableOpacity>
                 {chats.length < 1 && <Text>Nenhum chat encontrado.</Text>}
                 {chats.map((chat) => (
-                   <TouchableOpacity
-                       style={globalStyles.agentBox}
-                       onPress={() =>
-                           router.push(`/Chat/[${chat[GetChatResponseKeys.ID]}]`)
-                       }
-                       key={chat[GetChatResponseKeys.ID]}
-                   >
-                       <Text>id agente: {chat[GetChatResponseKeys.ID]}</Text>
-                   </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[globalStyles.agentBox, { flexDirection: "row", alignItems: "center" }]}
+                        onPress={() =>
+                            router.push(`/Chat/[${chat[GetChatResponseKeys.ID]}]`)
+                        }
+                        key={chat[GetChatResponseKeys.ID]}
+                    >
+                        <Image
+                            source={require("../../assets/images/agente4.png")}
+                            style={{ width: 50, height: 50, borderRadius: 25, marginRight: 10 }}
+                        />
+                        <Text>id agente: {chat[GetChatResponseKeys.ID]}</Text>
+                    </TouchableOpacity>
                 ))}
+
+
             </View>
         </ScrollView>
     )

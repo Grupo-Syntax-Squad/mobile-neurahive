@@ -85,7 +85,7 @@ export default function WebSocketProvider({ children }: { children: React.ReactN
                 console.log("Conexão fechada", e.code, e.reason)
                 setIsConnected(false)
                 
-                if (chatId) { // Só reconecta se tiver um chatId válido
+                if (chatId) {
                     setTimeout(() => {
                         console.log("Tentando reconectar...")
                         connect()

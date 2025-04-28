@@ -15,14 +15,13 @@ import { useWebSocket } from "../WebSocketContext"
 import { Message } from "@/interfaces/Services/Message"
 
 export default function Chat() {
-    const { id, agentName } = useLocalSearchParams()
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [message, setMessage] = useState("")
     const { post } = useAxios()
     const [sending, setSending] = useState(false)
-
-    console.log("Chat ID:", id)
+    const params = useLocalSearchParams();
+    const chatId = params.id[1];
 
     const { 
         connect, 
@@ -34,7 +33,7 @@ export default function Chat() {
     } = useWebSocket()
 
     useEffect(() => {
-        setChatId(Number(id))
+        setChatId(Number(chatId))
         connect()
 
         return () => {
@@ -53,14 +52,14 @@ export default function Chat() {
     
     const postMessageToDatabase = async (messageContent: string): Promise<void> => {
         const newMessage: Message = {
-            chat_id: Number(id), 
+            chat_id: Number(chatId), 
             message: messageContent,
             is_user_message: true,
             message_date: new Date() 
         };
     
         try {
-            await post(`/chat/${id}/chat_history`, newMessage);
+            await post(`/message/`, newMessage);
         } catch (error) {
             console.error("Erro ao salvar mensagem:", error);
             throw error;
@@ -74,14 +73,12 @@ export default function Chat() {
         setSending(true);
         try {
             sendMessage(message);
-            
-
             await postMessageToDatabase(message);
             
             setMessage("");
         } catch (error) {
             setError("Falha ao enviar mensagem");
-            console.error("Erro completo:", error);
+            console.error("Erro: ", error);
         } finally {
             setSending(false);
         }
@@ -106,12 +103,6 @@ export default function Chat() {
                 {error && (
                     <Text style={styles.errorText}>{error}</Text>
                 )}
-
-                <View style={[styles.message, styles.iaMessage]}>
-                    <Text style={styles.iaText}>
-                        Olá! Eu sou {agentName || 'o agente'}. Como posso te ajudar?
-                    </Text>
-                </View>
             </View>
 
             {messages.map((msg, index) => (

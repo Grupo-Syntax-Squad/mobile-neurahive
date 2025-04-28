@@ -56,7 +56,7 @@ export default function Layout() {
                                 fontSize: 18, 
                                 fontWeight: 'bold' 
                                 }}>
-                                {route.params?.agentName || 'Agente'}
+                                {route.params?.agentName || 'Agente '}
                                 </Text>
                             </View>
                             ),
