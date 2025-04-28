@@ -48,7 +48,7 @@ export default function InicialSettings() {
                     <Text style={styles.sectionTitle}>Chat e Iterações</Text>
                     <View style={styles.sectionSwitch}>
                         <Text style={styles.subtitle}>Limpar conversas inativas?</Text>
-                        <Switch value={isEnabled} onValueChange={toggleSwitch} />
+                        <Switch value={isChatEnabled} onValueChange={toggleChatSwitch} />
                     </View>
                     <View style={styles.checkboxContainer}>
                         <Checkbox
