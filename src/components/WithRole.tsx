@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/authContext"
+import { useAuth } from "@/contexts/authContext"
 
 const WithRole = ({ children, allowedRoles }: { children: any; allowedRoles: number[] }) => {
     const { user } = useAuth()

@@ -14,7 +14,7 @@ import { NeurahiveIcon } from "@/components/NeurahiveIcon"
 import globalStyles from "../styles/globalStyles"
 import axios from "axios"
 import * as SecureStore from "expo-secure-store"
-import { useAuth } from "@/context/authContext"
+import { useAuth } from "@/contexts/authContext"
 
 const Login = () => {
     const router = useRouter()

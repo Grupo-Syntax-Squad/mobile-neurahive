@@ -15,7 +15,7 @@ import { router } from "expo-router"
 import FormField from "@/components/FormField"
 import Checkbox from "expo-checkbox"
 import { Agent } from "@/types/Agent"
-import { useAxios } from "@/context/axiosContext"
+import { useAxios } from "@/contexts/axiosContext"
 import MultiSelect from "@/components/MultiSelect"
 
 export default function CreateUser() {

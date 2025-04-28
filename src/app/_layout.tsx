@@ -1,5 +1,5 @@
-import { AuthProvider } from "@/context/authContext"
-import { AxiosProvider } from "@/context/axiosContext"
+import { AuthProvider } from "@/contexts/authContext"
+import { AxiosProvider } from "@/contexts/axiosContext"
 import { Stack } from "expo-router"
 
 export default function Layout() {
@@ -34,6 +34,14 @@ export default function Layout() {
                     <Stack.Screen name="Agents/create" options={{ title: "Nova agente de IA" }} />
                     <Stack.Screen name="Chat/page" options={{ title: "Selecione o Agente" }} />
                     <Stack.Screen name="Chat/[id]" options={{ title: "" }} />
+                    <Stack.Screen
+                        name="KnowledgeBase/page"
+                        options={{ title: "Bases de conhecimento" }}
+                    />
+                    <Stack.Screen
+                        name="KnowledgeBase/[id]"
+                        options={{ title: "Detalhes da base de conhecimento" }}
+                    />
                 </Stack>
             </AxiosProvider>
         </AuthProvider>

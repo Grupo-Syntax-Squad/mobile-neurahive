@@ -1,4 +1,4 @@
-import { useWebSocket } from "@/app/WebSocketContext"
+import { useWebSocket } from "@/contexts/WebSocketContext"
 import { useEffect } from "react"
 import { Text } from "react-native"
 
