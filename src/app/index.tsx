@@ -4,10 +4,10 @@ import { router } from "expo-router"
 import globalStyles from "./styles/globalStyles"
 import { NewsSection } from "@/components/NewsSection"
 import { ConfigurationAlert } from "@/components/ConfigurationAlert"
-import { useAuth } from "@/context/authContext"
+import { useAuth } from "@/contexts/authContext"
 import WithRole from "@/components/WithRole"
 import { Role } from "@/enum/Role"
-import { HomeActionButton } from "@/types/HomeActionButton"
+import { HomeActionButton, HomeActionButtonKeys } from "@/types/HomeActionButton"
 import * as SecureStore from "expo-secure-store"
 import { Division } from "@/components/Division"
 import { MaterialIcons } from '@expo/vector-icons';
@@ -16,52 +16,60 @@ export function HomeScreen() {
     const { logout, isAuthenticated, login } = useAuth()
     const actionButtons: HomeActionButton[] = [
         {
-            id: "1",
-            title: "Usuários",
-            icon: require("../assets/images/user-icon.png"),
-            route: "/users/page",
-            testID: "users-button",
-            allowedRoles: [Role.ADMIN],
+            [HomeActionButtonKeys.ID]: "1",
+            [HomeActionButtonKeys.TITLE]: "Usuários",
+            [HomeActionButtonKeys.ICON]: require("../assets/images/user-icon.png"),
+            [HomeActionButtonKeys.ROUTE]: "/users/page",
+            [HomeActionButtonKeys.TEST_ID]: "users-button",
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
         },
         {
-            id: "2",
-            title: "Agentes",
-            icon: require("../assets/images/user-icon.png"),
-            route: "/Agents/page",
-            testID: "agents-button",
-            allowedRoles: [Role.ADMIN, Role.CURATOR, Role.CLIENT],
+            [HomeActionButtonKeys.ID]: "2",
+            [HomeActionButtonKeys.TITLE]: "Agentes",
+            [HomeActionButtonKeys.ICON]: require("../assets/images/user-icon.png"),
+            [HomeActionButtonKeys.ROUTE]: "/Agents/page",
+            [HomeActionButtonKeys.TEST_ID]: "agents-button",
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.CURATOR, Role.CLIENT],
         },
         {
-            id: "3",
-            title: "Chat",
-            icon: require("../assets/images/chat.png"),
-            route: "/Chat/page",
-            testID: "chat-button",
-            allowedRoles: [Role.ADMIN],
+            [HomeActionButtonKeys.ID]: "7",
+            [HomeActionButtonKeys.TITLE]: "Bases de conhecimento",
+            [HomeActionButtonKeys.ICON]: null,
+            [HomeActionButtonKeys.ROUTE]: "/KnowledgeBase/page",
+            [HomeActionButtonKeys.TEST_ID]: "knowledge-bases-button",
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
+        },
+        {
+            [HomeActionButtonKeys.ID]: "3",
+            [HomeActionButtonKeys.TITLE]: "Chat",
+            [HomeActionButtonKeys.ICON]: require("../assets/images/chat.png"),
+            [HomeActionButtonKeys.ROUTE]: "/Chat/page",
+            [HomeActionButtonKeys.TEST_ID]: "chat-button",
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
         },
         // {
-        //     id: "4",
-        //     title: "Configurações Iniciais",
-        //     icon: require("../assets/images/settings.png"),
-        //     route: "/InicialSettings",
-        //     testID: "settings-button",
-        //     allowedRoles: [Role.ADMIN],
+        //     [HomeActionButtonKeys.ID]: "4",
+        //     [HomeActionButtonKeys.TITLE]: "Configurações Iniciais",
+        //     [HomeActionButtonKeys.ICON]: require("../assets/images/settings.png"),
+        //     [HomeActionButtonKeys.ROUTE]: "/InicialSettings",
+        //     [HomeActionButtonKeys.TEST_ID]: "settings-button",
+        //     [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
         // },
         // {
-        //     id: "5",
-        //     title: "Permissões",
-        //     icon: require("../assets/images/permission-icon.png"),
-        //     route: "/permissions/page",
-        //     testID: "permissions-button",
-        //     allowedRoles: [Role.ADMIN],
+        //     [HomeActionButtonKeys.ID]: "5",
+        //     [HomeActionButtonKeys.TITLE]: "Permissões",
+        //     [HomeActionButtonKeys.ICON]: require("../assets/images/permission-icon.png"),
+        //     [HomeActionButtonKeys.ROUTE]: "/permissions/page",
+        //     [HomeActionButtonKeys.TEST_ID]: "permissions-button",
+        //     [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
         // },
         // {
-        //     id: "6",
-        //     title: "Acessos",
-        //     icon: require("../assets/images/permission-icon.png"),
-        //     route: "/accesses/page",
-        //     testID: "permissions-button",
-        //     allowedRoles: [Role.ADMIN],
+        //     [HomeActionButtonKeys.ID]: "6",
+        //     [HomeActionButtonKeys.TITLE]: "Acessos",
+        //     [HomeActionButtonKeys.ICON]: require("../assets/images/permission-icon.png"),
+        //     [HomeActionButtonKeys.ROUTE]: "/accesses/page",
+        //     [HomeActionButtonKeys.TEST_ID]: "permissions-button",
+        //     [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
         // },
     ]
 
@@ -110,16 +118,22 @@ export function HomeScreen() {
                 />
             )}
             <Division/>
+
             <View style={styles.actionsSection}>
                 <Text style={styles.sectionTitle}>O que você deseja fazer hoje?</Text>
                 <View style={styles.actionsGrid}>
                     {actionButtons.map((button) => (
-                        <WithRole allowedRoles={button.allowedRoles} key={button.id}>
+                        <WithRole
+                            allowedRoles={button[HomeActionButtonKeys.ALLOWED_ROLES]}
+                            key={button[HomeActionButtonKeys.ID]}
+                        >
                             <ActionButton
-                                title={button.title}
-                                icon={button.icon}
-                                onPress={() => router.push(button.route as any)}
-                                testID={button.testID}
+                                title={button[HomeActionButtonKeys.TITLE]}
+                                icon={button[HomeActionButtonKeys.ICON]}
+                                onPress={() =>
+                                    router.push(button[HomeActionButtonKeys.ROUTE] as any)
+                                }
+                                testID={button[HomeActionButtonKeys.TEST_ID]}
                             />
                         </WithRole>
                     ))}

@@ -2,10 +2,10 @@ import { useRouter } from "expo-router"
 import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
-import { useAxios } from "@/context/axiosContext"
+import { useAxios } from "@/contexts/axiosContext"
 import { GetAgentResponse, GetAgentResponseKeys } from "@/interfaces/Services/Agent"
 import { Division } from "@/components/Division"
-import { useAuth } from "@/context/authContext"
+import { useAuth } from "@/contexts/authContext"
 
 export default function Chats() {
     const router = useRouter()

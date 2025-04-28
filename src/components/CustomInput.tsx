@@ -34,7 +34,7 @@ export default function CustomInput({
 const styles = StyleSheet.create({
     input: {
         width: "100%",
-        height: 50,
+        minHeight: 50,
         backgroundColor: "#fff",
         borderRadius: 10,
         paddingHorizontal: 15,

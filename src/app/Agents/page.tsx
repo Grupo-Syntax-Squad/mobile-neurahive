@@ -1,15 +1,16 @@
-import { Link, useRouter } from "expo-router"
-import { Image, StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native"
+import { useRouter } from "expo-router"
+import { Image, View, Text, TouchableOpacity, Alert } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
-import { useAxios } from "@/context/axiosContext"
+import { useAxios } from "@/contexts/axiosContext"
 import { GetAgentResponse, GetAgentResponseKeys } from "@/interfaces/Services/Agent"
+import { TestComponent } from "@/components/Test"
+import WebSocketProvider from "@/contexts/WebSocketContext"
 
 export default function Agents() {
     const router = useRouter()
     const [agents, setAgents] = useState<GetAgentResponse[]>([])
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
     const { get } = useAxios()
     const fetchAgents = async () => {
         setLoading(true)
@@ -35,6 +36,8 @@ export default function Agents() {
         )
 
     return (
+        <WebSocketProvider>
+            <TestComponent/>
             <View>
                 <View style={globalStyles.header}>
                     <Text>Área de Agentes</Text>
@@ -60,7 +63,7 @@ export default function Agents() {
                         <TouchableOpacity
                             style={globalStyles.agentBox}
                             onPress={() =>
-                                router.push(`/Agents/[${agent[GetAgentResponseKeys.ID]}]`)
+                                router.push(`/Agents/${agent[GetAgentResponseKeys.ID]}`)
                             }
                             key={agent[GetAgentResponseKeys.ID]}
                         >
@@ -69,7 +72,6 @@ export default function Agents() {
                     ))}
                 </View>
             </View>
+            </WebSocketProvider>
     )
 }
-
-const styles = StyleSheet.create({})

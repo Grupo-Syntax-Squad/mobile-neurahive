@@ -11,7 +11,7 @@ import {
 import globalStyles from "../styles/globalStyles"
 import { MaterialIcons } from '@expo/vector-icons'; 
 import React, { useEffect, useState } from "react";
-import { useAxios } from "@/context/axiosContext";
+import { useAxios } from "@/contexts/axiosContext";
 import { GetChatResponse, GetChatResponseKeys } from "@/interfaces/Services/Chat"
 
 export default function NewChat() {

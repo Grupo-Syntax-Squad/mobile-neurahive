@@ -1,4 +1,4 @@
-import { useWebSocket } from "@/app/WebSocketContext"
+import { useWebSocket } from "@/contexts/WebSocketContext"
 import { useEffect } from "react"
 import { Text } from "react-native"
 
@@ -7,7 +7,7 @@ export const TestComponent = () => {
     const { connect, disconnect, setChatId, sendMessage, isConnected } = useWebSocket()
 
     useEffect(() => {
-        setChatId(2)
+        setChatId(1)
         connect()
 
         return () => {

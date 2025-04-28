@@ -3,7 +3,7 @@ import { Link, useRouter } from "expo-router"
 import React, { useEffect, useState } from "react"
 import ProtectedRoute from "@/components/ProtectedRoute"
 import { Role } from "@/enum/Role"
-import { useAxios } from "@/context/axiosContext"
+import { useAxios } from "@/contexts/axiosContext"
 import globalStyles from "../styles/globalStyles"
 import { User } from "@/types/User"
 import { Division } from "@/components/Division"
@@ -30,7 +30,6 @@ export function Users() {
 
     useEffect(() => {
         fetchUsers()
-        console.log(users)
     }, [])
 
     const actionButtons = [

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { useAuth } from "../context/authContext"
+import { useAuth } from "../contexts/authContext"
 import { useRouter } from "expo-router"
 
 interface ProtectedRouteProps {

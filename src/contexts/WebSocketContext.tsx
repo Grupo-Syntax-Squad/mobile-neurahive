@@ -1,9 +1,9 @@
 import { Message } from "@/interfaces/Services/Message"
 import { createContext, useContext, useRef, useState } from "react"
-import { Alert, Platform } from "react-native"
+import { Alert } from "react-native"
 
 interface WebSocketContextType {
-    connect: () => void
+    connect: (chat_id: number) => void
     disconnect: () => void
     sendMessage: (message: string) => void
     messages: Message[]
@@ -23,19 +23,12 @@ export default function WebSocketProvider({ children }: { children: React.ReactN
     const [isConnected, setIsConnected] = useState(false)
     const [messages, setMessages] = useState<Message[]>([])
     const [chatId, setChatId] = useState<number | undefined>(undefined)
-
     const getWebSocketUrl = () => {
-        if (__DEV__) {
-            if (Platform.OS === 'android') {
-                return "ws://10.0.2.2:8000/ws" 
-            } else {
-                return "ws://localhost:8000/ws"
-            }
-        }
         return process.env.EXPO_PUBLIC_WEBSOCKET_URL
     }
 
-    const connect = () => {
+    const connect = (chat_id: number) => {
+        setChatId(chat_id)
         try {
             if (!chatId) {
                 console.log("Aguardando chatId...")
@@ -52,9 +45,9 @@ export default function WebSocketProvider({ children }: { children: React.ReactN
                 return
             }
 
-            const url = `${getWebSocketUrl()}?chat_id=${chatId}`
+            const url = `${getWebSocketUrl()}`
             console.log("Conectando a:", url)
-            
+
             ws.current = new WebSocket(url)
 
             ws.current.onopen = () => {
@@ -65,13 +58,15 @@ export default function WebSocketProvider({ children }: { children: React.ReactN
             ws.current.onmessage = (e) => {
                 try {
                     const data = JSON.parse(e.data)
-                    console.log("Mensagem recebida:", data)
-                    setMessages(prev => [...prev, {
-                        chat_id: chatId,
-                        message: data.message,
-                        is_user_message: false,
-                        message_date: new Date()
-                    }])
+                    setMessages((prev) => [
+                        ...prev,
+                        {
+                            chat_id: chatId,
+                            message: data.answer,
+                            is_user_message: false,
+                            message_date: new Date(data.response_date),
+                        },
+                    ])
                 } catch (error) {
                     console.error("Erro ao processar mensagem:", error)
                 }
@@ -84,11 +79,11 @@ export default function WebSocketProvider({ children }: { children: React.ReactN
             ws.current.onclose = (e) => {
                 console.log("Conexão fechada", e.code, e.reason)
                 setIsConnected(false)
-                
+
                 if (chatId) {
                     setTimeout(() => {
                         console.log("Tentando reconectar...")
-                        connect()
+                        connect(chatId)
                     }, 3000)
                 }
             }
@@ -106,37 +101,40 @@ export default function WebSocketProvider({ children }: { children: React.ReactN
     }
 
     const sendMessage = (message: string) => {
+        console.log("ws.current: ", ws.current)
+        console.log("chaID: " + chatId)
+        console.log("mensagem: " + message)
+        console.log("isConnected: " + isConnected)
         if (ws.current && isConnected && chatId) {
-            const webSocketMessage: WebSocketMessage = { 
-                chat_id: chatId, 
-                message 
-            }
-            ws.current.send(JSON.stringify(webSocketMessage))
-            setMessages(prev => [...prev, {
+            const webSocketMessage: WebSocketMessage = {
                 chat_id: chatId,
                 message,
-                is_user_message: true,
-                message_date: new Date()
-            }])
+            }
+            ws.current.send(JSON.stringify(webSocketMessage))
+            setMessages((prev) => [
+                ...prev,
+                {
+                    chat_id: chatId,
+                    message,
+                    is_user_message: true,
+                    message_date: new Date(),
+                },
+            ])
         } else {
             console.warn("WebSocket não conectado ou chatId inválido")
         }
     }
 
-    const value = { 
-        connect, 
-        disconnect, 
-        sendMessage, 
-        messages, 
-        isConnected, 
-        setChatId 
+    const value = {
+        connect,
+        disconnect,
+        sendMessage,
+        messages,
+        isConnected,
+        setChatId,
     }
 
-    return (
-        <WebSocketContext.Provider value={value}>
-            {children}
-        </WebSocketContext.Provider>
-    )
+    return <WebSocketContext.Provider value={value}>{children}</WebSocketContext.Provider>
 }
 
 export const useWebSocket = () => {

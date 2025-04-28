@@ -1,15 +1,13 @@
-import { AuthProvider } from "@/context/authContext"
-import { AxiosProvider } from "@/context/axiosContext"
+import { AuthProvider } from "@/contexts/authContext"
+import { AxiosProvider } from "@/contexts/axiosContext"
 import { Stack } from "expo-router"
 import { View, Image, Text } from "react-native"
-import WebSocketProvider from "./WebSocketContext"
+import WebSocketProvider from "../contexts/WebSocketContext"
 
 export default function Layout() {
     return (
         <AuthProvider>
             <AxiosProvider>
-            <WebSocketProvider>
-
                 <Stack>
                     <Stack.Screen
                         name="Auth/login"
@@ -34,7 +32,7 @@ export default function Layout() {
                     <Stack.Screen name="users/[id]" options={{ title: "Detalhes do Usuário" }} />
                     <Stack.Screen name="permissions/[id]" options={{ title: "Permissões" }} />
                     <Stack.Screen name="Agents/page" options={{ title: "Agentes" }} />
-                    <Stack.Screen name="Agents/[id]" options={{ title: "Agente" }} />
+                    <Stack.Screen name="Agents/[id]" options={{ title: "Editar Agente" }} />
                     <Stack.Screen name="Agents/create" options={{ title: "Nova agente de IA" }} />
                     <Stack.Screen name="Chat/page" options={{ title: "Minhas conversas" }} />
                     <Stack.Screen 
@@ -62,9 +60,15 @@ export default function Layout() {
                         })}
                         />
                     <Stack.Screen name="Chat/selectAgent" options={{ title: "Selecione o Agente" }} />
+                    <Stack.Screen
+                        name="KnowledgeBase/page"
+                        options={{ title: "Bases de conhecimento" }}
+                    />
+                    <Stack.Screen
+                        name="KnowledgeBase/[id]"
+                        options={{ title: "Detalhes da base de conhecimento" }}
+                    />
                 </Stack>
-                </WebSocketProvider>
-
             </AxiosProvider>
         </AuthProvider>
     )
