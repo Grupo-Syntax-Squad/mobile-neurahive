@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router"
 import { useAxios } from "@/context/axiosContext"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { 
     StyleSheet, 
     View, 
@@ -13,6 +13,7 @@ import {
 } from "react-native"
 import { useWebSocket } from "../WebSocketContext"
 import { Message } from "@/interfaces/Services/Message"
+import Icon from "react-native-vector-icons/Ionicons"
 
 export default function Chat() {
     const [loading, setLoading] = useState(true)
@@ -148,14 +149,13 @@ export default function Chat() {
                     style={styles.sendButton}
                     onPress={handleSendMessage}
                 >
-                    <Text style={styles.sendButtonText}>Enviar</Text>
+                <Icon name="send" size={24} color="#fff" />
                 </TouchableOpacity>
             </KeyboardAvoidingView>
         </View>
     )
 }
 
-// Adicione esses novos estilos ao seu StyleSheet
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -43,13 +43,8 @@ export default function Layout() {
                             headerTitle: () => (
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Image
-                                source={{ uri: "https://cdn-icons-png.flaticon.com/512/4712/4712038.png" }}
-                                style={{ 
-                                    width: 30, 
-                                    height: 30, 
-                                    borderRadius: 15, 
-                                    marginRight: 10 
-                                }}
+                                    source={require("../assets/images/agente4.png")}
+                                    style={{ width: 50, height: 50, borderRadius: 25, marginRight: 10 }}
                                 />
                                 <Text style={{ 
                                 color: 'white', 
