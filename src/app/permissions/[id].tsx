@@ -1,14 +1,7 @@
 import React, { useState } from "react"
-import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    Image,
-} from "react-native"
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from "react-native"
 import { useRouter } from "expo-router"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import Checkbox from "expo-checkbox"
 
 export default function Permission() {
@@ -27,9 +20,7 @@ export default function Permission() {
                     value={"Total"}
                 />
                 <View style={globalStyles.spaceAround}>
-                    <Text style={globalStyles.orangeText}>
-                        Selecione os acessos da permissão
-                    </Text>
+                    <Text style={globalStyles.orangeText}>Selecione os acessos da permissão</Text>
                     <Text style={globalStyles.orangeText}>Selecionados: </Text>
                 </View>
                 <View style={styles.section}>

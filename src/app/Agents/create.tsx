@@ -1,18 +1,12 @@
 import { Alert, Button, StyleSheet, Switch, Text, View } from "react-native"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import CustomInput from "@/components/CustomInput"
 import { useState } from "react"
 import * as DocumentPicker from "expo-document-picker"
 import { Access, AccessKeys } from "@/interfaces/Services/Access"
-import {
-    KnowledgeBase,
-    KnowledgeBaseKeys,
-} from "@/interfaces/Services/KnowledgeBase"
+import { KnowledgeBase, KnowledgeBaseKeys } from "@/interfaces/Services/KnowledgeBase"
 import { useAxios } from "@/context/axiosContext"
-import {
-    PostAgentRequest,
-    PostAgentRequestKeys,
-} from "@/interfaces/Services/Agent"
+import { PostAgentRequest, PostAgentRequestKeys } from "@/interfaces/Services/Agent"
 import { router } from "expo-router"
 
 enum FormKeys {
@@ -92,10 +86,8 @@ const defaultFormErrors: Record<FormKeys, string> = {
 export default function CreateAgent() {
     const [form, setForm] = useState<Form>(defaultForm)
     const [accesses, setAccesses] = useState<Access[]>(MockAccess)
-    const [knowledgeBases, setKnowledgeBases] =
-        useState<KnowledgeBase[]>(MockKnowledgeBase)
-    const [formErrors, setFormErrors] =
-        useState<Record<FormKeys, string>>(defaultFormErrors)
+    const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>(MockKnowledgeBase)
+    const [formErrors, setFormErrors] = useState<Record<FormKeys, string>>(defaultFormErrors)
     const { post } = useAxios()
 
     const setName = (value: string): void => {
@@ -116,8 +108,7 @@ export default function CreateAgent() {
 
     const validateForm = () => {
         let customFormErrors: Partial<Record<FormKeys, string>> = {}
-        if (!form[FormKeys.NAME])
-            customFormErrors[FormKeys.NAME] = "O nome do agente é obrigatório"
+        if (!form[FormKeys.NAME]) customFormErrors[FormKeys.NAME] = "O nome do agente é obrigatório"
         else customFormErrors[FormKeys.NAME] = ""
         setFormErrors({ ...formErrors, ...customFormErrors })
         return customFormErrors
@@ -133,10 +124,7 @@ export default function CreateAgent() {
             }
             await post("/agents/", request)
         } catch (error) {
-            Alert.alert(
-                "Cadastrar agente",
-                "Erro ao cadastrar agente tente novamente"
-            )
+            Alert.alert("Cadastrar agente", "Erro ao cadastrar agente tente novamente")
         } finally {
             router.replace("/Agents/page")
         }
@@ -164,9 +152,7 @@ export default function CreateAgent() {
 
     return (
         <View style={globalStyles.container}>
-            <Text style={[globalStyles.orangeText, styles.inputText]}>
-                Nome
-            </Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>Nome</Text>
             <CustomInput
                 placeholder="Digite o nome do agente"
                 value={form[FormKeys.NAME]}
@@ -248,9 +234,7 @@ export default function CreateAgent() {
                 />
             </Picker> */}
             <View style={globalStyles.orangeButton} onTouchStart={handleSubmit}>
-                <Text style={[globalStyles.WhiteText, styles.inputText]}>
-                    Criar
-                </Text>
+                <Text style={[globalStyles.WhiteText, styles.inputText]}>Criar</Text>
             </View>
         </View>
     )

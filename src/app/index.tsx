@@ -1,14 +1,7 @@
-import {
-    Image,
-    StyleSheet,
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-} from "react-native"
+import { Image, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native"
 import React, { useEffect } from "react"
 import { router } from "expo-router"
-import { globalStyles } from "./styles/globalStyles"
+import globalStyles from "./styles/globalStyles"
 import { NewsSection } from "@/components/NewsSection"
 import { ConfigurationAlert } from "@/components/ConfigurationAlert"
 import { useAuth } from "@/context/authContext"
@@ -58,7 +51,7 @@ export function HomeScreen() {
         //     id: "5",
         //     title: "Permissões",
         //     icon: require("../assets/images/permission-icon.png"),
-        //     route: "/Permissions/page",
+        //     route: "/permissions/page",
         //     testID: "permissions-button",
         //     allowedRoles: [Role.ADMIN],
         // },
@@ -118,15 +111,10 @@ export function HomeScreen() {
             )}
             <Division/>
             <View style={styles.actionsSection}>
-                <Text style={styles.sectionTitle}>
-                    O que você deseja fazer hoje?
-                </Text>
+                <Text style={styles.sectionTitle}>O que você deseja fazer hoje?</Text>
                 <View style={styles.actionsGrid}>
                     {actionButtons.map((button) => (
-                        <WithRole
-                            allowedRoles={button.allowedRoles}
-                            key={button.id}
-                        >
+                        <WithRole allowedRoles={button.allowedRoles} key={button.id}>
                             <ActionButton
                                 title={button.title}
                                 icon={button.icon}
@@ -150,11 +138,7 @@ const ActionButton: React.FC<{
     onPress: () => void
     testID?: string
 }> = ({ title, icon, onPress, testID }) => (
-    <TouchableOpacity
-        style={styles.actionButton}
-        onPress={onPress}
-        testID={testID}
-    >
+    <TouchableOpacity style={styles.actionButton} onPress={onPress} testID={testID}>
         <Image source={icon} style={styles.actionIcon} />
         <Text style={styles.actionText}>{title}</Text>
     </TouchableOpacity>

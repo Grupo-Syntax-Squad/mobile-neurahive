@@ -1,15 +1,8 @@
 import React, { useState } from "react"
-import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Image,
-    Switch,
-} from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View, Image, Switch } from "react-native"
 import { useRouter } from "expo-router"
 import CustomInput from "../../components/CustomInput"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import { Picker } from "@react-native-picker/picker"
 
 export default function Agent() {
@@ -28,25 +21,15 @@ export default function Agent() {
         <View style={globalStyles.container}>
             <View style={globalStyles.imageContainer}>
                 <Text style={globalStyles.textCenter}>Thiago</Text>
-                <Image
-                    source={require("../../assets/images/bees-background.png")}
-                />
+                <Image source={require("../../assets/images/bees-background.png")} />
             </View>
             <View style={styles.userDetail}>
                 <Text style={styles.userStatus}>Ativo</Text>
-                <Text style={styles.DetailContainer}>
-                    Criado em: 12/12/2024
-                </Text>
-                <Text style={styles.DetailContainer}>
-                    Atualizado em: 12/12/2024
-                </Text>
+                <Text style={styles.DetailContainer}>Criado em: 12/12/2024</Text>
+                <Text style={styles.DetailContainer}>Atualizado em: 12/12/2024</Text>
             </View>
             <Text style={globalStyles.orangeText}>Nome</Text>
-            <CustomInput
-                placeholder="Nome"
-                value={name}
-                onChangeText={setName}
-            />
+            <CustomInput placeholder="Nome" value={name} onChangeText={setName} />
             <Text style={globalStyles.orangeText}>E-mail</Text>
             <CustomInput
                 placeholder="E-mail"

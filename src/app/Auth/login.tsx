@@ -11,7 +11,7 @@ import {
 import { Link, useRouter } from "expo-router"
 import OrangeButton from "@/components/orangeButton"
 import { NeurahiveIcon } from "@/components/NeurahiveIcon"
-import { globalStyles } from "../styles/globalStyles"
+import globalStyles from "../styles/globalStyles"
 import axios from "axios"
 import * as SecureStore from "expo-secure-store"
 import { useAuth } from "@/context/authContext"
@@ -24,20 +24,17 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(
-                `${process.env.EXPO_PUBLIC_API_URL}/auth/login`,
-                { email, password }
-            )
+            const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/login`, {
+                email,
+                password,
+            })
             const token = response.data.access_token
             await SecureStore.setItem("jwt_token", token)
 
             login(token)
         } catch (error: any) {
             console.log(error)
-            Alert.alert(
-                "Erro ao logar",
-                error.response ? error.response.data : "Erro desconhecido"
-            )
+            Alert.alert("Erro ao logar", error.response ? error.response.data : "Erro desconhecido")
         }
         router.replace("/")
     }
@@ -77,9 +74,7 @@ const Login = () => {
                     <OrangeButton title={"Entrar"} onPress={handleLogin} />
 
                     <View style={styles.registerContainer}>
-                        <Text style={styles.registerText}>
-                            Ainda não tem conta?{" "}
-                        </Text>
+                        <Text style={styles.registerText}>Ainda não tem conta? </Text>
                         <Link href="/Auth/register" style={styles.registerLink}>
                             Cadastre-se
                         </Link>
