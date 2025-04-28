@@ -4,11 +4,8 @@ import CustomInput from "@/components/CustomInput"
 import { useEffect, useState } from "react"
 
 //import { Access, AccessKeys } from "@/interfaces/Services/Access"
-import {
-    KnowledgeBase,
-    KnowledgeBaseKeys,
-} from "@/interfaces/Services/KnowledgeBase"
-import { useAxios } from "@/context/axiosContext"
+import { KnowledgeBase, KnowledgeBaseKeys } from "@/interfaces/Services/KnowledgeBase"
+import { useAxios } from "@/contexts/axiosContext"
 import { PostAgentRequest, PostAgentRequestKeys } from "@/interfaces/Services/Agent"
 import { router } from "expo-router"
 import { Picker } from "@react-native-picker/picker"
@@ -86,10 +83,8 @@ export default function CreateAgent() {
     const [uploadedFile, setUploadedFile] = useState<UploadedFile>()
     const [form, setForm] = useState<Form>(defaultForm)
     //const [accesses, setAccesses] = useState<Access[]>(MockAccess)
-    const [knowledgeBases, setKnowledgeBases] =
-        useState<KnowledgeBase[]>([])
-    const [formErrors, setFormErrors] =
-        useState<Record<FormKeys, string>>(defaultFormErrors)
+    const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([])
+    const [formErrors, setFormErrors] = useState<Record<FormKeys, string>>(defaultFormErrors)
     const { get, post } = useAxios()
 
     const setName = (value: string): void => {
@@ -115,10 +110,9 @@ export default function CreateAgent() {
     }
 
     const fetchKnowledgeBases = async () => {
-        try{
-            const response = await get('/knowledge-base')
-            console.log(response.data)
-            setKnowledgeBases(response.data)            
+        try {
+            const response = await get("/knowledge-base")
+            setKnowledgeBases(response.data)
         } catch (err) {
             console.log("Erro ao buscar bases de conhecimento:", err)
         }
@@ -127,7 +121,6 @@ export default function CreateAgent() {
     useEffect(() => {
         fetchKnowledgeBases()
     }, [form[FormKeys.EXISTENT_KNOWLEDGE]])
-
 
     const validateForm = () => {
         let customFormErrors: Partial<Record<FormKeys, string>> = {}
@@ -145,8 +138,12 @@ export default function CreateAgent() {
             const request: PostAgentRequest = {
                 [PostAgentRequestKeys.NAME]: form[FormKeys.NAME],
                 [PostAgentRequestKeys.THEME]: form[FormKeys.THEME],
-                [PostAgentRequestKeys.BEHAVIOR]: form[FormKeys.BEHAVIOR] ? form[FormKeys.BEHAVIOR] : undefined,
-                [PostAgentRequestKeys.KNOWLEDGE_BASE_ID]: form[FormKeys.KNOWLEDGE_BASE_ID] ? form[FormKeys.KNOWLEDGE_BASE_ID] : undefined
+                [PostAgentRequestKeys.BEHAVIOR]: form[FormKeys.BEHAVIOR]
+                    ? form[FormKeys.BEHAVIOR]
+                    : undefined,
+                [PostAgentRequestKeys.KNOWLEDGE_BASE_ID]: form[FormKeys.KNOWLEDGE_BASE_ID]
+                    ? form[FormKeys.KNOWLEDGE_BASE_ID]
+                    : undefined,
             }
             await post("/agents/", request)
         } catch (error) {
@@ -154,7 +151,7 @@ export default function CreateAgent() {
         } finally {
             router.replace("/Agents/page")
         }
-    }    
+    }
 
     return (
         <View style={globalStyles.container}>
@@ -166,26 +163,16 @@ export default function CreateAgent() {
                 error={formErrors[FormKeys.NAME]}
             />
 
-            <Text style={[globalStyles.orangeText, styles.inputText]}>
-                Tema
-            </Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>Tema</Text>
             <CustomInput
                 placeholder="Digite o tema do agente"
                 value={form[FormKeys.THEME]}
                 onChangeText={setTheme}
                 error={formErrors[FormKeys.THEME]}
             />
-            
-            <Text style={[globalStyles.orangeText, styles.inputText]}>
-                Base de conhecimento
-            </Text>
-            <View
-                style={[
-                    globalStyles.flexRow,
-                    styles.gap_10,
-                    styles.align_center,
-                ]}
-            >
+
+            <Text style={[globalStyles.orangeText, styles.inputText]}>Base de conhecimento</Text>
+            <View style={[globalStyles.flexRow, styles.gap_10, styles.align_center]}>
                 <Text>Utilizar base de conhecimento já existente?</Text>
                 <Switch
                     value={form[FormKeys.EXISTENT_KNOWLEDGE]}
@@ -195,10 +182,7 @@ export default function CreateAgent() {
                 />
             </View>
             {!form[FormKeys.EXISTENT_KNOWLEDGE] && (
-                <DocumentSelect 
-                    uploadedFile={uploadedFile}
-                    setUploadedFile={setUploadedFile}
-                />
+                <DocumentSelect uploadedFile={uploadedFile} setUploadedFile={setUploadedFile} />
             )}
             {form[FormKeys.EXISTENT_KNOWLEDGE] && (
                 <Picker
@@ -206,10 +190,7 @@ export default function CreateAgent() {
                     selectedValue={form[FormKeys.KNOWLEDGE_BASE_ID]}
                     onValueChange={(value) => setKnowledgeBase(value)}
                 >
-                    <Picker.Item
-                        label="Selecione a base de conhecimento"
-                        value={undefined}
-                    />
+                    <Picker.Item label="Selecione a base de conhecimento" value={undefined} />
                     {knowledgeBases.map((knowledgeBase) => (
                         <Picker.Item
                             key={knowledgeBase[KnowledgeBaseKeys.ID]}
@@ -220,8 +201,7 @@ export default function CreateAgent() {
                 </Picker>
             )}
             <Text style={[globalStyles.orangeText, styles.inputText]}>
-                Comportamento do agente{" "}
-                <Text style={globalStyles.textMuted}>(Opcional)</Text>
+                Comportamento do agente <Text style={globalStyles.textMuted}>(Opcional)</Text>
             </Text>
             <CustomInput
                 placeholder="Digite o comportamento do agente"

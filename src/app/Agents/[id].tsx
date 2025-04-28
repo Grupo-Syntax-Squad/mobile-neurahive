@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react"
-import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Switch,
-    Alert,
-} from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View, Switch, Alert } from "react-native"
 import { router, useLocalSearchParams } from "expo-router"
 import CustomInput from "../../components/CustomInput"
 import globalStyles from "../styles/globalStyles"
 import { Picker } from "@react-native-picker/picker"
-import { useAxios } from "@/context/axiosContext"
+import { useAxios } from "@/contexts/axiosContext"
 import { KnowledgeBase } from "@/interfaces/Services/KnowledgeBase"
 import { DocumentSelect } from "@/components/DocumentSelect"
 import { UploadedFile } from "@/types/UploadedFile"
@@ -26,22 +19,22 @@ type AgentData = {
 export default function Agent() {
     const { id } = useLocalSearchParams()
     const { get, put } = useAxios()
-    
+
     //const [isEnabled, setIsEnabled] = useState<boolean>()
     const [uploadedFile, setUploadedFile] = useState<UploadedFile>()
     const [useExistingKnowledge, setUseExistingKnowledge] = useState<boolean>(true)
     const [knowledgeBases, setKnowledgebases] = useState<KnowledgeBase[]>([])
     const [agentData, setAgentData] = useState<AgentData>({
-        name: '',
-        theme: '',
-        behavior: ''
+        name: "",
+        theme: "",
+        behavior: "",
     })
 
     //const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
     const toggleUseExistingKnowledge = () => {
         setUseExistingKnowledge(!useExistingKnowledge)
     }
-    
+
     const fetchAgent = async () => {
         const response = await get(`/agents/${id}`)
         setAgentData(response.data)
@@ -57,10 +50,7 @@ export default function Agent() {
             Alert.alert("Sucesso", "Agente atualizado com sucesso!")
             router.replace("/Agents/")
         } catch (error: any) {
-            Alert.alert(
-                "Erro",
-                error.response?.data?.message || "Erro ao salvar agente"
-            )
+            Alert.alert("Erro", error.response?.data?.message || "Erro ao salvar agente")
             console.error(error)
         }
     }
@@ -68,7 +58,7 @@ export default function Agent() {
     const handleCancel = () => {
         router.back()
     }
-    
+
     useEffect(() => {
         fetchAgent()
         fetchKnowledgeBases()
@@ -80,17 +70,13 @@ export default function Agent() {
             <CustomInput
                 placeholder="Nome"
                 value={agentData.name}
-                onChangeText={(text) =>
-                    setAgentData((prev) => ({ ...prev, name: text }))
-                }
+                onChangeText={(text) => setAgentData((prev) => ({ ...prev, name: text }))}
             />
             <Text style={globalStyles.orangeText}>Tema</Text>
             <CustomInput
                 placeholder="Tema"
                 value={agentData.theme}
-                onChangeText={(text) =>
-                    setAgentData((prev) => ({ ...prev, theme: text }))
-                }
+                onChangeText={(text) => setAgentData((prev) => ({ ...prev, theme: text }))}
             />
             <Text style={globalStyles.orangeText}>Comportamento</Text>
             <CustomInput
@@ -98,18 +84,10 @@ export default function Agent() {
                 value={agentData.behavior}
                 multiline
                 numberOfLines={3}
-                onChangeText={(text) =>
-                    setAgentData((prev) => ({ ...prev, behavior: text }))
-                }
+                onChangeText={(text) => setAgentData((prev) => ({ ...prev, behavior: text }))}
             />
             <Text style={globalStyles.orangeText}>Base de conhecimento</Text>
-            <View
-                style={[
-                    globalStyles.flexRow,
-                    styles.gap_10,
-                    styles.align_center,
-                ]}
-            >
+            <View style={[globalStyles.flexRow, styles.gap_10, styles.align_center]}>
                 <Text>Utilizar base de conhecimento já existente?</Text>
                 <Switch
                     value={useExistingKnowledge}
@@ -119,30 +97,26 @@ export default function Agent() {
                 />
             </View>
             {!useExistingKnowledge && (
-                <DocumentSelect 
-                    uploadedFile={uploadedFile}
-                    setUploadedFile={setUploadedFile}
-                />
+                <DocumentSelect uploadedFile={uploadedFile} setUploadedFile={setUploadedFile} />
             )}
             {useExistingKnowledge && (
-                            <Picker
-                                style={styles.input}
-                                selectedValue={agentData.knowledge_base_id}
-                                onValueChange={(value) => setAgentData((prev) => ({ ...prev, knowledgeBaseId: value}))}
-                            >
-                                <Picker.Item
-                                    label="Selecione a base de conhecimento"
-                                    value={undefined}
-                                />
-                                {knowledgeBases.map((knowledgeBase) => (
-                                    <Picker.Item
-                                        key={knowledgeBase.id}
-                                        label={knowledgeBase.name}
-                                        value={knowledgeBase.id}
-                                    />
-                                ))}
-                            </Picker>
-                        )}
+                <Picker
+                    style={styles.input}
+                    selectedValue={agentData.knowledge_base_id}
+                    onValueChange={(value) =>
+                        setAgentData((prev) => ({ ...prev, knowledgeBaseId: value }))
+                    }
+                >
+                    <Picker.Item label="Selecione a base de conhecimento" value={undefined} />
+                    {knowledgeBases.map((knowledgeBase) => (
+                        <Picker.Item
+                            key={knowledgeBase.id}
+                            label={knowledgeBase.name}
+                            value={knowledgeBase.id}
+                        />
+                    ))}
+                </Picker>
+            )}
             {/* <View style={globalStyles.flexRow}>
                 <Text style={globalStyles.orangeText}>Status</Text>
                 <Switch value={isEnabled} onValueChange={toggleSwitch} />

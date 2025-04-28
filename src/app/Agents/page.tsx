@@ -1,17 +1,16 @@
 import { useRouter } from "expo-router"
-import { Image, StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native"
+import { Image, View, Text, TouchableOpacity, Alert } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
-import { useAxios } from "@/context/axiosContext"
+import { useAxios } from "@/contexts/axiosContext"
 import { GetAgentResponse, GetAgentResponseKeys } from "@/interfaces/Services/Agent"
 import { TestComponent } from "@/components/Test"
-import WebSocketProvider from "@/app/WebSocketContext"
+import WebSocketProvider from "@/contexts/WebSocketContext"
 
 export default function Agents() {
     const router = useRouter()
     const [agents, setAgents] = useState<GetAgentResponse[]>([])
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
     const { get } = useAxios()
     const fetchAgents = async () => {
         setLoading(true)
@@ -77,5 +76,3 @@ export default function Agents() {
         </WebSocketProvider>
     )
 }
-
-const styles = StyleSheet.create({})

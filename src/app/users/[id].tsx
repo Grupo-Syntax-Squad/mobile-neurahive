@@ -17,7 +17,7 @@ import { useLocalSearchParams, useRouter } from "expo-router"
 import CustomInput from "../../components/CustomInput"
 import globalStyles from "../styles/globalStyles"
 import Checkbox from "expo-checkbox"
-import { useAxios } from "@/context/axiosContext"
+import { useAxios } from "@/contexts/axiosContext"
 import FormField from "@/components/FormField"
 import MultiSelect from "@/components/MultiSelect"
 import { Agent } from "@/types/Agent"
@@ -65,7 +65,6 @@ const UserDetails: React.FC = () => {
     useEffect(() => {
         const fetchAgents = async () => {
             const response = await get("/agents/")
-            console.log(response.data)
             setAgents(response.data)
         }
         fetchAgents()
@@ -110,7 +109,6 @@ const UserDetails: React.FC = () => {
         }
 
         try {
-            console.log(user)
             await put(`/users/`, {
                 id: user.id,
                 name: user.name,
