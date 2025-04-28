@@ -104,7 +104,7 @@ export default function Agent() {
                     style={styles.input}
                     selectedValue={agentData.knowledge_base_id}
                     onValueChange={(value) =>
-                        setAgentData((prev) => ({ ...prev, knowledgeBaseId: value }))
+                        setAgentData((prev) => ({ ...prev, knowledge_base_id: value }))
                     }
                 >
                     <Picker.Item label="Selecione a base de conhecimento" value={undefined} />
