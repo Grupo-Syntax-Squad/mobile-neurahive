@@ -64,7 +64,7 @@ export default function Agents() {
                         <TouchableOpacity
                             style={globalStyles.agentBox}
                             onPress={() =>
-                                router.push(`/Agents/[${agent[GetAgentResponseKeys.ID]}]`)
+                                router.push(`/Agents/${agent[GetAgentResponseKeys.ID]}`)
                             }
                             key={agent[GetAgentResponseKeys.ID]}
                         >
