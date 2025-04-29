@@ -1,15 +1,15 @@
 import { useLocalSearchParams } from "expo-router"
 import React from "react"
-import Body from "./body";
-import WebSocketProvider from "@/contexts/WebSocketContext";
+import Body from "./body"
+import WebSocketProvider from "@/contexts/WebSocketContext"
 
 export default function Chat() {
-    const params = useLocalSearchParams();
-    const chatId = params.id[1];
+    const params = useLocalSearchParams()
+    const chatId = Number(params.id[1])
 
     return (
-        <WebSocketProvider>
-            <Body chatId = {Number(chatId)}/>
+        <WebSocketProvider chatId={chatId}>
+            <Body />
         </WebSocketProvider>
     )
 }

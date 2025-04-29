@@ -1,5 +1,3 @@
-import { useLocalSearchParams } from "expo-router"
-import { useAxios } from "@/contexts/axiosContext"
 import React, { useState, useEffect } from "react"
 import {
     StyleSheet,
@@ -14,17 +12,16 @@ import {
 import { useWebSocket } from "@/contexts/WebSocketContext"
 import Icon from "react-native-vector-icons/Ionicons"
 
-export default function Body({ chatId }: { chatId: number }) {
+export default function Body() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [message, setMessage] = useState("")
     const [sending, setSending] = useState(false)
 
-    const { connect, disconnect, sendMessage, messages, isConnected, setChatId } = useWebSocket()
+    const { connect, disconnect, sendMessage, messages, isConnected } = useWebSocket()
 
     useEffect(() => {
-        setChatId(chatId)
-        connect(chatId)
+        connect()
 
         return () => {
             disconnect()
@@ -222,7 +219,3 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
 })
-
-function setSending(arg0: boolean) {
-    throw new Error("Function not implemented.")
-}

@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router"
-import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-native"
+import { View, Text, TouchableOpacity, Image, Alert } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
 import { useAxios } from "@/contexts/axiosContext"
@@ -13,7 +13,7 @@ export default function Chats() {
     const [loading, setLoading] = useState(true)
     const { get, post } = useAxios()
     const { user } = useAuth()
-    
+
     const fetchAgents = async () => {
         setLoading(true)
         try {
@@ -33,29 +33,16 @@ export default function Chats() {
         }
 
         try {
-            console.log("userId", user.userId)
-            console.log("agentId", agentId)
-            const response = await post("/chat/", { 
+            const response = await post("/chat/", {
                 user_id: user.userId,
-                agent_id: agentId
-            });
-            console.log("Resposta COMPLETA da API:", JSON.stringify(response, null, 2));
-            console.log("USer id", response.data.data.user_id);
-            console.log("Agent name", response.data.data.agent_name);
-            console.log("Dados da navegação:", {
-                pathname: `/Chat/[id]`,
-                params: {
-                    id: response.data.user_id,
-                    agentName: response.data.agent_name,
-                }
-            });
+                agent_id: agentId,
+            })
             router.push({
                 pathname: `/Chat/${response.data.data.user_id}`,
                 params: {
                     agentName: response.data.data.agent_name,
-                }
-            });
-            
+                },
+            })
         } catch (error) {
             Alert.alert("Erro", "Não foi possível iniciar o chat com o agente")
             console.error("Error creating chat:", error)
@@ -76,16 +63,21 @@ export default function Chats() {
 
     return (
         <View>
-            <Division/>
+            <Division />
             <View style={globalStyles.agentContainer}>
                 {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
                 {agents.map((agent) => (
                     <TouchableOpacity
-                        style={[globalStyles.agentBox, { flexDirection: "row", alignItems: "center" }]}
-                        onPress={() => handleAgentPress(
-                            agent[GetAgentResponseKeys.ID].toString(),
-                            agent[GetAgentResponseKeys.NAME]
-                        )}
+                        style={[
+                            globalStyles.agentBox,
+                            { flexDirection: "row", alignItems: "center" },
+                        ]}
+                        onPress={() =>
+                            handleAgentPress(
+                                agent[GetAgentResponseKeys.ID].toString(),
+                                agent[GetAgentResponseKeys.NAME]
+                            )
+                        }
                         key={agent[GetAgentResponseKeys.ID]}
                     >
                         <Image
@@ -95,10 +87,7 @@ export default function Chats() {
                         <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
                     </TouchableOpacity>
                 ))}
-
             </View>
         </View>
     )
 }
-
-const styles = StyleSheet.create({})
