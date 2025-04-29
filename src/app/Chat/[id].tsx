@@ -5,10 +5,11 @@ import WebSocketProvider from "@/contexts/WebSocketContext"
 
 export default function Chat() {
     const params = useLocalSearchParams()
-    const chatId = Number(params.id[1])
+    const chatId = params.id[1]
+    console.log(chatId)
 
     return (
-        <WebSocketProvider chatId={chatId}>
+        <WebSocketProvider chatId={Number(chatId)}>
             <Body />
         </WebSocketProvider>
     )

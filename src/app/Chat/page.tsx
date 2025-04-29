@@ -55,7 +55,7 @@ export default function NewChat() {
                         ]}
                         onPress={() =>
                             router.push({
-                                pathname: `/Chat/${String(chat[GetChatResponseKeys.ID])}`,
+                                pathname: `/Chat/[${String(chat[GetChatResponseKeys.ID])}]`,
                                 params: {
                                     agentName: chat[GetChatResponseKeys.AGENT_NAME],
                                 },
