@@ -10,7 +10,7 @@ import { Role } from "@/enum/Role"
 import { HomeActionButton, HomeActionButtonKeys } from "@/types/HomeActionButton"
 import * as SecureStore from "expo-secure-store"
 import { Division } from "@/components/Division"
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons"
 
 export function HomeScreen() {
     const { logout, isAuthenticated, login } = useAuth()
@@ -29,7 +29,7 @@ export function HomeScreen() {
             [HomeActionButtonKeys.ICON]: require("../assets/images/user-icon.png"),
             [HomeActionButtonKeys.ROUTE]: "/Agents/page",
             [HomeActionButtonKeys.TEST_ID]: "agents-button",
-            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.CURATOR, Role.CLIENT],
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.CURATOR],
         },
         {
             [HomeActionButtonKeys.ID]: "7",
@@ -45,7 +45,7 @@ export function HomeScreen() {
             [HomeActionButtonKeys.ICON]: require("../assets/images/chat.png"),
             [HomeActionButtonKeys.ROUTE]: "/Chat/page",
             [HomeActionButtonKeys.TEST_ID]: "chat-button",
-            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.CLIENT],
         },
         // {
         //     [HomeActionButtonKeys.ID]: "4",
@@ -105,9 +105,7 @@ export function HomeScreen() {
             </View>
             <Text>v1.0.0</Text>
             {isAuthenticated ? (
-                <TouchableOpacity
-                    style={styles.logoutButton}
-                    onPress={() => logout()}>
+                <TouchableOpacity style={styles.logoutButton} onPress={() => logout()}>
                     <MaterialIcons name="exit-to-app" size={24} color="white" />
                 </TouchableOpacity>
             ) : (
@@ -117,7 +115,7 @@ export function HomeScreen() {
                     icon={require("../assets/images/permission-icon.png")}
                 />
             )}
-            <Division/>
+            <Division />
 
             <View style={styles.actionsSection}>
                 <Text style={styles.sectionTitle}>O que você deseja fazer hoje?</Text>
@@ -160,11 +158,11 @@ const ActionButton: React.FC<{
 
 const styles = StyleSheet.create({
     logoutButton: {
-        position: 'absolute',
-        top: 10, 
+        position: "absolute",
+        top: 10,
         right: 20,
         padding: 10,
-        backgroundColor: 'red',
+        backgroundColor: "red",
         borderRadius: 5,
     },
     flexColumn: {
