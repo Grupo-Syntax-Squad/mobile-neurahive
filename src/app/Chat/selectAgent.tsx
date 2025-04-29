@@ -33,21 +33,9 @@ export default function Chats() {
         }
 
         try {
-            console.log("userId", user.userId)
-            console.log("agentId", agentId)
             const response = await post("/chat/", { 
                 user_id: user.userId,
                 agent_id: agentId
-            });
-            console.log("Resposta COMPLETA da API:", JSON.stringify(response, null, 2));
-            console.log("USer id", response.data.data.user_id);
-            console.log("Agent name", response.data.data.agent_name);
-            console.log("Dados da navegação:", {
-                pathname: `/Chat/[id]`,
-                params: {
-                    id: response.data.user_id,
-                    agentName: response.data.agent_name,
-                }
             });
             router.push({
                 pathname: `/Chat/${response.data.data.user_id}`,
