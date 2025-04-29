@@ -59,7 +59,12 @@ export default function NewChat() {
                     <TouchableOpacity
                         style={[globalStyles.agentBox, { flexDirection: "row", alignItems: "center" }]}
                         onPress={() =>
-                            router.push(`/Chat/[${chat[GetChatResponseKeys.ID]}]`)
+                            router.push({
+                                pathname: `/Chat/${String(chat[GetChatResponseKeys.ID])}`,
+                                params: {
+                                    agentName: chat[GetChatResponseKeys.AGENT_NAME],
+                                }
+                            })
                         }
                         key={chat[GetChatResponseKeys.ID]}
                     >
@@ -67,7 +72,7 @@ export default function NewChat() {
                             source={require("../../assets/images/agente4.png")}
                             style={{ width: 50, height: 50, borderRadius: 25, marginRight: 10 }}
                         />
-                        <Text>id agente: {chat[GetChatResponseKeys.ID]}</Text>
+                        <Text>{chat[GetChatResponseKeys.AGENT_NAME]}</Text>
                     </TouchableOpacity>
                 ))}
 
