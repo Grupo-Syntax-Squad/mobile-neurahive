@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Alert, Text, TouchableOpacity, View } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import { router } from "expo-router"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 interface GetKnowledgeBasesResponse {
     [GetKnowledgeBasesResponseKeys.ID]: number
@@ -31,7 +32,7 @@ export default function KnowledgeBase() {
         } catch (error) {
             Alert.alert(
                 "Consultar bases de conhecimento",
-                "Erro ao consultar as bases de conhecimento do sistema"
+                `Erro ao consultar as bases de conhecimento do sistema: ${getErrorMessage(error)}`
             )
         } finally {
             setLoading(false)

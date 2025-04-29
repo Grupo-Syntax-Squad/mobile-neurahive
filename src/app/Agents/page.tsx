@@ -4,6 +4,7 @@ import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
 import { useAxios } from "@/contexts/axiosContext"
 import { GetAgentResponse, GetAgentResponseKeys } from "@/interfaces/Services/Agent"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export default function Agents() {
     const router = useRouter()
@@ -16,7 +17,7 @@ export default function Agents() {
             const response = (await get("/agents/")).data
             setAgents(response)
         } catch (error) {
-            Alert.alert("Consultar agentes", "Erro ao consultar agentes")
+            Alert.alert("Consultar agentes", `Erro ao consultar agentes: ${getErrorMessage(error)}`)
         } finally {
             setLoading(false)
         }

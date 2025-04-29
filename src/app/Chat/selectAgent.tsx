@@ -6,6 +6,7 @@ import { useAxios } from "@/contexts/axiosContext"
 import { GetAgentResponse, GetAgentResponseKeys } from "@/interfaces/Services/Agent"
 import { Division } from "@/components/Division"
 import { useAuth } from "@/contexts/authContext"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export default function Chats() {
     const router = useRouter()
@@ -20,7 +21,7 @@ export default function Chats() {
             const response = (await get("/agents/")).data
             setAgents(response)
         } catch (error) {
-            Alert.alert("Consultar agentes", "Erro ao consultar agentes")
+            Alert.alert("Consultar agentes", `Erro ao consultar agentes: ${getErrorMessage(error)}`)
         } finally {
             setLoading(false)
         }
@@ -44,7 +45,10 @@ export default function Chats() {
                 },
             })
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível iniciar o chat com o agente")
+            Alert.alert(
+                "Erro",
+                `Não foi possível iniciar o chat com o agente: ${getErrorMessage(error)}`
+            )
             console.error("Error creating chat:", error)
         }
     }

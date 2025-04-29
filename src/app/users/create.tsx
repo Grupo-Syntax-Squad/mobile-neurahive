@@ -18,6 +18,7 @@ import { Agent } from "@/types/Agent"
 import { useAxios } from "@/contexts/axiosContext"
 import MultiSelect from "@/components/MultiSelect"
 import { Division } from "@/components/Division"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export default function CreateUser() {
     const [name, setName] = useState("")
@@ -63,78 +64,76 @@ export default function CreateUser() {
             router.replace("/users/page")
         } catch (error: any) {
             console.log(error)
-            Alert.alert(
-                "Erro ao criar usuário",
-                error.response
-                    ? error.response.data.message || error.response.data
-                    : "Erro desconhecido"
-            )
+            Alert.alert("Erro ao criar usuário", getErrorMessage(error))
         }
     }
 
     return (
         <>
-        <Division/>
-        <View style={globalStyles.container}>
-            <Text style={globalStyles.textCenter}>Novo Usuário</Text>
-            <View style={globalStyles.imageContainer}>
-                <Image source={require("../../assets/images/bees-background.png")} />
+            <Division />
+            <View style={globalStyles.container}>
+                <Text style={globalStyles.textCenter}>Novo Usuário</Text>
+                <View style={globalStyles.imageContainer}>
+                    <Image source={require("../../assets/images/bees-background.png")} />
+                </View>
+                <Text style={globalStyles.orangeText}>Nome</Text>
+                <CustomInput placeholder="Nome" value={name} onChangeText={setName} />
+                <Text style={globalStyles.orangeText}>E-mail</Text>
+                <CustomInput
+                    placeholder="E-mail"
+                    keyboardType="email-address"
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                <FormField label="Permissões do Usuário">
+                    <View style={[styles.checkboxContainer, styles.marginTop10]}>
+                        <Checkbox
+                            style={styles.checkbox}
+                            value={roles.admin}
+                            onValueChange={(value) => setRoles({ ...roles, admin: value })}
+                            color={roles.admin ? "#4630EB" : undefined}
+                        />
+                        <Text style={styles.checkboxLabel}>Administrador</Text>
+                    </View>
+                    <View style={styles.checkboxContainer}>
+                        <Checkbox
+                            style={styles.checkbox}
+                            value={roles.curator}
+                            onValueChange={(value) => setRoles({ ...roles, curator: value })}
+                            color={roles.curator ? "#4630EB" : undefined}
+                        />
+                        <Text style={styles.checkboxLabel}>Curador</Text>
+                    </View>
+                </FormField>
+                <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
+                <ScrollView style={{ flex: 1 }}>
+                    <MultiSelect
+                        data={agents}
+                        selectedItems={selectedAgents}
+                        setSelectedItems={setSelectedAgents}
+                    ></MultiSelect>
+                </ScrollView>
+                <Text style={globalStyles.orangeText}>Senha</Text>
+                <CustomInput
+                    placeholder="Senha"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                />
+                <Text style={globalStyles.orangeText}>Repita a Senha</Text>
+                <CustomInput
+                    placeholder="Repita a Senha"
+                    secureTextEntry
+                    value={passwordConfirmation}
+                    onChangeText={setPasswordConfirmation}
+                />
+                <TouchableOpacity
+                    style={globalStyles.orangeButton}
+                    onPress={() => handleCreateUser()}
+                >
+                    <Text style={globalStyles.WhiteText}>Criar Usuário</Text>
+                </TouchableOpacity>
             </View>
-            <Text style={globalStyles.orangeText}>Nome</Text>
-            <CustomInput placeholder="Nome" value={name} onChangeText={setName} />
-            <Text style={globalStyles.orangeText}>E-mail</Text>
-            <CustomInput
-                placeholder="E-mail"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-            />
-            <FormField label="Permissões do Usuário">
-                <View style={[styles.checkboxContainer, styles.marginTop10]}>
-                    <Checkbox
-                        style={styles.checkbox}
-                        value={roles.admin}
-                        onValueChange={(value) => setRoles({ ...roles, admin: value })}
-                        color={roles.admin ? "#4630EB" : undefined}
-                    />
-                    <Text style={styles.checkboxLabel}>Administrador</Text>
-                </View>
-                <View style={styles.checkboxContainer}>
-                    <Checkbox
-                        style={styles.checkbox}
-                        value={roles.curator}
-                        onValueChange={(value) => setRoles({ ...roles, curator: value })}
-                        color={roles.curator ? "#4630EB" : undefined}
-                    />
-                    <Text style={styles.checkboxLabel}>Curador</Text>
-                </View>
-            </FormField>
-            <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
-            <ScrollView style={{ flex: 1 }}>
-                <MultiSelect
-                    data={agents}
-                    selectedItems={selectedAgents}
-                    setSelectedItems={setSelectedAgents}
-                ></MultiSelect>
-            </ScrollView>
-            <Text style={globalStyles.orangeText}>Senha</Text>
-            <CustomInput
-                placeholder="Senha"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-            />
-            <Text style={globalStyles.orangeText}>Repita a Senha</Text>
-            <CustomInput
-                placeholder="Repita a Senha"
-                secureTextEntry
-                value={passwordConfirmation}
-                onChangeText={setPasswordConfirmation}
-            />
-            <TouchableOpacity style={globalStyles.orangeButton} onPress={() => handleCreateUser()}>
-                <Text style={globalStyles.WhiteText}>Criar Usuário</Text>
-            </TouchableOpacity>
-        </View>
         </>
     )
 }

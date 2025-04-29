@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { StyleSheet, Text, TouchableOpacity, View, Switch, Alert, ScrollView, Image } from "react-native"
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Switch,
+    Alert,
+    ScrollView,
+    Image,
+} from "react-native"
 import { router, useLocalSearchParams, useRouter } from "expo-router"
 import CustomInput from "../../components/CustomInput"
 import globalStyles from "../styles/globalStyles"
@@ -8,6 +17,7 @@ import { useAxios } from "@/contexts/axiosContext"
 import { KnowledgeBase } from "@/interfaces/Services/KnowledgeBase"
 import { DocumentSelect } from "@/components/DocumentSelect"
 import { UploadedFile } from "@/types/UploadedFile"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 type AgentData = {
     name: string
@@ -24,7 +34,7 @@ export default function Agent() {
     const [isEnabled, setIsEnabled] = useState(false)
     const [selectedImage, setSelectedImage] = useState<number | null>(null)
     const [selectedValue, setSelectedValue] = useState("Escolha uma permissão")
-    
+
     const router = useRouter()
 
     const images = [
@@ -72,7 +82,7 @@ export default function Agent() {
             Alert.alert("Sucesso", "Agente atualizado com sucesso!")
             router.replace("/Agents/")
         } catch (error: any) {
-            Alert.alert("Erro", error.response?.data?.message || "Erro ao salvar agente")
+            Alert.alert("Erro", getErrorMessage(error))
             console.error(error)
         }
     }
@@ -92,8 +102,8 @@ export default function Agent() {
 
     return (
         <View style={globalStyles.container}>
-            <ScrollView 
-                contentContainerStyle={{ paddingBottom: 40 }} 
+            <ScrollView
+                contentContainerStyle={{ paddingBottom: 40 }}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={globalStyles.imageContainer}>

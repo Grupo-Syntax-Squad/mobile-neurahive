@@ -7,6 +7,7 @@ import { useAxios } from "@/contexts/axiosContext"
 import globalStyles from "../styles/globalStyles"
 import { User } from "@/types/User"
 import { Division } from "@/components/Division"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export function Users() {
     const router = useRouter()
@@ -22,7 +23,7 @@ export function Users() {
             setUsers(response.data)
         } catch (err) {
             setError("Erro ao carregar usuários")
-            console.error("Erro na requisição:", err)
+            console.error("Erro na requisição:", getErrorMessage(err))
         } finally {
             setLoading(false)
         }

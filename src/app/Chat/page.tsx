@@ -1,24 +1,16 @@
 import { useRouter } from "expo-router"
-import {
-    StyleSheet,
-    View,
-    Text,
-    TouchableOpacity,
-    Alert,
-    Image,
-    ScrollView
-} from "react-native"
+import { StyleSheet, View, Text, TouchableOpacity, Alert, Image, ScrollView } from "react-native"
 import globalStyles from "../styles/globalStyles"
-import { MaterialIcons } from '@expo/vector-icons'; 
-import React, { useEffect, useState } from "react";
-import { useAxios } from "@/contexts/axiosContext";
+import { MaterialIcons } from "@expo/vector-icons"
+import React, { useEffect, useState } from "react"
+import { useAxios } from "@/contexts/axiosContext"
 import { GetChatResponse, GetChatResponseKeys } from "@/interfaces/Services/Chat"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export default function NewChat() {
     const router = useRouter()
     const [chats, setChats] = useState<GetChatResponse[]>([])
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
     const { get } = useAxios()
 
     const fetchChats = async () => {
@@ -27,7 +19,7 @@ export default function NewChat() {
             const response = (await get("/chat/")).data
             setChats(response)
         } catch (error) {
-            Alert.alert("Consultar chats", "Erro ao consultar chats")
+            Alert.alert("Consultar chats", `Erro ao consultar chats: ${getErrorMessage(error)}`)
         } finally {
             setLoading(false)
         }
@@ -36,7 +28,7 @@ export default function NewChat() {
     useEffect(() => {
         fetchChats()
     }, [])
-    
+
     if (loading)
         return (
             <View>
@@ -57,13 +49,16 @@ export default function NewChat() {
                 {chats.length < 1 && <Text>Nenhum chat encontrado.</Text>}
                 {chats.map((chat) => (
                     <TouchableOpacity
-                        style={[globalStyles.agentBox, { flexDirection: "row", alignItems: "center" }]}
+                        style={[
+                            globalStyles.agentBox,
+                            { flexDirection: "row", alignItems: "center" },
+                        ]}
                         onPress={() =>
                             router.push({
                                 pathname: `/Chat/${String(chat[GetChatResponseKeys.ID])}`,
                                 params: {
                                     agentName: chat[GetChatResponseKeys.AGENT_NAME],
-                                }
+                                },
                             })
                         }
                         key={chat[GetChatResponseKeys.ID]}
@@ -75,8 +70,6 @@ export default function NewChat() {
                         <Text>{chat[GetChatResponseKeys.AGENT_NAME]}</Text>
                     </TouchableOpacity>
                 ))}
-
-
             </View>
         </ScrollView>
     )
@@ -87,22 +80,22 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
         padding: 20,
         gap: 10,
     },
     buttonContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         gap: 10,
         paddingVertical: 15,
         borderRadius: 10,
     },
     buttonText: {
-        color: 'gray',
+        color: "gray",
         fontSize: 18,
-        fontWeight: 'bold',
-    }
+        fontWeight: "bold",
+    },
 })

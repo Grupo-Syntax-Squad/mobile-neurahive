@@ -21,6 +21,7 @@ import { useAxios } from "@/contexts/axiosContext"
 import FormField from "@/components/FormField"
 import MultiSelect from "@/components/MultiSelect"
 import { Agent } from "@/types/Agent"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 type UserData = {
     id: number
@@ -82,7 +83,10 @@ const UserDetails: React.FC = () => {
                     setIsLoading(false)
                 }
             } catch (error: any) {
-                Alert.alert("Erro", "Não foi possível carregar os dados do usuário")
+                Alert.alert(
+                    "Erro",
+                    `Não foi possível carregar os dados do usuário: ${getErrorMessage(error)}`
+                )
                 console.error(error)
             } finally {
                 setIsLoading(false)
@@ -120,7 +124,7 @@ const UserDetails: React.FC = () => {
             Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
             router.replace("/users/")
         } catch (error: any) {
-            Alert.alert("Erro", error.response?.data?.message || "Erro ao salvar usuário")
+            Alert.alert("Erro", getErrorMessage(error) || "Erro ao salvar usuário")
             console.error(error)
         }
     }
