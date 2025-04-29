@@ -36,42 +36,37 @@ export default function Agents() {
         )
 
     return (
-        <WebSocketProvider>
-            <TestComponent/>
-            <View>
-                <View style={globalStyles.header}>
-                    <Text>Área de Agentes</Text>
-                    <Image source={require("../../assets/images/agente1.png")} />
-                </View>
-                {/* <Link href="/#" style={globalStyles.middleButton}>
+        <View>
+            <View style={globalStyles.header}>
+                <Text>Área de Agentes</Text>
+                <Image source={require("../../assets/images/agente1.png")} />
+            </View>
+            {/* <Link href="/#" style={globalStyles.middleButton}>
                 <Image
                     source={require("../../assets/images/base-de-conhecimento.png")}
                 />
                 <Text>Base de Conhecimento</Text>
             </Link> */}
-                <TouchableOpacity style={globalStyles.orangeButton}>
-                    <Text
-                        style={globalStyles.WhiteText}
-                        onPress={() => router.replace("/Agents/create")}
+            <TouchableOpacity style={globalStyles.orangeButton}>
+                <Text
+                    style={globalStyles.WhiteText}
+                    onPress={() => router.replace("/Agents/create")}
+                >
+                    Criar Novo Agente
+                </Text>
+            </TouchableOpacity>
+            <View style={globalStyles.agentContainer}>
+                {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
+                {agents.map((agent) => (
+                    <TouchableOpacity
+                        style={globalStyles.agentBox}
+                        onPress={() => router.push(`/Agents/${agent[GetAgentResponseKeys.ID]}`)}
+                        key={agent[GetAgentResponseKeys.ID]}
                     >
-                        Criar Novo Agente
-                    </Text>
-                </TouchableOpacity>
-                <View style={globalStyles.agentContainer}>
-                    {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
-                    {agents.map((agent) => (
-                        <TouchableOpacity
-                            style={globalStyles.agentBox}
-                            onPress={() =>
-                                router.push(`/Agents/${agent[GetAgentResponseKeys.ID]}`)
-                            }
-                            key={agent[GetAgentResponseKeys.ID]}
-                        >
-                            <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                        <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
-            </WebSocketProvider>
+        </View>
     )
 }
