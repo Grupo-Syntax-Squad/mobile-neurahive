@@ -34,7 +34,7 @@ export function HomeScreen() {
         {
             [HomeActionButtonKeys.ID]: "7",
             [HomeActionButtonKeys.TITLE]: "Bases de conhecimento",
-            [HomeActionButtonKeys.ICON]: null,
+            [HomeActionButtonKeys.ICON]: require("../assets/images/base-de-conhecimento.png"),
             [HomeActionButtonKeys.ROUTE]: "/KnowledgeBase/page",
             [HomeActionButtonKeys.TEST_ID]: "knowledge-bases-button",
             [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
