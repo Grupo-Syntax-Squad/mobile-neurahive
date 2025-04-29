@@ -52,11 +52,11 @@ export function Users() {
 
     return (
         <ProtectedRoute allowedRoles={[Role.ADMIN]}>
-            <Division/>
+            <Division />
             <ScrollView
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.scrollContainer}
-                >
+            >
                 <View style={globalStyles.header}>
                     <Text>Seus Usuários</Text>
                     <Image source={require("../../assets/images/usuarios.png")}></Image>
@@ -89,7 +89,6 @@ const UserCard: React.FC<{ user: User }> = ({ user }) => (
     <View style={styles.userContainer}>
         <Text style={styles.userName}>{user.name}</Text>
         <Text style={styles.userEmail}>{user.email}</Text>
-        <Text style={styles.userName}>{user.id}</Text>
         <TouchableOpacity style={styles.userDetailButton}>
             <Link href={{ pathname: "/users/[id]", params: { id: user.id } }}>
                 <Text style={globalStyles.WhiteText}>Detalhes</Text>

@@ -4,8 +4,6 @@ import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
 import { useAxios } from "@/contexts/axiosContext"
 import { GetAgentResponse, GetAgentResponseKeys } from "@/interfaces/Services/Agent"
-import { TestComponent } from "@/components/Test"
-import WebSocketProvider from "@/contexts/WebSocketContext"
 
 export default function Agents() {
     const router = useRouter()
