@@ -11,6 +11,7 @@ import { router } from "expo-router"
 import { Picker } from "@react-native-picker/picker"
 import { DocumentSelect } from "@/components/DocumentSelect"
 import { UploadedFile } from "@/types/UploadedFile"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 enum FormKeys {
     NAME = "name",
@@ -114,7 +115,7 @@ export default function CreateAgent() {
             const response = await get("/knowledge-base")
             setKnowledgeBases(response.data)
         } catch (err) {
-            console.log("Erro ao buscar bases de conhecimento:", err)
+            console.log("Erro ao buscar bases de conhecimento:", getErrorMessage(err))
         }
     }
 
@@ -147,7 +148,7 @@ export default function CreateAgent() {
             }
             await post("/agents/", request)
         } catch (error) {
-            Alert.alert("Cadastrar agente", "Erro ao cadastrar agente tente novamente")
+            Alert.alert("Cadastrar agente", `Erro ao cadastrar agente: ${getErrorMessage(error)}`)
         } finally {
             router.replace("/Agents/page")
         }

@@ -72,13 +72,6 @@ const Login = () => {
                     />
 
                     <OrangeButton title={"Entrar"} onPress={handleLogin} />
-
-                    <View style={styles.registerContainer}>
-                        <Text style={styles.registerText}>Ainda não tem conta? </Text>
-                        <Link href="/Auth/register" style={styles.registerLink}>
-                            Cadastre-se
-                        </Link>
-                    </View>
                 </View>
             </View>
         </KeyboardAvoidingView>

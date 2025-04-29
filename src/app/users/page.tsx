@@ -6,6 +6,8 @@ import { Role } from "@/enum/Role"
 import { useAxios } from "@/contexts/axiosContext"
 import globalStyles from "../styles/globalStyles"
 import { User } from "@/types/User"
+import { Division } from "@/components/Division"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export function Users() {
     const router = useRouter()
@@ -21,7 +23,7 @@ export function Users() {
             setUsers(response.data)
         } catch (err) {
             setError("Erro ao carregar usuários")
-            console.error("Erro na requisição:", err)
+            console.error("Erro na requisição:", getErrorMessage(err))
         } finally {
             setLoading(false)
         }
@@ -51,6 +53,7 @@ export function Users() {
 
     return (
         <ProtectedRoute allowedRoles={[Role.ADMIN]}>
+            <Division />
             <ScrollView
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.scrollContainer}
@@ -87,7 +90,6 @@ const UserCard: React.FC<{ user: User }> = ({ user }) => (
     <View style={styles.userContainer}>
         <Text style={styles.userName}>{user.name}</Text>
         <Text style={styles.userEmail}>{user.email}</Text>
-        <Text style={styles.userName}>{user.id}</Text>
         <TouchableOpacity style={styles.userDetailButton}>
             <Link href={{ pathname: "/users/[id]", params: { id: user.id } }}>
                 <Text style={globalStyles.WhiteText}>Detalhes</Text>

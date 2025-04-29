@@ -1,6 +1,8 @@
 import { AuthProvider } from "@/contexts/authContext"
 import { AxiosProvider } from "@/contexts/axiosContext"
 import { Stack } from "expo-router"
+import { View, Image, Text } from "react-native"
+import WebSocketProvider from "../contexts/WebSocketContext"
 
 export default function Layout() {
     return (
@@ -32,8 +34,32 @@ export default function Layout() {
                     <Stack.Screen name="Agents/page" options={{ title: "Agentes" }} />
                     <Stack.Screen name="Agents/[id]" options={{ title: "Editar Agente" }} />
                     <Stack.Screen name="Agents/create" options={{ title: "Nova agente de IA" }} />
-                    <Stack.Screen name="Chat/page" options={{ title: "Selecione o Agente" }} />
-                    <Stack.Screen name="Chat/[id]" options={{ title: "" }} />
+                    <Stack.Screen name="Chat/page" options={{ title: "Minhas conversas" }} />
+                    <Stack.Screen 
+                        name="Chat/[id]" 
+                        options={({ route }) => ({
+                            headerTitle: () => (
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image
+                                    source={require("../assets/images/agente4.png")}
+                                    style={{ width: 50, height: 50, borderRadius: 25, marginRight: 10 }}
+                                />
+                                <Text style={{ 
+                                color: 'white', 
+                                fontSize: 18, 
+                                fontWeight: 'bold' 
+                                }}>
+                                {route.params?.agentName || 'Agente '}
+                                </Text>
+                            </View>
+                            ),
+                            headerStyle: {
+                            backgroundColor: '#FCAF1F',
+                            },
+                            headerTintColor: '#fff',
+                        })}
+                        />
+                    <Stack.Screen name="Chat/selectAgent" options={{ title: "Selecione o Agente" }} />
                     <Stack.Screen
                         name="KnowledgeBase/page"
                         options={{ title: "Bases de conhecimento" }}

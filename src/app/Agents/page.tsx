@@ -4,8 +4,7 @@ import globalStyles from "../styles/globalStyles"
 import { useEffect, useState } from "react"
 import { useAxios } from "@/contexts/axiosContext"
 import { GetAgentResponse, GetAgentResponseKeys } from "@/interfaces/Services/Agent"
-import { TestComponent } from "@/components/Test"
-import WebSocketProvider from "@/contexts/WebSocketContext"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export default function Agents() {
     const router = useRouter()
@@ -18,7 +17,7 @@ export default function Agents() {
             const response = (await get("/agents/")).data
             setAgents(response)
         } catch (error) {
-            Alert.alert("Consultar agentes", "Erro ao consultar agentes")
+            Alert.alert("Consultar agentes", `Erro ao consultar agentes: ${getErrorMessage(error)}`)
         } finally {
             setLoading(false)
         }
@@ -35,44 +34,38 @@ export default function Agents() {
             </View>
         )
 
-    // @TODO: Remover o WebSocketProvider e TestComponent depois, usado somente para testar o WebSocket
     return (
-        <WebSocketProvider>
-            <TestComponent />
-            <View>
-                <View style={globalStyles.header}>
-                    <Text>Área de Agentes</Text>
-                    <Image source={require("../../assets/images/agente1.png")} />
-                </View>
-                {/* <Link href="/#" style={globalStyles.middleButton}>
+        <View>
+            <View style={globalStyles.header}>
+                <Text>Área de Agentes</Text>
+                <Image source={require("../../assets/images/agente1.png")} />
+            </View>
+            {/* <Link href="/#" style={globalStyles.middleButton}>
                 <Image
                     source={require("../../assets/images/base-de-conhecimento.png")}
                 />
                 <Text>Base de Conhecimento</Text>
             </Link> */}
-                <TouchableOpacity style={globalStyles.orangeButton}>
-                    <Text
-                        style={globalStyles.WhiteText}
-                        onPress={() => router.replace("/Agents/create")}
+            <TouchableOpacity style={globalStyles.orangeButton}>
+                <Text
+                    style={globalStyles.WhiteText}
+                    onPress={() => router.replace("/Agents/create")}
+                >
+                    Criar Novo Agente
+                </Text>
+            </TouchableOpacity>
+            <View style={globalStyles.agentContainer}>
+                {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
+                {agents.map((agent) => (
+                    <TouchableOpacity
+                        style={globalStyles.agentBox}
+                        onPress={() => router.push(`/Agents/${agent[GetAgentResponseKeys.ID]}`)}
+                        key={agent[GetAgentResponseKeys.ID]}
                     >
-                        Criar Novo Agente
-                    </Text>
-                </TouchableOpacity>
-                <View style={globalStyles.agentContainer}>
-                    {agents.length < 1 && <Text>Nenhum agente encontrado.</Text>}
-                    {agents.map((agent) => (
-                        <TouchableOpacity
-                            style={globalStyles.agentBox}
-                            onPress={() =>
-                                router.push(`/Agents/${agent[GetAgentResponseKeys.ID]}`)
-                            }
-                            key={agent[GetAgentResponseKeys.ID]}
-                        >
-                            <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                        <Text>{agent[GetAgentResponseKeys.NAME]}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
-        </WebSocketProvider>
+        </View>
     )
 }

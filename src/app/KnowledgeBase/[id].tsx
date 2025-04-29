@@ -9,6 +9,7 @@ import {
     KnowledgeBaseDetailsDataKeys,
 } from "@/interfaces/Services/KnowledgeBase"
 import KnowledgeBaseTable from "@/components/KnowledgeBaseTable"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 export default function KnowledgeBaseDetails() {
     const { id } = useLocalSearchParams()
@@ -30,11 +31,19 @@ export default function KnowledgeBaseDetails() {
         } catch (error) {
             Alert.alert(
                 "Consultar detalhes da base de conhecimento",
-                "Erro ao consultar os detalhes da base de conhecimento"
+                `Erro ao consultar os detalhes da base de conhecimento: ${getErrorMessage(error)}`
             )
         } finally {
             setLoading(false)
         }
+    }
+
+    const hasData = (): boolean => {
+        const questions =
+            knowledgeBaseDetails?.[GetKnowledgeBaseDetailsKeys.DATA]?.[
+                KnowledgeBaseDetailsDataKeys.QUESTIONS
+            ]
+        return Array.isArray(questions) && questions.length > 0
     }
 
     if (loading) return <Text>Consultando os detalhes da base de conhecimento...</Text>
@@ -45,18 +54,22 @@ export default function KnowledgeBaseDetails() {
                 {knowledgeBaseDetails?.[GetKnowledgeBaseDetailsKeys.NAME]}
             </Text>
             {knowledgeBaseDetails ? (
-                <KnowledgeBaseTable
-                    questions={
-                        knowledgeBaseDetails?.[GetKnowledgeBaseDetailsKeys.DATA][
-                            KnowledgeBaseDetailsDataKeys.QUESTIONS
-                        ]
-                    }
-                    answers={
-                        knowledgeBaseDetails[GetKnowledgeBaseDetailsKeys.DATA][
-                            KnowledgeBaseDetailsDataKeys.ANSWERS
-                        ]
-                    }
-                />
+                hasData() ? (
+                    <KnowledgeBaseTable
+                        questions={
+                            knowledgeBaseDetails?.[GetKnowledgeBaseDetailsKeys.DATA][
+                                KnowledgeBaseDetailsDataKeys.QUESTIONS
+                            ]
+                        }
+                        answers={
+                            knowledgeBaseDetails[GetKnowledgeBaseDetailsKeys.DATA][
+                                KnowledgeBaseDetailsDataKeys.ANSWERS
+                            ]
+                        }
+                    />
+                ) : (
+                    <Text>Base de conhecimento vazia</Text>
+                )
             ) : (
                 <Text>Não foi possível consultar os detalhe da base de conhecimento</Text>
             )}

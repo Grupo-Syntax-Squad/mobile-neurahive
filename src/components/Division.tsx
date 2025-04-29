@@ -1,12 +1,15 @@
-import { StyleSheet, View } from "react-native"
+import { StyleSheet } from 'react-native';
 
-export default function Division() {
-    return <View style={styles.division} />
+import { View } from 'react-native';
+export function Division() {
+  return (
+    <View style={styles.division}></View>
+  );
 }
 
 const styles = StyleSheet.create({
-    division: {
-        backgroundColor: "#FC801F",
-        padding: 9,
-    },
-})
+  division: {
+    backgroundColor: "#FC801F",
+    height:10
+},
+});
