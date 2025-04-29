@@ -40,23 +40,22 @@ export default function Chats() {
                 agent_id: agentId
             });
             console.log("Resposta COMPLETA da API:", JSON.stringify(response, null, 2));
-
+            console.log("USer id", response.data.data.user_id);
+            console.log("Agent name", response.data.data.agent_name);
             console.log("Dados da navegação:", {
                 pathname: `/Chat/[id]`,
                 params: {
-                    id: response.data.id,
-                    agentName: agentName
+                    id: response.data.user_id,
+                    agentName: response.data.agent_name,
                 }
             });
-            const chatId = response.data.chat_id || response.data._id;
-            console.log("ChatID: " + chatId)
             router.push({
-                pathname: `/Chat/[id]`,
+                pathname: `/Chat/${response.data.data.user_id}`,
                 params: {
-                  id: response.data.id,
-                  agentName: agentName
+                    agentName: response.data.data.agent_name,
                 }
-              });
+            });
+            
         } catch (error) {
             Alert.alert("Erro", "Não foi possível iniciar o chat com o agente")
             console.error("Error creating chat:", error)
