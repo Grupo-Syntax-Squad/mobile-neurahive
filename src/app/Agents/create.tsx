@@ -1,7 +1,9 @@
-import { Alert, StyleSheet, Switch, Text, View } from "react-native"
+import { Alert, StyleSheet, Switch, Text, View, ScrollView } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import CustomInput from "@/components/CustomInput"
 import { useEffect, useState } from "react"
+import * as FileSystem from "expo-file-system"
+import * as DocumentPicker from "expo-document-picker"
 
 //import { Access, AccessKeys } from "@/interfaces/Services/Access"
 import { KnowledgeBase, KnowledgeBaseKeys } from "@/interfaces/Services/KnowledgeBase"
@@ -10,8 +12,8 @@ import { PostAgentRequest, PostAgentRequestKeys } from "@/interfaces/Services/Ag
 import { router } from "expo-router"
 import { Picker } from "@react-native-picker/picker"
 import { DocumentSelect } from "@/components/DocumentSelect"
-import { UploadedFile } from "@/types/UploadedFile"
 import { getErrorMessage } from "@/utils/getErrorMessage"
+import { useAuth } from "@/contexts/authContext"
 
 enum FormKeys {
     NAME = "name",
@@ -81,12 +83,13 @@ const defaultFormErrors: Record<FormKeys, string> = {
 }
 
 export default function CreateAgent() {
-    const [uploadedFile, setUploadedFile] = useState<UploadedFile>()
+    const [selectedFile, setSelectedFile] = useState<DocumentPicker.DocumentPickerAsset>()
     const [form, setForm] = useState<Form>(defaultForm)
     //const [accesses, setAccesses] = useState<Access[]>(MockAccess)
     const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([])
     const [formErrors, setFormErrors] = useState<Record<FormKeys, string>>(defaultFormErrors)
     const { get, post } = useAxios()
+    const { token } = useAuth()
 
     const setName = (value: string): void => {
         setForm({ ...form, [FormKeys.NAME]: value })
@@ -130,11 +133,49 @@ export default function CreateAgent() {
         setFormErrors({ ...formErrors, ...customFormErrors })
         return customFormErrors
     }
-    const handleSubmit = async () => {
+
+    const submitWithFile = async (file: DocumentPicker.DocumentPickerAsset) => {
+        try {
+
+            const response = await FileSystem.uploadAsync(
+                `${process.env.EXPO_PUBLIC_API_URL}/agents/`,
+                file.uri,
+                {
+                    fieldName: "file",
+                    httpMethod: "POST",
+                    uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    parameters: {
+                        knowledge_base_name: file.name,
+                        name: form[FormKeys.NAME],
+                        theme: form[FormKeys.THEME],
+                        behavior: form[FormKeys.BEHAVIOR]
+                    },
+                }
+            )
+            const json = JSON.parse(response.body)
+            console.log(json)
+        } catch (err) {
+            console.log("Erro na requisição:", err)
+        }
+    }
+
+    const handleSubmit = () => {
+        if(selectedFile && !form[FormKeys.EXISTENT_KNOWLEDGE]) {
+            submitWithFile(selectedFile)
+        } else {
+            submitWithoutFile()
+        }
+    }
+
+    const submitWithoutFile = async () => {
         const customFormErrors = validateForm()
         if (Object.values(customFormErrors).some((value) => value !== "")) {
             return
         }
+
         try {
             const request: PostAgentRequest = {
                 [PostAgentRequestKeys.NAME]: form[FormKeys.NAME],
@@ -146,7 +187,20 @@ export default function CreateAgent() {
                     ? form[FormKeys.KNOWLEDGE_BASE_ID]
                     : undefined,
             }
-            await post("/agents/", request)
+
+            const formData = new FormData()
+            formData.append('name', form[FormKeys.NAME])
+            formData.append('theme', form[FormKeys.THEME])
+            formData.append('behavior', form[FormKeys.BEHAVIOR])
+            if (form[FormKeys.KNOWLEDGE_BASE_ID]) {
+                formData.append('knowledge_base_id', String(form[FormKeys.KNOWLEDGE_BASE_ID]))
+            }
+
+            await post("/agents/", request, {
+                headers: {
+                    "Content-Type": 'multipart/form-data'
+                }
+            })
         } catch (error) {
             Alert.alert("Cadastrar agente", `Erro ao cadastrar agente: ${getErrorMessage(error)}`)
         } finally {
@@ -155,7 +209,7 @@ export default function CreateAgent() {
     }
 
     return (
-        <View style={globalStyles.container}>
+        <ScrollView contentContainerStyle={[globalStyles.container, styles.scrollContainer]}>
             <Text style={[globalStyles.orangeText, styles.inputText]}>Nome</Text>
             <CustomInput
                 placeholder="Digite o nome do agente"
@@ -183,7 +237,7 @@ export default function CreateAgent() {
                 />
             </View>
             {!form[FormKeys.EXISTENT_KNOWLEDGE] && (
-                <DocumentSelect uploadedFile={uploadedFile} setUploadedFile={setUploadedFile} />
+                <DocumentSelect selectedFile={selectedFile} setSelectedFile={setSelectedFile} />
             )}
             {form[FormKeys.EXISTENT_KNOWLEDGE] && (
                 <Picker
@@ -215,7 +269,7 @@ export default function CreateAgent() {
             <View style={globalStyles.orangeButton} onTouchStart={handleSubmit}>
                 <Text style={[globalStyles.WhiteText, styles.inputText]}>Criar</Text>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -223,6 +277,9 @@ const styles = StyleSheet.create({
     inputText: {
         fontWeight: "bold",
         fontSize: 18,
+    },
+    scrollContainer: {
+        flexGrow: 1,
     },
     input: {
         width: "100%",

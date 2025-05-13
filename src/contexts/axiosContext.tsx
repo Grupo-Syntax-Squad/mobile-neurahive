@@ -33,12 +33,31 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
         return (await client.get(url, config)).data
     }
 
-    const post = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.post(url, body, config)
+    const post = (
+        url: string,
+        body: any,
+        config: AxiosRequestConfig = {}
+    ) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+
+        return client.post(url, body, mergedConfig)
     }
 
-    const put = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.put(url, body, config)
+    const put = (url: string, body: any, config: AxiosRequestConfig = {}) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        return client.put(url, body, mergedConfig)
     }
 
     const deletar = (url: string, config?: AxiosRequestConfig<any> | undefined) => {
