@@ -34,17 +34,11 @@ Copy the env example file and place your local IP:
 cp .env.example .env
 ```
 
-To get your IP on windows run this command:
-
+To get your IP see the sections below:
 <details>
-    <summary>Linux</summary>
-    
-    ```bash
-    ifconfig
-    ```
-</details>
+<summary>Windows</summary>
 
-
+Run this:
 ```bash
 ipconfig
 ```
@@ -65,8 +59,12 @@ Adaptador de Rede sem Fio Wi-Fi:
    Gateway Padrão. . . . . . . . . . . . . . . : fe80::b830:9bff:fec1:b9ca%11
                                                  192.168.179.97
 ```
+</details>
 
-On linux run this command:
+<details>
+<summary>Linux</summary>
+
+Run this:
 
 ```bash
 ifconfig
@@ -83,8 +81,10 @@ after run `ìfconfig` you will see something like this:
 ```bash
 
 ```
+</details>
 
-Finally, to actually run the application, type the second command in the terminal
+
+Finally, to actually run the application, type the command below in the terminal
 
 ```bash
 npx expo start
