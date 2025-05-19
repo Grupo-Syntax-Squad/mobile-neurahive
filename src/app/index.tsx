@@ -47,6 +47,14 @@ export function HomeScreen() {
             [HomeActionButtonKeys.TEST_ID]: "chat-button",
             [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.CLIENT],
         },
+        {
+            [HomeActionButtonKeys.ID]: "8",
+            [HomeActionButtonKeys.TITLE]: "Dashboard",
+            [HomeActionButtonKeys.ICON]: require("../assets/images/dashboard-icon.png"),
+            [HomeActionButtonKeys.ROUTE]: "/Dashboard/page",
+            [HomeActionButtonKeys.TEST_ID]: "chat-button",
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.ADMIN],
+        },
         // {
         //     [HomeActionButtonKeys.ID]: "4",
         //     [HomeActionButtonKeys.TITLE]: "Configurações Iniciais",

@@ -5,6 +5,7 @@ import { View, Image, Text } from "react-native"
 import WebSocketProvider from "../contexts/WebSocketContext"
 
 export default function Layout() {
+    
     return (
         <AuthProvider>
             <AxiosProvider>
@@ -35,6 +36,9 @@ export default function Layout() {
                     <Stack.Screen name="Agents/[id]" options={{ title: "Editar Agente" }} />
                     <Stack.Screen name="Agents/create" options={{ title: "Nova agente de IA" }} />
                     <Stack.Screen name="Chat/page" options={{ title: "Minhas conversas" }} />
+                    <Stack.Screen name="Dashboard/page" options={{ title: "Dashboard" }} />
+                    <Stack.Screen name="Dashboard/Users/page" options={{ title: "Gerenciar Usuários" }} />
+                    <Stack.Screen name="Dashboard/Agents/page" options={{ title: "Gerenciar Agentes" }} />
                     <Stack.Screen 
                         name="Chat/[id]" 
                         options={({ route }) => ({
