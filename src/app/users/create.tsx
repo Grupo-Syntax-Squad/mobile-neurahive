@@ -6,7 +6,6 @@ import {
     View,
     Image,
     Alert,
-    SafeAreaView,
     ScrollView,
 } from "react-native"
 import CustomInput from "../../components/CustomInput"
@@ -52,12 +51,12 @@ export default function CreateUser() {
 
     const handleCreateUser = async () => {
         try {
-            const response = await post(`/users`, {
+            await post(`/users`, {
                 name: name,
                 email: email,
                 password: password,
                 role: getRoles(),
-                selectedAgents,
+                selected_agents: selectedAgents,
             })
 
             Alert.alert("Sucesso", "Usuário criado com sucesso!")
@@ -71,7 +70,7 @@ export default function CreateUser() {
     return (
         <>
             <Division />
-            <View style={globalStyles.container}>
+            <ScrollView contentContainerStyle={[styles.scrollContainer]}>
                 <Text style={globalStyles.textCenter}>Novo Usuário</Text>
                 <View style={globalStyles.imageContainer}>
                     <Image source={require("../../assets/images/bees-background.png")} />
@@ -133,7 +132,7 @@ export default function CreateUser() {
                 >
                     <Text style={globalStyles.WhiteText}>Criar Usuário</Text>
                 </TouchableOpacity>
-            </View>
+            </ScrollView>
         </>
     )
 }
@@ -153,6 +152,10 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         borderWidth: 1,
         borderColor: "#ccc",
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        padding: 20
     },
     button: {
         width: "100%",

@@ -79,8 +79,9 @@ const UserDetails: React.FC = () => {
                         admin: userRoles.includes(1),
                         curator: userRoles.includes(2),
                     })
-                    setSelectedAgents(user.agents.map((agent) => agent.id))
+                    setSelectedAgents(response.data.agents.map((agent: any) => agent.id))
                     setIsLoading(false)
+                    console.log('user', response.data)
                 }
             } catch (error: any) {
                 Alert.alert(
@@ -112,6 +113,8 @@ const UserDetails: React.FC = () => {
             return
         }
 
+        console.log('selected agents: ', selectedAgents)
+
         try {
             await put(`/users/`, {
                 id: user.id,
@@ -119,7 +122,7 @@ const UserDetails: React.FC = () => {
                 email: user.email,
                 role: getRoles(),
                 password: password,
-                agents: selectedAgents,
+                selected_agents: selectedAgents,
             })
             Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
             router.replace("/users/")
