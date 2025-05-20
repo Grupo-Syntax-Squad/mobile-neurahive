@@ -1,14 +1,14 @@
-import { Alert, StyleSheet, Switch, Text, View, ScrollView } from "react-native"
+import { Alert, StyleSheet, Switch, Text, View, ScrollView, TouchableOpacity, Image } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import CustomInput from "@/components/CustomInput"
 import { useEffect, useState } from "react"
 import * as FileSystem from "expo-file-system"
 import * as DocumentPicker from "expo-document-picker"
+import Slider from "@react-native-community/slider"
 
 //import { Access, AccessKeys } from "@/interfaces/Services/Access"
 import { KnowledgeBase, KnowledgeBaseKeys } from "@/interfaces/Services/KnowledgeBase"
 import { useAxios } from "@/contexts/axiosContext"
-import { PostAgentRequest, PostAgentRequestKeys } from "@/interfaces/Services/Agent"
 import { router } from "expo-router"
 import { Picker } from "@react-native-picker/picker"
 import { DocumentSelect } from "@/components/DocumentSelect"
@@ -19,6 +19,8 @@ enum FormKeys {
     NAME = "name",
     THEME = "theme",
     BEHAVIOR = "behavior",
+    TEMPERATURE = "temperature",
+    TOP_P = "top_p",
     ACCESS = "access",
     EXISTENT_KNOWLEDGE = "existentKnowledge",
     KNOWLEDGE_BASE_NAME = "knowledge_base_name",
@@ -30,6 +32,8 @@ interface Form {
     [FormKeys.NAME]: string
     [FormKeys.THEME]: string
     [FormKeys.BEHAVIOR]: string
+    [FormKeys.TEMPERATURE]: number
+    [FormKeys.TOP_P]: number
     [FormKeys.ACCESS]?: number
     [FormKeys.EXISTENT_KNOWLEDGE]: boolean
     [FormKeys.KNOWLEDGE_BASE_NAME]?: string
@@ -41,6 +45,8 @@ const defaultForm: Form = {
     [FormKeys.NAME]: "",
     [FormKeys.THEME]: "",
     [FormKeys.BEHAVIOR]: "",
+    [FormKeys.TEMPERATURE]: 0.5,
+    [FormKeys.TOP_P]: 0.5,
     [FormKeys.ACCESS]: undefined,
     [FormKeys.EXISTENT_KNOWLEDGE]: false,
     [FormKeys.KNOWLEDGE_BASE_NAME]: undefined,
@@ -80,6 +86,8 @@ const defaultFormErrors: Record<FormKeys, string> = {
     [FormKeys.NAME]: "",
     [FormKeys.THEME]: "",
     [FormKeys.BEHAVIOR]: "",
+    [FormKeys.TEMPERATURE]: "",
+    [FormKeys.TOP_P]: "",
 }
 
 export default function CreateAgent() {
@@ -91,6 +99,19 @@ export default function CreateAgent() {
     const { get, post } = useAxios()
     const { token } = useAuth()
 
+    const [selectedImage, setSelectedImage] = useState<number | null>(null)
+    const images = [
+        require("../../assets/images/agente1.png"),
+        require("../../assets/images/agente2.png"),
+        require("../../assets/images/agente3.png"),
+        require("../../assets/images/agente4.png"),
+        require("../../assets/images/agente5.png"),
+        require("../../assets/images/agente6.png"),
+    ]
+    const handleSelectImage = (index: number) => {
+        setSelectedImage(index)
+    }
+
     const setName = (value: string): void => {
         setForm({ ...form, [FormKeys.NAME]: value })
     }
@@ -99,6 +120,12 @@ export default function CreateAgent() {
     }
     const setBehavior = (value: string): void => {
         setForm({ ...form, [FormKeys.BEHAVIOR]: value })
+    }
+    const setTemperature = (value: number): void => {
+        setForm({ ...form, [FormKeys.TEMPERATURE]: value })
+    }
+    const setTopP = (value: number): void => {
+        setForm({ ...form, [FormKeys.TOP_P]: value })
     }
 
     // const setAccess = (value: number | undefined): void => {
@@ -136,7 +163,6 @@ export default function CreateAgent() {
 
     const submitWithFile = async (file: DocumentPicker.DocumentPickerAsset) => {
         try {
-
             const response = await FileSystem.uploadAsync(
                 `${process.env.EXPO_PUBLIC_API_URL}/agents/`,
                 file.uri,
@@ -151,12 +177,16 @@ export default function CreateAgent() {
                         knowledge_base_name: file.name,
                         name: form[FormKeys.NAME],
                         theme: form[FormKeys.THEME],
-                        behavior: form[FormKeys.BEHAVIOR]
+                        behavior: form[FormKeys.BEHAVIOR],
+                        temperature: String(form[FormKeys.TEMPERATURE]),
+                        top_p: String(form[FormKeys.TOP_P]),
+                        image_id: String(selectedImage)
                     },
                 }
             )
             const json = JSON.parse(response.body)
-            console.log(json)
+            Alert.alert("Sucesso", json.message)
+            router.replace("/Agents/page")
         } catch (err) {
             console.log("Erro na requisição:", err)
         }
@@ -177,39 +207,48 @@ export default function CreateAgent() {
         }
 
         try {
-            const request: PostAgentRequest = {
-                [PostAgentRequestKeys.NAME]: form[FormKeys.NAME],
-                [PostAgentRequestKeys.THEME]: form[FormKeys.THEME],
-                [PostAgentRequestKeys.BEHAVIOR]: form[FormKeys.BEHAVIOR]
-                    ? form[FormKeys.BEHAVIOR]
-                    : undefined,
-                [PostAgentRequestKeys.KNOWLEDGE_BASE_ID]: form[FormKeys.KNOWLEDGE_BASE_ID]
-                    ? form[FormKeys.KNOWLEDGE_BASE_ID]
-                    : undefined,
-            }
-
             const formData = new FormData()
             formData.append('name', form[FormKeys.NAME])
             formData.append('theme', form[FormKeys.THEME])
             formData.append('behavior', form[FormKeys.BEHAVIOR])
+            formData.append('temperature', String(form[FormKeys.TEMPERATURE]))
+            formData.append('top_p', String(form[FormKeys.TOP_P]))
+            formData.append('image_id', String(selectedImage))
             if (form[FormKeys.KNOWLEDGE_BASE_ID]) {
                 formData.append('knowledge_base_id', String(form[FormKeys.KNOWLEDGE_BASE_ID]))
             }
 
-            await post("/agents/", request, {
+            const response = await post("/agents/", formData, {
                 headers: {
                     "Content-Type": 'multipart/form-data'
                 }
             })
+            Alert.alert("Sucesso", response.data.message)
         } catch (error) {
-            Alert.alert("Cadastrar agente", `Erro ao cadastrar agente: ${getErrorMessage(error)}`)
+            console.log(`Erro ao cadastrar agente: ${getErrorMessage(error)}`)
+            Alert.alert("Cadastrar agente", 'Erro ao cadastrar agente')
         } finally {
             router.replace("/Agents/page")
         }
     }
 
     return (
-        <ScrollView contentContainerStyle={[globalStyles.container, styles.scrollContainer]}>
+        <ScrollView contentContainerStyle={[styles.scrollContainer]}>
+            <Text style={styles.selectImageText}>Selecione uma Imagem:</Text>
+            <View style={styles.imagesContainer}>
+                {images.map((img, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() => handleSelectImage(index)}
+                        style={[
+                            styles.imageWrapper,
+                            selectedImage === index && styles.selectedImage,
+                        ]}
+                    >
+                        <Image source={img} style={styles.agentImage} />
+                    </TouchableOpacity>
+                ))}
+            </View>
             <Text style={[globalStyles.orangeText, styles.inputText]}>Nome</Text>
             <CustomInput
                 placeholder="Digite o nome do agente"
@@ -266,6 +305,36 @@ export default function CreateAgent() {
                 multiline
                 numberOfLines={3}
             />
+            <Text style={[globalStyles.orangeText, styles.inputText]}>Temperature: {form[FormKeys.TEMPERATURE].toFixed(1)}</Text>
+            <Text style={styles.sliderTip}>
+                Controla a criatividade da resposta. Valores baixos geram respostas mais conservadoras, altos geram mais variedade.
+            </Text>
+            <Slider
+                style={styles.slider}
+                minimumValue={0.1}
+                maximumValue={1}
+                step={0.1}
+                value={form[FormKeys.TEMPERATURE]}
+                onSlidingComplete={(value) => setTemperature(value)}
+                minimumTrackTintColor="#FF7F50"
+                maximumTrackTintColor="#000000"
+                thumbTintColor="#FF7F50"
+            />
+            <Text style={[globalStyles.orangeText, styles.inputText]}>Top-p: {form[FormKeys.TOP_P].toFixed(1)}</Text>
+            <Text style={styles.sliderTip}>
+                Controla a diversidade das palavras usadas. Valores baixos geram respostas mais focadas, altos geram respostas mais diversas.
+            </Text>
+            <Slider
+                style={styles.slider}
+                minimumValue={0.1}
+                maximumValue={1}
+                step={0.1}
+                value={form[FormKeys.TOP_P]}
+                onSlidingComplete={(value) => setTopP(value)}
+                minimumTrackTintColor="#FF7F50"
+                maximumTrackTintColor="#000000"
+                thumbTintColor="#FF7F50"
+            />
             <View style={globalStyles.orangeButton} onTouchStart={handleSubmit}>
                 <Text style={[globalStyles.WhiteText, styles.inputText]}>Criar</Text>
             </View>
@@ -280,6 +349,7 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         flexGrow: 1,
+        padding: 20
     },
     input: {
         width: "100%",
@@ -296,5 +366,43 @@ const styles = StyleSheet.create({
     },
     align_center: {
         alignItems: "center",
+    },
+    slider: {
+        width: "100%",
+        height: 40,
+    },
+    sliderTip: {
+        fontSize: 12,
+        fontStyle: "italic",
+        color: "#666",
+        padding: 5
+    },
+    imagesContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        marginBottom: 20,
+    },
+    imageWrapper: {
+        margin: 5,
+        borderWidth: 2,
+        borderColor: "transparent",
+        borderRadius: 10,
+        overflow: "hidden",
+    },
+    selectedImage: {
+        borderColor: "#FFA500",
+    },
+    agentImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 10,
+    },
+    selectImageText: {
+        color: "#FFA500",
+        fontSize: 18,
+        marginBottom: 10,
+        fontWeight: "bold",
+        textAlign: "center",
     },
 })

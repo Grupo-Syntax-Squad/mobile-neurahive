@@ -2,6 +2,8 @@ import globalStyles from "@/app/styles/globalStyles"
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import * as DocumentPicker from "expo-document-picker"
 import { Feather } from "@expo/vector-icons"
+import { useAxios } from "@/contexts/axiosContext"
+import { useState } from "react"
 
 interface Props {
     onPress?: () => void
@@ -10,6 +12,8 @@ interface Props {
 }
 
 export const DocumentSelect = ({ selectedFile, setSelectedFile, ...rest }: Props) => {
+    const { get } = useAxios()
+    const [filenameAvailable, setFilenameAvailable] = useState<boolean>(true)
 
     const handlePickDocument = async () => {
         try {
@@ -21,6 +25,7 @@ export const DocumentSelect = ({ selectedFile, setSelectedFile, ...rest }: Props
 
             if (result.assets) {
                 setSelectedFile(result.assets[0])
+                checkFilename(result.assets[0]?.name)
             }
         } catch (error) {
             console.log("erro:", error)
@@ -28,21 +33,42 @@ export const DocumentSelect = ({ selectedFile, setSelectedFile, ...rest }: Props
         }
     }
 
+    const checkFilename = async (filename: string) => {
+        get(`/knowledge-base/filenameAvailable`, {
+            params: {
+                filename: filename
+            }
+        }).then(response => {
+            setFilenameAvailable(response.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     return (
         <TouchableOpacity style={styles.container} {...rest} onPress={handlePickDocument}>
             <>
                 {selectedFile && (
                     <View style={styles.uploadedFileContainer}>
-                        <Feather name="check-circle" size={16} color="#4CAF50" />
-                        <Text style={styles.uploadedFileText}>
-                            Arquivo enviado: {selectedFile?.name}
-                        </Text>
+                        <Feather
+                            name={filenameAvailable ? "check-circle" : "x-circle"}
+                            size={16}
+                            color={filenameAvailable ? styles.success.color : styles.error.color}
+                        />
+                        { filenameAvailable ? 
+                            <Text style={[styles.uploadedFileText, styles.success]}>
+                                Arquivo carregado: {selectedFile?.name}                          
+                            </Text> : 
+                            <Text style={[styles.uploadedFileText, styles.error]}>
+                                Este nome de arquivo já está sendo usado.        
+                            </Text>
+                        }                        
                     </View>
                 )}
                 <Text style={globalStyles.textMuted}>
                     Carregue o arquivo de temas e respostas
                 </Text>
-                <Text style={globalStyles.orangeText}>formatos válidos .csv .txt</Text>
+                <Text style={globalStyles.orangeText}>Formatos válidos: .csv .txt</Text>
             </>
         </TouchableOpacity>
     )
@@ -69,9 +95,14 @@ const styles = StyleSheet.create({
         gap: 6,
         marginTop: 8,
     },
-    uploadedFileText: {
-        color: "#4CAF50",
+    uploadedFileText: {       
         fontWeight: "bold",
         fontSize: 14,
     },
+    success: {
+        color: "#4CAF50",
+    },
+    error: {
+        color: "#d32f2f"
+    }
 })
