@@ -6,17 +6,19 @@ import React, { useEffect, useState } from "react"
 import { useAxios } from "@/contexts/axiosContext"
 import { GetChatResponse, GetChatResponseKeys } from "@/interfaces/Services/Chat"
 import { getErrorMessage } from "@/utils/getErrorMessage"
+import { useAuth } from "@/contexts/authContext"
 
 export default function NewChat() {
     const router = useRouter()
     const [chats, setChats] = useState<GetChatResponse[]>([])
     const [loading, setLoading] = useState(true)
     const { get } = useAxios()
+    const { user} = useAuth()
 
     const fetchChats = async () => {
         setLoading(true)
         try {
-            const response = (await get("/chat/")).data
+            const response = (await get("/chat/", {params: {"user_id": user?.userId}})).data
             setChats(response)
         } catch (error) {
             Alert.alert("Consultar chats", `Erro ao consultar chats: ${getErrorMessage(error)}`)
