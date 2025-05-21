@@ -8,6 +8,7 @@ import { getErrorMessage } from "@/utils/getErrorMessage"
 import Entypo from '@expo/vector-icons/Entypo'
 import { PieChart } from 'react-native-svg-charts'
 import { Text as SvgText} from 'react-native-svg'
+import axios from "axios"
 
 
 export function ManageUsers() {
@@ -15,7 +16,25 @@ export function ManageUsers() {
     const [users, setUsers] = useState<User[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [statistics, setStatistics] = useState<Statistic[]>([])
     const { get } = useAxios()
+
+    const fetchStatistics = async () => {
+            try {
+                setLoading(true)
+                const response = await get(`/statistics/general`)
+                setStatistics(response.data)
+            } catch (err) {
+                setError("Erro ao carregar estatísticas")
+                console.error("Erro na requisição:", getErrorMessage(err))
+            } finally {
+                setLoading(false)
+            }
+        }
+    
+        useEffect(() => {
+            fetchStatistics()
+        }, [])
 
     const data = [30, 10]
     const chartColors = ['#16ae03', '#ae1a03']
@@ -63,6 +82,7 @@ export function ManageUsers() {
         useEffect(() => {
             fetchUsers()
         }, [])
+    
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled"
@@ -76,14 +96,14 @@ export function ManageUsers() {
     <View style={styles.usersList}>
         <Text style={globalStyles.orangeText}>Usuários Ativos</Text>
         {users.map((user) => (
-            <UserCard key={user.id} user={user} />
+            <UserCard key={user.id} user={user}/>
         ))}
     </View>
     </ScrollView>
   );
 };
 
-const UserCard: React.FC<{ user: User }> = ({ user }) => (
+const UserCard: React.FC<{ user: User}> = ({ user }) => (
     <View style={styles.userContainer}>
         <Text style={styles.userName}>{user.name}</Text>
         <View style={{ flexDirection: "row", gap: 8 }}>

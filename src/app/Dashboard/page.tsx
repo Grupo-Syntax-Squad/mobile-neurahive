@@ -1,44 +1,84 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native"
 import { HomeActionButton, HomeActionButtonKeys } from "@/types/HomeActionButton"
+import { DashboardButton, DashboardButtonKeys } from "@/types/DashboardButton"
 import { Role } from "@/enum/Role"
 import WithRole from '@/components/WithRole';
 import globalStyles from "../styles/globalStyles"
 import { router } from "expo-router"
+import { User } from '@/types/User';
+import { Statistic } from '@/types/Statistic';
+import { getErrorMessage } from '@/utils/getErrorMessage';
+import { useAxios } from '@/contexts/axiosContext';
 
 const DashboardPage: React.FC = () => {
-    const actionButtons: HomeActionButton[] = [
+    const [statistics, setStatistics] = useState<Statistic[]>([])
+    const [error, setError] = useState<string | null>(null)
+    const [loading, setLoading] = useState<boolean>(false)
+    const { get } = useAxios()
+    
+    const fetchStatistics = async () => {
+        try {
+            setLoading(true)
+            const response = await get(`/statistics/general`)
+            setStatistics(response.data)
+        } catch (err) {
+            setError("Erro ao carregar estatísticas")
+            console.error("Erro na requisição:", getErrorMessage(err))
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchStatistics()
+    }, [])
+
+
+        const actionButtons: DashboardButton[] = [
             {
-                [HomeActionButtonKeys.ID]: "1",
-                [HomeActionButtonKeys.TITLE]: "Usuários",
-                [HomeActionButtonKeys.ICON]: require("../../assets/images/user-icon.png"),
-                [HomeActionButtonKeys.ROUTE]: "/Dashboard/Users/page",
-                [HomeActionButtonKeys.TEST_ID]: "users-button",
-                [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
+                [DashboardButtonKeys.ID]: "1",
+                [DashboardButtonKeys.TITLE]: "Usuários",
+                [DashboardButtonKeys.ROUTE]: "/Dashboard/Users/page",
+                [DashboardButtonKeys.TOTAL]: statistics.total_users,
+                [DashboardButtonKeys.ALLOWED_ROLES]: [Role.ADMIN]
             },
             {
-                [HomeActionButtonKeys.ID]: "2",
-                [HomeActionButtonKeys.TITLE]: "Agentes",
-                [HomeActionButtonKeys.ICON]: require("../../assets/images/user-icon.png"),
-                [HomeActionButtonKeys.ROUTE]: "/Dashboard/Agents/page",
-                [HomeActionButtonKeys.TEST_ID]: "users-button",
-                [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN],
+                [DashboardButtonKeys.ID]: "2",
+                [DashboardButtonKeys.TITLE]: "Agentes",
+                [DashboardButtonKeys.ROUTE]: "/Dashboard/Agents/page",
+                [DashboardButtonKeys.TOTAL]: statistics.total_agents,
+                [DashboardButtonKeys.ALLOWED_ROLES]: [Role.ADMIN]
             },
-    ]
+            {
+                [DashboardButtonKeys.ID]: "3",
+                [DashboardButtonKeys.TITLE]: "Conversas",
+                [DashboardButtonKeys.ROUTE]: "/Dashboard/Agents/page",
+                [DashboardButtonKeys.TOTAL]: statistics.total_conversations,
+                [DashboardButtonKeys.ALLOWED_ROLES]: [Role.ADMIN]
+            },
+            {
+                [DashboardButtonKeys.ID]: "4",
+                [DashboardButtonKeys.TITLE]: "Mensagens",
+                [DashboardButtonKeys.ROUTE]: "/Dashboard/Agents/page",
+                [DashboardButtonKeys.TOTAL]: statistics.total_messages,
+                [DashboardButtonKeys.ALLOWED_ROLES]: [Role.ADMIN]
+            },
+        ]
   return (
     <View style={styles.actionButtonsContainer}>
       {actionButtons.map((button) => (
         <WithRole
-            allowedRoles={button[HomeActionButtonKeys.ALLOWED_ROLES]}
-            key={button[HomeActionButtonKeys.ID]}
+            allowedRoles={button[DashboardButtonKeys.ALLOWED_ROLES]}
+            key={button[DashboardButtonKeys.ID]}
         >
             <ActionButton
-                title={button[HomeActionButtonKeys.TITLE]}
-                icon={button[HomeActionButtonKeys.ICON]}
+                title={button[DashboardButtonKeys.TITLE]}
+                total={button[DashboardButtonKeys.TOTAL]}
                 onPress={() =>
-                    router.push(button[HomeActionButtonKeys.ROUTE] as any)
+                    router.push(button[DashboardButtonKeys.ROUTE] as any)
                 }
-                testID={button[HomeActionButtonKeys.TEST_ID]}
+                testID={button[DashboardButtonKeys.TEST_ID]}
             />
         </WithRole>
     ))}
@@ -48,21 +88,23 @@ const DashboardPage: React.FC = () => {
 
 const ActionButton: React.FC<{
     title: string
-    icon: any
+    total: number
     onPress: () => void
     testID?: string
-}> = ({ title, icon, onPress, testID }) => (
+}> = ({ title, total, onPress, testID }) => (
     <TouchableOpacity style={styles.actionButton} onPress={onPress} testID={testID}>
-        <Image source={icon} style={styles.actionIcon} />
         <Text style={styles.actionText}>{title}</Text>
+        <Text style={styles.totalText}>{total}</Text>
     </TouchableOpacity>
 )
 const styles = StyleSheet.create({
     actionButtonsContainer: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-around",
+        flexWrap: "wrap",
         padding: 10,
+        gap: 10
+        
     },
     logoutButton: {
         position: "absolute",
@@ -149,7 +191,7 @@ const styles = StyleSheet.create({
         width: "48%",
         backgroundColor: "white",
         borderRadius: 10,
-        padding: 15,
+        padding: 25,
         alignItems: "center",
         justifyContent: "center",
         shadowColor: "#000",
@@ -165,9 +207,18 @@ const styles = StyleSheet.create({
     },
     actionText: {
         textAlign: "center",
-        fontSize: 14,
+        fontSize: 20,
         color: "#333",
+    },
+    totalText: {
+        textAlign: "center",
+        fontSize: 20,
+        color: "#FF7700",
     },
 })
 
 export default DashboardPage;
+function setLoading(arg0: boolean) {
+    throw new Error('Function not implemented.');
+}
+
