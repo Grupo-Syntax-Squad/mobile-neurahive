@@ -8,7 +8,7 @@ import {
     Platform,
     Alert,
 } from "react-native"
-import { Link, useRouter } from "expo-router"
+import { useRouter } from "expo-router"
 import OrangeButton from "@/components/orangeButton"
 import { NeurahiveIcon } from "@/components/NeurahiveIcon"
 import globalStyles from "../styles/globalStyles"
@@ -33,8 +33,15 @@ const Login = () => {
 
             login(token)
         } catch (error: any) {
-            console.log(error)
-            Alert.alert("Erro ao logar", error.response ? error.response.data : "Erro desconhecido")
+            console.log("Erro ao fazer login:", error)
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.detail || error.message || "Erro desconhecido"
+
+                Alert.alert(`Erro ao logar`, typeof message === "string" ? message : JSON.stringify(message))
+            } else {
+                Alert.alert("Erro desconhecido", error.message || "Ocorreu um erro inesperado.")
+            }
+            return
         }
         router.replace("/")
     }

@@ -29,20 +29,56 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
         headers: { Authorization: `Bearer ${token}` },
     })
 
-    const get = async (url: string, config?: AxiosRequestConfig<any> | undefined) => {
-        return (await client.get(url, config)).data
+    const get = async (
+        url: string,
+        config: AxiosRequestConfig = {}
+        ) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+            ...client.defaults.headers.common,
+            ...config.headers,
+            },
+        }
+        const response = await client.get(url, mergedConfig)
+        return response.data
     }
 
-    const post = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.post(url, body, config)
+    const post = (
+        url: string,
+        body: any,
+        config: AxiosRequestConfig = {}
+    ) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        return client.post(url, body, mergedConfig)
     }
 
-    const put = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.put(url, body, config)
+    const put = (url: string, body: any, config: AxiosRequestConfig = {}) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        return client.put(url, body, mergedConfig)
     }
 
-    const deletar = (url: string, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.delete(url)
+    const deletar = (url: string, config: AxiosRequestConfig = {}) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        return client.delete(url, mergedConfig)
     }
 
     return (
