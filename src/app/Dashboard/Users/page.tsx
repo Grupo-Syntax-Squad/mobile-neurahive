@@ -9,6 +9,7 @@ import Entypo from '@expo/vector-icons/Entypo'
 import { PieChart } from 'react-native-svg-charts'
 import { Text as SvgText} from 'react-native-svg'
 import axios from "axios"
+import UsersLegend from "@/components/UsersLegend"
 
 
 export function ManageUsers() {
@@ -19,27 +20,34 @@ export function ManageUsers() {
     const [statistics, setStatistics] = useState<Statistic[]>([])
     const { get } = useAxios()
 
-    const fetchStatistics = async () => {
-            try {
-                setLoading(true)
-                const response = await get(`/statistics/general`)
-                setStatistics(response.data)
-            } catch (err) {
-                setError("Erro ao carregar estatísticas")
-                console.error("Erro na requisição:", getErrorMessage(err))
-            } finally {
-                setLoading(false)
-            }
-        }
-    
-        useEffect(() => {
-            fetchStatistics()
-        }, [])
 
-    const data = [30, 10]
+    const enableUsers = users.filter((user) => user.enabled);
+    const disableUsers = users.filter((user) => !user.enabled);
+
+    const percentActive = (enableUsers.length / users.length) * 100;
+    const percentInactive = (disableUsers.length / users.length) * 100;
+
+    const fetchStatistics = async () => {
+        try {
+            setLoading(true)
+            const response = await get(`/statistics/general`)
+            setStatistics(response.data)
+        } catch (err) {
+            setError("Erro ao carregar estatísticas")
+            console.error("Erro na requisição:", getErrorMessage(err))
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchStatistics()
+    }, [])
+
+    const data = [percentActive, percentInactive]
     const chartColors = ['#16ae03', '#ae1a03']
     const  pieData = data.map((value, index) => ({
-        value,
+        value: parseFloat(value.toFixed(0)),
         key: `${index}-${value}`,
         svg: {
             fill: chartColors[index % chartColors.length]
@@ -67,21 +75,21 @@ export function ManageUsers() {
 
 
     const fetchUsers = async () => {
-            try {
-                setLoading(true)
-                const response = await get(`/users/`)
-                setUsers(response.data)
-            } catch (err) {
-                setError("Erro ao carregar usuários")
-                console.error("Erro na requisição:", getErrorMessage(err))
-            } finally {
-                setLoading(false)
-            }
+        try {
+            setLoading(true)
+            const response = await get(`/users/`)
+            setUsers(response.data)
+        } catch (err) {
+            setError("Erro ao carregar usuários")
+            console.error("Erro na requisição:", getErrorMessage(err))
+        } finally {
+            setLoading(false)
         }
-    
-        useEffect(() => {
-            fetchUsers()
-        }, [])
+    }
+
+    useEffect(() => {
+        fetchUsers()
+    }, [])
     
 
   return (
@@ -93,9 +101,10 @@ export function ManageUsers() {
                 <Label/>
             </PieChart>
         </View>
+        <UsersLegend/>
     <View style={styles.usersList}>
         <Text style={globalStyles.orangeText}>Usuários Ativos</Text>
-        {users.map((user) => (
+        {enableUsers.map((user) => (
             <UserCard key={user.id} user={user}/>
         ))}
     </View>

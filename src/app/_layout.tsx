@@ -39,6 +39,7 @@ export default function Layout() {
                     <Stack.Screen name="Dashboard/page" options={{ title: "Dashboard" }} />
                     <Stack.Screen name="Dashboard/Users/page" options={{ title: "Gerenciar Usuários" }} />
                     <Stack.Screen name="Dashboard/Agents/page" options={{ title: "Gerenciar Agentes" }} />
+                    <Stack.Screen name="Dashboard/Chats/page" options={{ title: "Gerenciar Conversas" }} />
                     <Stack.Screen 
                         name="Chat/[id]" 
                         options={({ route }) => ({

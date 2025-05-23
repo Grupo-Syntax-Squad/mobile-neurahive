@@ -53,7 +53,7 @@ const DashboardPage: React.FC = () => {
             {
                 [DashboardButtonKeys.ID]: "3",
                 [DashboardButtonKeys.TITLE]: "Conversas",
-                [DashboardButtonKeys.ROUTE]: "/Dashboard/Agents/page",
+                [DashboardButtonKeys.ROUTE]: "/Dashboard/Chats/page",
                 [DashboardButtonKeys.TOTAL]: statistics.total_conversations,
                 [DashboardButtonKeys.ALLOWED_ROLES]: [Role.ADMIN]
             },
