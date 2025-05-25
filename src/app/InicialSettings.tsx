@@ -1,7 +1,5 @@
-import { Image, StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch } from "react-native"
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch } from "react-native"
 import React from "react"
-import { NavigationProp, useNavigation } from "@react-navigation/native"
-import { RootStackParamList } from "./navigation/types"
 import CustomInput from "@/components/CustomInput"
 import { useState } from "react"
 import Checkbox from "expo-checkbox"
@@ -17,12 +15,12 @@ export default function InicialSettings() {
         weekly: false,
         monthly: false,
     })
-    const [knowledgeBase, setKnowledgeBase] = useState(false)
     const [isEnabled, setIsEnabled] = useState(false)
+    const [cleanInactiveConversations, setCleanInactiveConversations] = useState(false)
 
-    const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
-
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>()
+    const toggleSwitch = () => setIsEnabled(!isEnabled)
+    const toggleCleanInactiveConversations = () =>
+        setCleanInactiveConversations(!cleanInactiveConversations)
 
     return (
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
@@ -48,7 +46,10 @@ export default function InicialSettings() {
                     <Text style={styles.sectionTitle}>Chat e Iterações</Text>
                     <View style={styles.sectionSwitch}>
                         <Text style={styles.subtitle}>Limpar conversas inativas?</Text>
-                        <Switch value={isChatEnabled} onValueChange={toggleChatSwitch} />
+                        <Switch
+                            value={cleanInactiveConversations}
+                            onValueChange={toggleCleanInactiveConversations}
+                        />
                     </View>
                     <View style={styles.checkboxContainer}>
                         <Checkbox

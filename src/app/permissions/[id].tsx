@@ -1,32 +1,12 @@
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from "react-native"
 import Checkbox from "expo-checkbox"
 import React, { useState } from "react"
+
 import globalStyles from "../styles/globalStyles"
 
-export default function Permissions() {
-    const [permissionTitle, setPermissionTitle] = useState("")
-    const [selectedAccesses, setSelectedAccesses] = useState<string[]>([])
-
-    const accesses = [
-        "Recursos Humanos",
-        "Estoque",
-        "Gerência",
-        "Administrativo",
-        "Laboratório",
-        "SAC",
-        "Financeiro",
-        "Comercial",
-        "Manutenção",
-    ]
-
-    const toggleAccess = (access: string) => {
-        if (selectedAccesses.includes(access)) {
-            setSelectedAccesses(selectedAccesses.filter((item) => item !== access))
-        } else {
-            setSelectedAccesses([...selectedAccesses, access])
-        }
-    }
-
+export default function Permission() {
+    const [isChecked, setChecked] = useState(false)
+    
     return (
         <ScrollView
             keyboardShouldPersistTaps="handled"

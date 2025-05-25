@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react"
-import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Image,
-    Alert,
-    SafeAreaView,
-    ScrollView,
-} from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View, Image, Alert, ScrollView } from "react-native"
 import CustomInput from "../../components/CustomInput"
 import globalStyles from "../styles/globalStyles"
 import { router } from "expo-router"
@@ -52,12 +43,12 @@ export default function CreateUser() {
 
     const handleCreateUser = async () => {
         try {
-            const response = await post(`/users`, {
+            await post(`/users`, {
                 name: name,
                 email: email,
                 password: password,
                 role: getRoles(),
-                selectedAgents,
+                selected_agents: selectedAgents,
             })
 
             Alert.alert("Sucesso", "Usuário criado com sucesso!")

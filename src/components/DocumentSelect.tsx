@@ -1,26 +1,21 @@
 import globalStyles from "@/app/styles/globalStyles"
-import { useState } from "react"
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import * as DocumentPicker from "expo-document-picker"
-import { UploadingOverlay } from "./UploadingOverlay"
 import { Feather } from "@expo/vector-icons"
-import { UploadedFile } from "@/types/UploadedFile"
-import { useAuth } from "@/contexts/authContext"
-import * as FileSystem from "expo-file-system"
+import { useAxios } from "@/contexts/axiosContext"
+import { useState } from "react"
 
 interface Props {
     onPress?: () => void
-    uploadedFile?: UploadedFile
-    setUploadedFile?: (uploadedFile: UploadedFile | undefined) => void
+    selectedFile?: DocumentPicker.DocumentPickerAsset
+    setSelectedFile: (selectedFile: DocumentPicker.DocumentPickerAsset | undefined) => void
 }
 
-export const DocumentSelect = ({ uploadedFile, setUploadedFile, ...rest }: Props) => {
-    const [uploading, setUploading] = useState<boolean>(false)
-
-    const { token } = useAuth()
+export const DocumentSelect = ({ selectedFile, setSelectedFile, ...rest }: Props) => {
+    const { get } = useAxios()
+    const [filenameAvailable, setFilenameAvailable] = useState<boolean>(true)
 
     const handlePickDocument = async () => {
-        if (uploading) return
         try {
             const result = await DocumentPicker.getDocumentAsync({
                 type: ["text/comma-separated-values", "text/csv", "text/plain"],
@@ -29,64 +24,52 @@ export const DocumentSelect = ({ uploadedFile, setUploadedFile, ...rest }: Props
             })
 
             if (result.assets) {
-                const file = result.assets[0]
-                uploadDocument(file)
+                setSelectedFile(result.assets[0])
+                checkFilename(result.assets[0]?.name)
             }
         } catch (error) {
             console.log("erro:", error)
             Alert.alert("Carregar documento", "Erro ao carregar documento")
-        } finally {
-            setUploading(false)
         }
     }
 
-    const uploadDocument = async (file: DocumentPicker.DocumentPickerAsset) => {
-        try {
-            setUploading(true)
-            const response = await FileSystem.uploadAsync(
-                `${process.env.EXPO_PUBLIC_API_URL}/knowledge-base`,
-                file.uri,
-                {
-                    fieldName: "file",
-                    httpMethod: "POST",
-                    uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    parameters: {
-                        name: file.name,
-                    },
-                }
-            )
-            const json = JSON.parse(response.body)
-            setUploadedFile?.(json)
-        } catch (err) {
-            console.log("Erro na requisição:", err)
-        } finally {
-            setUploading(false)
-        }
+    const checkFilename = async (filename: string) => {
+        get(`/knowledge-base/filenameAvailable`, {
+            params: {
+                filename: filename
+            }
+        }).then(response => {
+            setFilenameAvailable(response.data)
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     return (
         <TouchableOpacity style={styles.container} {...rest} onPress={handlePickDocument}>
-            {uploading ? (
-                <UploadingOverlay visible={uploading} />
-            ) : (
-                <>
-                    {uploadedFile && (
-                        <View style={styles.uploadedFileContainer}>
-                            <Feather name="check-circle" size={16} color="#4CAF50" />
-                            <Text style={styles.uploadedFileText}>
-                                Arquivo enviado: {uploadedFile?.name}
+            <>
+                {selectedFile && (
+                    <View style={styles.uploadedFileContainer}>
+                        <Feather
+                            name={filenameAvailable ? "check-circle" : "x-circle"}
+                            size={16}
+                            color={filenameAvailable ? styles.success.color : styles.error.color}
+                        />
+                        { filenameAvailable ? 
+                            <Text style={[styles.uploadedFileText, styles.success]}>
+                                Arquivo carregado: {selectedFile?.name}                          
+                            </Text> : 
+                            <Text style={[styles.uploadedFileText, styles.error]}>
+                                Este nome de arquivo já está sendo usado.        
                             </Text>
-                        </View>
-                    )}
-                    <Text style={globalStyles.textMuted}>
-                        Carregue o arquivo de temas e respostas
-                    </Text>
-                    <Text style={globalStyles.orangeText}>formatos válidos .csv .txt</Text>
-                </>
-            )}
+                        }                        
+                    </View>
+                )}
+                <Text style={globalStyles.textMuted}>
+                    Carregue o arquivo de temas e respostas
+                </Text>
+                <Text style={globalStyles.orangeText}>Formatos válidos: .csv .txt</Text>
+            </>
         </TouchableOpacity>
     )
 }
@@ -112,9 +95,14 @@ const styles = StyleSheet.create({
         gap: 6,
         marginTop: 8,
     },
-    uploadedFileText: {
-        color: "#4CAF50",
+    uploadedFileText: {       
         fontWeight: "bold",
         fontSize: 14,
     },
+    success: {
+        color: "#4CAF50",
+    },
+    error: {
+        color: "#d32f2f"
+    }
 })

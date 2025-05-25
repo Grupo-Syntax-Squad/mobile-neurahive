@@ -2,7 +2,6 @@ import { AuthProvider } from "@/contexts/authContext"
 import { AxiosProvider } from "@/contexts/axiosContext"
 import { Stack } from "expo-router"
 import { View, Image, Text } from "react-native"
-import WebSocketProvider from "../contexts/WebSocketContext"
 
 export default function Layout() {
     
@@ -40,31 +39,42 @@ export default function Layout() {
                     <Stack.Screen name="Dashboard/Users/page" options={{ title: "Dashboard | Usuários" }} />
                     <Stack.Screen name="Dashboard/Agents/page" options={{ title: "Dashboard | Agentes" }} />
                     <Stack.Screen name="Dashboard/Chats/page" options={{ title: "Dashboard | Conversas" }} />
-                    <Stack.Screen 
-                        name="Chat/[id]" 
-                        options={({ route }) => ({
+
+                    <Stack.Screen
+                        name="Chat/[id]"
+                        options={({ route }: { route: any }) => ({
                             headerTitle: () => (
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Image
-                                    source={require("../assets/images/agente4.png")}
-                                    style={{ width: 50, height: 50, borderRadius: 25, marginRight: 10 }}
-                                />
-                                <Text style={{ 
-                                color: 'white', 
-                                fontSize: 18, 
-                                fontWeight: 'bold' 
-                                }}>
-                                {route.params?.agentName || 'Agente '}
-                                </Text>
-                            </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <Image
+                                        source={require("../assets/images/agente4.png")}
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                            borderRadius: 25,
+                                            marginRight: 10,
+                                        }}
+                                    />
+                                    <Text
+                                        style={{
+                                            color: "white",
+                                            fontSize: 18,
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {route.params?.agentName || "Agente "}
+                                    </Text>
+                                </View>
                             ),
                             headerStyle: {
-                            backgroundColor: '#FCAF1F',
+                                backgroundColor: "#FCAF1F",
                             },
-                            headerTintColor: '#fff',
+                            headerTintColor: "#fff",
                         })}
-                        />
-                    <Stack.Screen name="Chat/selectAgent" options={{ title: "Selecione o Agente" }} />
+                    />
+                    <Stack.Screen
+                        name="Chat/selectAgent"
+                        options={{ title: "Selecione o Agente" }}
+                    />
                     <Stack.Screen
                         name="KnowledgeBase/page"
                         options={{ title: "Bases de conhecimento" }}

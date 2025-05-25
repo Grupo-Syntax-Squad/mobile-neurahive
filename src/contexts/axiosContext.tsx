@@ -1,6 +1,10 @@
 import React, { createContext, useContext, ReactNode } from "react"
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import { useAuth } from "./authContext"
+
+interface APIError {
+    detail: string
+}
 
 interface Props {
     get: (url: string, config?: AxiosRequestConfig<any> | undefined) => Promise<any>
@@ -29,20 +33,73 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
         headers: { Authorization: `Bearer ${token}` },
     })
 
-    const get = async (url: string, config?: AxiosRequestConfig<any> | undefined) => {
-        return (await client.get(url, config)).data
+    client.interceptors.response.use(
+        (response) => response,
+        (error: AxiosError<APIError>) => {
+            if (error.response) {
+                const data = error.response.data
+                console.warn("Erro da API:", data.detail)
+            } else if (error.request) {
+                console.warn("Sem resposta do servidor:", error.message)
+            } else {
+                console.warn("Erro desconhecido:", error.message)
+            }
+            return Promise.reject(formatAxiosError(error))
+        }
+    )
+
+    const formatAxiosError = (error: AxiosError<APIError>): string => {
+        if (error.response?.data) {
+            const data = error.response.data
+            return data.detail || JSON.stringify(data)
+        }
+        if (error.message) return error.message
+        return "Erro desconhecido."
     }
 
-    const post = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.post(url, body, config)
+    const get = async (url: string, config: AxiosRequestConfig = {}) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        const response = await client.get(url, mergedConfig)
+        return response.data
     }
 
-    const put = (url: string, body: any, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.put(url, body, config)
+    const post = (url: string, body: any, config: AxiosRequestConfig = {}) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        return client.post(url, body, mergedConfig)
     }
 
-    const deletar = (url: string, config?: AxiosRequestConfig<any> | undefined) => {
-        return client.delete(url)
+    const put = (url: string, body: any, config: AxiosRequestConfig = {}) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        return client.put(url, body, mergedConfig)
+    }
+
+    const deletar = (url: string, config: AxiosRequestConfig = {}) => {
+        const mergedConfig: AxiosRequestConfig = {
+            ...config,
+            headers: {
+                ...client.defaults.headers.common,
+                ...config.headers,
+            },
+        }
+        return client.delete(url, mergedConfig)
     }
 
     return (

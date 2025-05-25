@@ -8,33 +8,29 @@ import {
     Platform,
     Alert,
 } from "react-native"
-import { Link, useRouter } from "expo-router"
+import { useRouter } from "expo-router"
 import OrangeButton from "@/components/orangeButton"
 import { NeurahiveIcon } from "@/components/NeurahiveIcon"
 import globalStyles from "../styles/globalStyles"
-import axios from "axios"
 import * as SecureStore from "expo-secure-store"
 import { useAuth } from "@/contexts/authContext"
+import { useAxios } from "@/contexts/axiosContext"
 
 const Login = () => {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const { login } = useAuth()
+    const { post } = useAxios()
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/login`, {
-                email,
-                password,
-            })
+            const response = await post("/auth/login", { email, password })
             const token = response.data.access_token
             await SecureStore.setItem("jwt_token", token)
-
             login(token)
         } catch (error: any) {
-            console.log(error)
-            Alert.alert("Erro ao logar", error.response ? error.response.data : "Erro desconhecido")
+            Alert.alert("Erro ao logar", String(error))
         }
         router.replace("/")
     }
