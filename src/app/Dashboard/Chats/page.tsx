@@ -16,54 +16,35 @@ const ManageChats = () => {
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
     const [users, setUsers] = useState<User[]>([])
     const [agents, setAgents] = useState<Agent[]>([])
-    const [statistics, setStatistics] = useState<any>({})
+    const [statistics, setStatistics] = useState<any | null>(null)
     const [error, setError] = useState<string | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const { get } = useAxios()
+    const [showStatistics, setShowStatistics] = useState(false);
 
     const fetchUsers = async () => {
         try {
-            setLoading(true)
             const response = await get(`/users/`)
             setUsers(response.data)
         } catch (err) {
             setError("Erro ao carregar usuários")
             console.error("Erro na requisição:", getErrorMessage(err))
-        } finally {
-            setLoading(false)
         }
     }
 
     const fetchAgents = async () => {
         try {
-            setLoading(true)
             const response = await get(`/agents/`)
             setAgents(response.data)
         } catch (err) {
             setError("Erro ao carregar agentes")
             console.error("Erro na requisição:", getErrorMessage(err))
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const fetchStatistics = async () => {
-        try {
-            setLoading(true)
-            const response = await get(`/statistics/general`)
-            setStatistics(response.data)
-        } catch (err) {
-            setError("Erro ao carregar estatísticas")
-            console.error("Erro na requisição:", getErrorMessage(err))
-        } finally {
-            setLoading(false)
         }
     }
 
     React.useEffect(() => {
         fetchUsers()
         fetchAgents()
-        fetchStatistics()
     }, [])
 
     const handleConfirmStart = (date: Date) => {
@@ -79,21 +60,23 @@ const ManageChats = () => {
     const handleFilter = async () => {
         try {
             setLoading(true);
-                let user_id = selectedUser ? Number(selectedUser) : 0;
-                let start_date = startDate || "string";
-                let end_date = endDate || "string";
-                let agent_id = selectedUser ? Number(selectedAgent) : 0;
+            let user_id = selectedUser ? Number(selectedUser) : 0;
+            let agent_id = selectedAgent ? Number(selectedAgent) : 0;
+            let start_date = startDate ? startDate.toISOString().split('T')[0] : "string";
+            let end_date = endDate ? endDate.toISOString().split('T')[0] : "string";
 
-                const response = await get('/statistics/general', {
-                    params: {
-                        start_date,
-                        end_date,
-                        user_id,
-                        agent_id
-                    }
-        });
-        console.log(response.data);
+            const response = await get('/statistics/general', {
+                params: {
+                    start_date,
+                    end_date,
+                    user_id,
+                    agent_id
+                }
+            });
 
+            console.log(response.data);
+            setStatistics(response.data);
+            setShowStatistics(true);
         } catch (err) {
             setError("Erro ao carregar estatísticas");
             console.error("Erro na requisição:", getErrorMessage(err));
@@ -157,29 +140,30 @@ const ManageChats = () => {
                 />
 
                 <TouchableOpacity style={styles.button} onPress={handleFilter}>
-                    <Text style={styles.buttonText}>Filtrar</Text>
+                    <Text style={styles.buttonText}>{loading ? 'Carregando...' : 'Filtrar'}</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.statisticsContainer}>
-                <Text>
-                    <Text >Agente mais ativo: </Text>
-                     <Text style={styles.textOrange}>{statistics?.most_active_agent_name ?? '-'} </Text>
-                </Text>
-                <Text>
-                    <Text>Agentes com interações recentes: </Text>
-                    <Text style={styles.textOrange}>{statistics?.total_agents_with_recent_iteractions ?? '-'}</Text>
-                </Text>
-                <Text>
-                    <Text>Total de conversas: </Text>
-                    <Text style={styles.textOrange}>{statistics?.total_conversations ?? '-'}</Text>
-                </Text>
-                <Text>
-                    <Text>Usuários com interações recentes: </Text>
-                    <Text style={styles.textOrange}>{statistics?.total_users_with_recent_iteractions ?? '-'}</Text>
-                </Text>
-            </View>
-
+            {showStatistics && statistics && (
+                <View style={styles.statisticsContainer}>
+                    <Text>
+                        <Text>Agente mais ativo: </Text>
+                        <Text style={styles.textOrange}>{statistics?.most_active_agent_name || '-'}</Text>
+                    </Text>
+                    <Text>
+                        <Text>Agentes com interações recentes: </Text>
+                        <Text style={styles.textOrange}>{statistics?.total_agents_with_recent_iteractions ?? '-'}</Text>
+                    </Text>
+                    <Text>
+                        <Text>Total de conversas: </Text>
+                        <Text style={styles.textOrange}>{statistics?.total_conversations ?? '-'}</Text>
+                    </Text>
+                    <Text>
+                        <Text>Usuários com interações recentes: </Text>
+                        <Text style={styles.textOrange}>{statistics?.total_users_with_recent_iteractions ?? '-'}</Text>
+                    </Text>
+                </View>
+            )}
         </ScrollView>
     );
 };
@@ -231,25 +215,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     statisticsContainer: {
-    backgroundColor: '#ffffff',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+        backgroundColor: '#ffffff',
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     textOrange: {
         color: '#FF7700',
         fontWeight: 'bold',
-    },
-
-    statisticsTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
     },
 });
 

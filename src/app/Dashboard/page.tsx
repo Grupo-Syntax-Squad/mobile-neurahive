@@ -5,7 +5,7 @@ import { DashboardButton, DashboardButtonKeys } from "@/types/DashboardButton"
 import { Role } from "@/enum/Role"
 import WithRole from '@/components/WithRole';
 import globalStyles from "../styles/globalStyles"
-import { router } from "expo-router"
+import { Link, router } from "expo-router"
 import { User } from '@/types/User';
 import { Statistic } from '@/types/Statistic';
 import { getErrorMessage } from '@/utils/getErrorMessage';
@@ -60,13 +60,17 @@ const DashboardPage: React.FC = () => {
             {
                 [DashboardButtonKeys.ID]: "4",
                 [DashboardButtonKeys.TITLE]: "Mensagens",
-                [DashboardButtonKeys.ROUTE]: "/Dashboard/Agents/page",
+                [DashboardButtonKeys.ROUTE]: "/Dashboard/page",
                 [DashboardButtonKeys.TOTAL]: statistics.total_messages,
                 [DashboardButtonKeys.ALLOWED_ROLES]: [Role.ADMIN]
             },
         ]
   return (
     <View style={styles.actionButtonsContainer}>
+        <Image
+            source={require("../../assets/images/painel-flat-image.png")}
+            style={styles.flatImage}
+        />
       {actionButtons.map((button) => (
         <WithRole
             allowedRoles={button[DashboardButtonKeys.ALLOWED_ROLES]}
@@ -148,11 +152,12 @@ const styles = StyleSheet.create({
         color: "#8A8888",
         marginLeft: 8,
     },
-    apicultoraImage: {
-        width: 100,
-        height: 150,
+    flatImage: {
+        width: 200,
+        height: 200,
         resizeMode: "contain",
-        marginLeft: 10,
+        marginLeft: 100,
+
     },
     titleContainer: {
         display: "flex",

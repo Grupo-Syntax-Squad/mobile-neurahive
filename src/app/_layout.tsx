@@ -37,9 +37,9 @@ export default function Layout() {
                     <Stack.Screen name="Agents/create" options={{ title: "Nova agente de IA" }} />
                     <Stack.Screen name="Chat/page" options={{ title: "Minhas conversas" }} />
                     <Stack.Screen name="Dashboard/page" options={{ title: "Dashboard" }} />
-                    <Stack.Screen name="Dashboard/Users/page" options={{ title: "Gerenciar Usuários" }} />
-                    <Stack.Screen name="Dashboard/Agents/page" options={{ title: "Gerenciar Agentes" }} />
-                    <Stack.Screen name="Dashboard/Chats/page" options={{ title: "Gerenciar Conversas" }} />
+                    <Stack.Screen name="Dashboard/Users/page" options={{ title: "Dashboard | Usuários" }} />
+                    <Stack.Screen name="Dashboard/Agents/page" options={{ title: "Dashboard | Agentes" }} />
+                    <Stack.Screen name="Dashboard/Chats/page" options={{ title: "Dashboard | Conversas" }} />
                     <Stack.Screen 
                         name="Chat/[id]" 
                         options={({ route }) => ({

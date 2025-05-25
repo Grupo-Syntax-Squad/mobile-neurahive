@@ -6,6 +6,9 @@ import globalStyles from "../../styles/globalStyles"
 import { Agent } from "@/types/Agent"
 import { getErrorMessage } from "@/utils/getErrorMessage"
 import Entypo from '@expo/vector-icons/Entypo';
+import { Text as SvgText} from 'react-native-svg'
+import { PieChart } from 'react-native-svg-charts'
+import AgentsLegend from "@/components/AgentsLegend"
 
 
 export function ManageAgents() {
@@ -13,7 +16,13 @@ export function ManageAgents() {
     const [agents, setAgents] = useState<Agent[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const { get } = useAxios()
+    const { get, deletar } = useAxios()
+
+    const enableAgents = agents.filter((agent) => agent.enabled);
+    const disableAgents = agents.filter((agent) => !agent.enabled);
+
+    const percentActive = agents.length ? (enableAgents.length / agents.length) * 100 : 0;
+    const percentInactive = agents.length ? (disableAgents.length / agents.length) * 100 : 0;
 
     const fetchAgents = async () => {
             try {
@@ -27,30 +36,92 @@ export function ManageAgents() {
                 setLoading(false)
             }
         }
+
+        const handleDelete = async (agentId: number) => {
+            try {
+                setLoading(true);
+                await deletar(`/agents/?agent_id=${agentId}`);
+                await fetchAgents();
+            } catch (err) {
+                console.error("Erro ao deletar:", getErrorMessage(err));
+                setError("Erro ao deletar Agente");
+            } finally {
+                setLoading(false);
+            }
+        };
     
         useEffect(() => {
             fetchAgents()
         }, [])
 
+        const data = [percentActive, percentInactive]
+        const chartColors = ['#16ae03', '#ae1a03']
+        const pieData = data.map((value, index) => ({
+            value: parseFloat(value.toFixed(0)),
+            color: chartColors[index % chartColors.length],
+        }))
+        .filter(item => item.value > 0)
+        .map((item, index) => ({
+            value: item.value,
+            key: `${index}-${item.value}`,
+            svg: {
+            fill: item.color,
+            },
+        }));
+
+        const Label = ({ slices }) => {
+        return slices.map((slice, index) => {
+            const { pieCentroid, data } = slice;
+            return (
+            <SvgText
+                key={`label-${index}`}
+                x={pieCentroid[0]}
+                y={pieCentroid[1]}
+                fill="white"
+                textAnchor={'middle'}
+                alignmentBaseline={'middle'}
+                fontSize={12}
+            >
+                {data.value}%
+            </SvgText>
+            );
+        });
+        };
+    
+
   return (
     <ScrollView keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.scrollContainer}
     >
+        <View style={{ justifyContent: 'center' }}>
+            <PieChart style={{ height: 150 }} data={pieData}>
+                <Label/>
+            </PieChart>
+        </View>
+        <AgentsLegend/>
     <View style={styles.usersList}>
         <Text style={globalStyles.orangeText}>Agentes Ativos</Text>
         {agents.map((agent) => (
-            <AgentCard key={agent.id} agent={agent} />
+            <AgentCard key={agent.id} agent={agent} onDelete={handleDelete}/>
         ))}
     </View>
     </ScrollView>
   );
 };
 
-const AgentCard: React.FC<{ agent: Agent }> = ({ agent }) => (
+type AgentCardProps = {
+    agent: Agent;
+    onDelete: (id: string) => void;
+}
+
+const AgentCard: React.FC<AgentCardProps> = ({ agent, onDelete }) => (
     <View style={styles.userContainer}>
         <Text style={styles.userName}>{agent.name}</Text>
-        <TouchableOpacity style={styles.userDetailButton}>
+        <TouchableOpacity style={styles.userDetailButton}
+            onPress={() => onDelete(agent.id)}
+        >
             <Entypo name="trash" size={24} color="white" />
+            
         </TouchableOpacity>
     </View>
 )

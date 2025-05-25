@@ -14,6 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons"
 
 export function HomeScreen() {
     const { logout, isAuthenticated, login } = useAuth()
+    console.log(useAuth())
     const actionButtons: HomeActionButton[] = [
         {
             [HomeActionButtonKeys.ID]: "1",
