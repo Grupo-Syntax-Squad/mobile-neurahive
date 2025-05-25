@@ -1,134 +1,99 @@
-import React, { useState } from "react"
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
-import globalStyles from "../styles/globalStyles"
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from "react-native"
 import Checkbox from "expo-checkbox"
+import React, { useState } from "react"
+
+import globalStyles from "../styles/globalStyles"
 
 export default function Permission() {
     const [isChecked, setChecked] = useState(false)
+    
     return (
-        <View style={styles.container}>
-            <Text>Total</Text>
-            <View>
-                <Text style={globalStyles.orangeText}>Título</Text>
-                <TextInput
-                    style={globalStyles.input}
-                    placeholder="Digite o título da permissão"
-                    autoCapitalize="none"
-                    value={"Total"}
-                />
-                <View style={globalStyles.spaceAround}>
-                    <Text style={globalStyles.orangeText}>Selecione os acessos da permissão</Text>
-                    <Text style={globalStyles.orangeText}>Selecionados: </Text>
-                </View>
-                <View style={styles.section}>
-                    <Checkbox
-                        style={styles.checkbox}
-                        value={isChecked}
-                        onValueChange={setChecked}
-                        color={isChecked ? "#4630EB" : undefined}
-                    />
-                    <Text>Recursos Humanos</Text>
-                    <Checkbox
-                        style={styles.checkbox}
-                        value={isChecked}
-                        onValueChange={setChecked}
-                        color={isChecked ? "#4630EB" : undefined}
-                    />
-                    <Text>Recursos Humanos</Text>
-                </View>
-                <View style={styles.section}>
-                    <Checkbox
-                        style={styles.checkbox}
-                        value={isChecked}
-                        onValueChange={setChecked}
-                        color={isChecked ? "#4630EB" : undefined}
-                    />
-                    <Text>Recursos Humanos</Text>
-                    <Checkbox
-                        style={styles.checkbox}
-                        value={isChecked}
-                        onValueChange={setChecked}
-                        color={isChecked ? "#4630EB" : undefined}
-                    />
-                    <Text>Recursos Humanos</Text>
-                </View>
+        <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContainer}
+        >
+
+            <View style={styles.accessSection}>
+                <Text style={globalStyles.orangeText}>Selecione as permissões do usuário</Text>
+                <Text style={styles.selectedText}>Selecionados: {selectedAccesses.length}</Text>
             </View>
+
+            <View style={styles.accessList}>
+                {accesses.map((access, index) => (
+                    <View key={index} style={styles.accessItem}>
+                        <Checkbox
+                            value={selectedAccesses.includes(access)}
+                            onValueChange={() => toggleAccess(access)}
+                            color={selectedAccesses.includes(access) ? "#4630EB" : undefined}
+                        />
+                        <Text style={styles.accessText}>{access}</Text>
+                    </View>
+                ))}
+            </View>
+
             <TouchableOpacity style={styles.saveButton}>
-                <Text style={styles.saveButtonText}>Salvar</Text>
+                <Text style={{ color: "#fff" }}>Salvar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.cancelButton}>
-                <Text style={styles.cancelButtonText}>Cancelar</Text>
+                <Text style={{ color: "#FC801F" }}>Cancelar</Text>
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     )
 }
-
 const styles = StyleSheet.create({
-    checkbox: {
-        margin: 8,
-    },
-    section: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    userStatus: {
-        backgroundColor: "green",
-        padding: 5,
-        color: "white",
-    },
-    userDetail: {
-        flexDirection: "row",
-        gap: 3,
-        justifyContent: "space-between",
-        marginBottom: 20,
-    },
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-        backgroundColor: "#f5f5f5",
-    },
-    title: {
-        fontSize: 24,
+    boxTitle: {
         fontWeight: "bold",
-        marginBottom: 20,
+        marginBottom: 5,
     },
-    input: {
-        width: "100%",
-        height: 50,
-        backgroundColor: "#fff",
-        borderRadius: 10,
-        paddingHorizontal: 15,
-        marginBottom: 15,
-        borderWidth: 1,
-        borderColor: "#ccc",
-    },
-    saveButton: {
-        width: "100%",
-        height: 50,
-        backgroundColor: "#28a745",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 10,
+    boxText: {
         marginBottom: 10,
     },
-    cancelButton: {
-        width: "100%",
-        height: 50,
-        backgroundColor: "#dc3545",
-        justifyContent: "center",
+    divider: {
+        height: 1,
+        backgroundColor: "#ccc",
+        marginVertical: 20,
+    },
+    accessSection: {
+        flexDirection: "row",
+        justifyContent: "space-between",
         alignItems: "center",
-        borderRadius: 10,
+        marginBottom: 15,
     },
-    saveButtonText: {
-        color: "#fff",
-        fontSize: 18,
-        fontWeight: "bold",
+    selectedText: {
+        color: "#666",
     },
-    cancelButtonText: {
-        color: "#fff",
-        fontSize: 18,
-        fontWeight: "bold",
+    accessList: {
+        marginBottom: 20,
+    },
+    accessItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    accessText: {
+        marginLeft: 10,
+    },
+    createButton: {
+        marginTop: 20,
+        marginBottom: 40,
+    },
+    saveButton: {
+        backgroundColor: "#FC801F",
+        paddingVertical: 12,
+        borderRadius: 8,
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    scrollContainer: {
+        padding: 20,
+    },
+    cancelButton: {
+        backgroundColor: "#fff",
+        paddingVertical: 12,
+        borderRadius: 8,
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#FC801F",
+        marginBottom: 10,
     },
 })

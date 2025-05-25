@@ -4,6 +4,7 @@ import { Stack } from "expo-router"
 import { View, Image, Text } from "react-native"
 
 export default function Layout() {
+    
     return (
         <AuthProvider>
             <AxiosProvider>
@@ -34,6 +35,11 @@ export default function Layout() {
                     <Stack.Screen name="Agents/[id]" options={{ title: "Editar Agente" }} />
                     <Stack.Screen name="Agents/create" options={{ title: "Nova agente de IA" }} />
                     <Stack.Screen name="Chat/page" options={{ title: "Minhas conversas" }} />
+                    <Stack.Screen name="Dashboard/page" options={{ title: "Dashboard" }} />
+                    <Stack.Screen name="Dashboard/Users/page" options={{ title: "Dashboard | Usuários" }} />
+                    <Stack.Screen name="Dashboard/Agents/page" options={{ title: "Dashboard | Agentes" }} />
+                    <Stack.Screen name="Dashboard/Chats/page" options={{ title: "Dashboard | Conversas" }} />
+
                     <Stack.Screen
                         name="Chat/[id]"
                         options={({ route }: { route: any }) => ({
