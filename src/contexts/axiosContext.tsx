@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from "react"
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import { useAuth } from "./authContext"
 
 interface Props {
@@ -29,26 +29,45 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
         headers: { Authorization: `Bearer ${token}` },
     })
 
-    const get = async (
-        url: string,
-        config: AxiosRequestConfig = {}
-        ) => {
+    client.interceptors.response.use(
+        (response) => response,
+        (error: AxiosError) => {
+            if (error.response) {
+                console.warn("Erro da API:", error.response.data)
+            } else if (error.request) {
+                // Sem resposta
+                console.warn("Sem resposta do servidor:", error.message)
+            } else {
+                // Outro tipo de erro
+                console.warn("Erro desconhecido:", error.message)
+            }
+
+            return Promise.reject(formatAxiosError(error))
+        }
+    )
+
+    const formatAxiosError = (error: AxiosError): string => {
+        if (error.response?.data) {
+            const data = error.response.data as any
+            return data.message || JSON.stringify(data)
+        }
+        if (error.message) return error.message
+        return "Erro desconhecido."
+    }
+
+    const get = async (url: string, config: AxiosRequestConfig = {}) => {
         const mergedConfig: AxiosRequestConfig = {
             ...config,
             headers: {
-            ...client.defaults.headers.common,
-            ...config.headers,
+                ...client.defaults.headers.common,
+                ...config.headers,
             },
         }
         const response = await client.get(url, mergedConfig)
         return response.data
     }
 
-    const post = (
-        url: string,
-        body: any,
-        config: AxiosRequestConfig = {}
-    ) => {
+    const post = (url: string, body: any, config: AxiosRequestConfig = {}) => {
         const mergedConfig: AxiosRequestConfig = {
             ...config,
             headers: {
