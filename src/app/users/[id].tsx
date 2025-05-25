@@ -82,11 +82,8 @@ const UserDetails: React.FC = () => {
                     setSelectedAgents(user.agents.map((agent) => agent.id))
                     setIsLoading(false)
                 }
-            } catch (error: any) {
-                Alert.alert(
-                    "Erro",
-                    `Não foi possível carregar os dados do usuário: ${getErrorMessage(error)}`
-                )
+            } catch (error) {
+                Alert.alert("Erro", `Não foi possível carregar os dados do usuário: ${error}`)
                 console.error(error)
             } finally {
                 setIsLoading(false)
@@ -119,10 +116,10 @@ const UserDetails: React.FC = () => {
                 email: user.email,
                 role: getRoles(),
                 password: password,
-                agents: selectedAgents,
+                selected_agents: selectedAgents,
             })
             Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
-            router.replace("/users/")
+            router.replace("/users/page")
         } catch (error: any) {
             Alert.alert("Erro", getErrorMessage(error) || "Erro ao salvar usuário")
             console.error(error)

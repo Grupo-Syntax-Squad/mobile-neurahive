@@ -1,11 +1,8 @@
-import React, { useState } from "react"
+import React from "react"
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { useRouter } from "expo-router"
 import globalStyles from "../styles/globalStyles"
 
 export default function Permission() {
-    const router = useRouter()
-
     return (
         <View style={styles.container}>
             <Text>Total</Text>

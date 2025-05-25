@@ -8,6 +8,7 @@ interface WebSocketContextType {
     disconnect: () => void
     sendMessage: (message: string) => void
     messages: Message[]
+    setMessages: React.Dispatch<React.SetStateAction<Message[]>>
     isConnected: boolean
 }
 
@@ -29,33 +30,33 @@ export default function WebSocketProvider({
     const [isConnected, setIsConnected] = useState(false)
     const [messages, setMessages] = useState<Message[]>([])
     const getWebSocketUrl = () => {
-        return process.env.EXPO_PUBLIC_WEBSOCKET_URL
+        return `${process.env.EXPO_PUBLIC_WEBSOCKET_URL}/ws/chat`
     }
 
-    const connect = () => {
+    const connect = async () => {
         try {
             if (!chatId) {
-                console.log("Aguardando chatId...")
+                console.log("[WEBSOCKET] Aguardando chatId...")
                 return
             }
 
             if (ws.current?.readyState === WebSocket.OPEN) {
-                console.log("Já conectado.")
+                console.log("[WEBSOCKET]  Já conectado.")
                 return
             }
 
             if (ws.current?.readyState === WebSocket.CONNECTING) {
-                console.log("Já está conectando...")
+                console.log("[WEBSOCKET] Já está conectando...")
                 return
             }
 
             const url = `${getWebSocketUrl()}`
-            console.log("Conectando a:", url)
+            console.log("[WEBSOCKET] Conectando a:", url)
 
             ws.current = new WebSocket(url)
 
             ws.current.onopen = () => {
-                console.log(`Conectado ao chat ${chatId}`)
+                console.log(`[WEBSOCKET] Conectado ao chat ${chatId}`)
                 setIsConnected(true)
             }
 
@@ -73,36 +74,38 @@ export default function WebSocketProvider({
                         },
                     ])
                 } catch (error) {
-                    console.error("Erro ao processar mensagem:", error)
+                    console.error("[WEBSOCKET] Erro ao processar mensagem:", error)
                 }
             }
 
             ws.current.onerror = (e) => {
-                console.error("Erro no WebSocket:", e)
+                console.error("[WEBSOCKET] Erro no WebSocket:", e)
             }
 
             ws.current.onclose = (e) => {
-                console.log("Conexão fechada", e.code, e.reason)
+                console.log("[WEBSOCKET] Conexão fechada", e.code, e.reason)
                 setIsConnected(false)
 
                 if (chatId) {
                     setTimeout(() => {
-                        console.log("Tentando reconectar...")
+                        console.log("[WEBSOCKET] Tentando reconectar...")
                         connect()
                     }, 3000)
                 }
             }
         } catch (error) {
-            console.error("Erro na conexão:", error)
+            console.error("[WEBSOCKET] Erro na conexão:", error)
             Alert.alert("Chat", "Erro ao acessar o chat. Tente novamente.")
         }
     }
 
     const disconnect = () => {
+        console.log("[WEBSOCKET] Disconectando do websocket")
         if (ws.current) {
             ws.current.close()
             ws.current = null
         }
+        console.log("[WEBSOCKET] Disconectado do websocket")
     }
 
     const sendMessage = (message: string) => {
@@ -122,7 +125,7 @@ export default function WebSocketProvider({
                 },
             ])
         } else {
-            console.warn("WebSocket não conectado ou chatId inválido")
+            console.warn("[WEBSOCKET] WebSocket não conectado ou chatId inválido")
         }
     }
 
@@ -131,6 +134,7 @@ export default function WebSocketProvider({
         disconnect,
         sendMessage,
         messages,
+        setMessages,
         isConnected,
     }
 
