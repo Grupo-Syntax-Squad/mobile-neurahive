@@ -8,25 +8,42 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
+    Alert,
 } from "react-native"
 import { useWebSocket } from "@/contexts/WebSocketContext"
 import Icon from "react-native-vector-icons/Ionicons"
+import { useAxios } from "@/contexts/axiosContext"
+import { router, useLocalSearchParams } from "expo-router"
 
 export default function Body() {
+    const { get } = useAxios()
+    const { connect, disconnect, sendMessage, messages, setMessages, isConnected } = useWebSocket()
+    const params = useLocalSearchParams()
+    const chatId = params.id[1]
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [message, setMessage] = useState("")
     const [sending, setSending] = useState(false)
 
-    const { connect, disconnect, sendMessage, messages, isConnected } = useWebSocket()
-
     useEffect(() => {
+        getChatMessages()
         connect()
 
         return () => {
             disconnect()
         }
     }, [])
+
+    const getChatMessages = async () => {
+        try {
+            if (!chatId) throw Error("ID do chat não encontrado")
+            const response = await get("/chat/history", { params: { chat_id: chatId } })
+            setMessages(response.data)
+        } catch (error) {
+            console.log(`[WEBSOCKET] Erro ao buscar as mensagens do chat: ${error}`)
+            Alert.alert("Consultar as mensagens do chat", "Erro ao consultar as mensagens do chat")
+        }
+    }
 
     useEffect(() => {
         const timer = setTimeout(() => {
