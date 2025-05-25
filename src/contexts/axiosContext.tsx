@@ -2,6 +2,10 @@ import React, { createContext, useContext, ReactNode } from "react"
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import { useAuth } from "./authContext"
 
+interface APIError {
+    detail: string
+}
+
 interface Props {
     get: (url: string, config?: AxiosRequestConfig<any> | undefined) => Promise<any>
     post: (
@@ -31,25 +35,23 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
 
     client.interceptors.response.use(
         (response) => response,
-        (error: AxiosError) => {
+        (error: AxiosError<APIError>) => {
             if (error.response) {
-                console.warn("Erro da API:", error.response.data)
+                const data = error.response.data
+                console.warn("Erro da API:", data.detail)
             } else if (error.request) {
-                // Sem resposta
                 console.warn("Sem resposta do servidor:", error.message)
             } else {
-                // Outro tipo de erro
                 console.warn("Erro desconhecido:", error.message)
             }
-
             return Promise.reject(formatAxiosError(error))
         }
     )
 
-    const formatAxiosError = (error: AxiosError): string => {
+    const formatAxiosError = (error: AxiosError<APIError>): string => {
         if (error.response?.data) {
-            const data = error.response.data as any
-            return data.message || JSON.stringify(data)
+            const data = error.response.data
+            return data.detail || JSON.stringify(data)
         }
         if (error.message) return error.message
         return "Erro desconhecido."

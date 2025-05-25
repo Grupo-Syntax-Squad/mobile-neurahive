@@ -57,7 +57,7 @@ export default function CreateUser() {
                 email: email,
                 password: password,
                 role: getRoles(),
-                selectedAgents,
+                selected_agents: selectedAgents,
             })
 
             Alert.alert("Sucesso", "Usuário criado com sucesso!")
