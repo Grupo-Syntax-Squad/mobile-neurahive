@@ -1,13 +1,10 @@
 import React, { useState } from "react"
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from "react-native"
-import { useRouter } from "expo-router"
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 import globalStyles from "../styles/globalStyles"
 import Checkbox from "expo-checkbox"
 
 export default function Permission() {
     const [isChecked, setChecked] = useState(false)
-    const router = useRouter()
-
     return (
         <View style={styles.container}>
             <Text>Total</Text>

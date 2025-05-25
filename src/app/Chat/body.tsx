@@ -13,7 +13,7 @@ import {
 import { useWebSocket } from "@/contexts/WebSocketContext"
 import Icon from "react-native-vector-icons/Ionicons"
 import { useAxios } from "@/contexts/axiosContext"
-import { router, useLocalSearchParams } from "expo-router"
+import { useLocalSearchParams } from "expo-router"
 
 export default function Body() {
     const { get } = useAxios()

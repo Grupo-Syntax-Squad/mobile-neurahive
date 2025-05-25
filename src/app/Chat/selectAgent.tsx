@@ -27,21 +27,23 @@ export default function Chats() {
         }
     }
 
-    const handleAgentPress = async (agentId: string, agentName: string) => {
+    const handleAgentPress = async (agentId: string) => {
         if (!user?.userId) {
             Alert.alert("Erro", "Usuário não autenticado")
             return
         }
 
         try {
-            const response = await post("/chat/", {
-                user_id: user.userId,
-                agent_id: agentId,
-            })
+            const response = (
+                await post("/chat/", {
+                    user_id: user.userId,
+                    agent_id: agentId,
+                })
+            ).data
             router.push({
-                pathname: `/Chat/${response.data.data.user_id}`,
+                pathname: `/Chat/${response.data.user_id}`,
                 params: {
-                    agentName: response.data.data.agent_name,
+                    agentName: response.data.agent_name,
                 },
             })
         } catch (error) {
@@ -76,12 +78,7 @@ export default function Chats() {
                             globalStyles.agentBox,
                             { flexDirection: "row", alignItems: "center" },
                         ]}
-                        onPress={() =>
-                            handleAgentPress(
-                                agent[GetAgentResponseKeys.ID].toString(),
-                                agent[GetAgentResponseKeys.NAME]
-                            )
-                        }
+                        onPress={() => handleAgentPress(agent[GetAgentResponseKeys.ID].toString())}
                         key={agent[GetAgentResponseKeys.ID]}
                     >
                         <Image
