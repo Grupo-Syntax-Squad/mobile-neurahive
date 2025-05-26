@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react"
-import { StyleSheet, Text, TouchableOpacity, View, Image, Alert, ScrollView } from "react-native"
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Image,
+    Alert,
+    ScrollView,
+} from "react-native"
 import CustomInput from "../../components/CustomInput"
 import globalStyles from "../styles/globalStyles"
 import { router } from "expo-router"
@@ -27,7 +35,6 @@ export default function CreateUser() {
     useEffect(() => {
         const fetchAgents = async () => {
             const response = await get("/agents/")
-            console.log(response.data)
             setAgents(response.data)
         }
         fetchAgents()
@@ -62,8 +69,7 @@ export default function CreateUser() {
     return (
         <>
             <Division />
-            <View style={globalStyles.container}>
-                <Text style={globalStyles.textCenter}>Novo Usuário</Text>
+            <ScrollView contentContainerStyle={[styles.scrollContainer]}>
                 <View style={globalStyles.imageContainer}>
                     <Image source={require("../../assets/images/bees-background.png")} />
                 </View>
@@ -97,13 +103,12 @@ export default function CreateUser() {
                     </View>
                 </FormField>
                 <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
-                <ScrollView style={{ flex: 1 }}>
-                    <MultiSelect
-                        data={agents}
-                        selectedItems={selectedAgents}
-                        setSelectedItems={setSelectedAgents}
-                    ></MultiSelect>
-                </ScrollView>
+                <MultiSelect
+                    data={agents}
+                    selectedItems={selectedAgents}
+                    setSelectedItems={setSelectedAgents}
+                    placeholder="Filtrar agentes"
+                ></MultiSelect>
                 <Text style={globalStyles.orangeText}>Senha</Text>
                 <CustomInput
                     placeholder="Senha"
@@ -124,7 +129,7 @@ export default function CreateUser() {
                 >
                     <Text style={globalStyles.WhiteText}>Criar Usuário</Text>
                 </TouchableOpacity>
-            </View>
+            </ScrollView>
         </>
     )
 }
@@ -144,6 +149,10 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         borderWidth: 1,
         borderColor: "#ccc",
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        padding: 20
     },
     button: {
         width: "100%",

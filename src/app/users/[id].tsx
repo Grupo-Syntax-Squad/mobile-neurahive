@@ -79,7 +79,7 @@ const UserDetails: React.FC = () => {
                         admin: userRoles.includes(1),
                         curator: userRoles.includes(2),
                     })
-                    setSelectedAgents(user.agents.map((agent) => agent.id))
+                    setSelectedAgents(response.data.agents.map((agent: any) => agent.id))
                     setIsLoading(false)
                 }
             } catch (error) {
@@ -108,6 +108,8 @@ const UserDetails: React.FC = () => {
             Alert.alert("Erro", "As senhas não coincidem")
             return
         }
+
+        console.log('selected agents: ', selectedAgents)
 
         try {
             await put(`/users/`, {
@@ -211,6 +213,7 @@ const UserDetails: React.FC = () => {
                             data={agents}
                             selectedItems={selectedAgents}
                             setSelectedItems={setSelectedAgents}
+                            placeholder="Filtrar agentes"
                         ></MultiSelect>
                     </ScrollView>
 

@@ -51,7 +51,7 @@ export default function Agent() {
     const { id } = useLocalSearchParams()
     const { get, put } = useAxios()
 
-    //const [isEnabled, setIsEnabled] = useState<boolean>()
+    const [isEnabled, setIsEnabled] = useState<boolean>(false)
     const [selectedFile, setSelectedFile] = useState<DocumentPicker.DocumentPickerAsset>()
     const [useExistingKnowledge, setUseExistingKnowledge] = useState<boolean>(true)
     const [knowledgeBases, setKnowledgebases] = useState<KnowledgeBase[]>([])
@@ -64,7 +64,7 @@ export default function Agent() {
         knowledge_base_id: null
     })
 
-    //const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
+    const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
     const toggleUseExistingKnowledge = () => {
         setUseExistingKnowledge(!useExistingKnowledge)
     }
@@ -72,7 +72,7 @@ export default function Agent() {
     const fetchAgent = async () => {
         const response = await get(`/agents/${id}`)
         setAgentData(response.data)
-        console.log(response.data.image_id)
+        setIsEnabled(response.data.enabled)
         setSelectedImage(response.data.image_id)
     }
     const fetchKnowledgeBases = async () => {
@@ -107,13 +107,19 @@ export default function Agent() {
                         behavior: agentData.behavior,
                         temperature: String(agentData.temperature),
                         top_p: String(agentData.top_p),
-                        image_id: String(selectedImage)
+                        image_id: String(selectedImage),
+                        enabled: String(isEnabled)
                     },
                 }
             )
             const json = JSON.parse(response.body)
-            Alert.alert("Sucesso", json.message)
-            router.replace("/Agents/page")
+            if(response.status === 200) {
+                Alert.alert("Sucesso", json.message)
+                router.replace("/Agents/page")
+            } else {
+                console.log(response)
+                Alert.alert("Erro", "Erro ao atualizar agente")
+            }
         } catch (err) {
             console.log("Erro na requisição:", err)
         }
@@ -128,9 +134,8 @@ export default function Agent() {
             formData.append('temperature', String(agentData.temperature))
             formData.append('top_p', String(agentData.top_p))
             formData.append('image_id', String(selectedImage))
-            agentData.knowledge_base_id ? formData.append('knowledge_base_id', String(agentData.knowledge_base_id)) : null            
-
-            console.log(formData)
+            formData.append('enabled', String(isEnabled))
+            agentData.knowledge_base_id ? formData.append('knowledge_base_id', String(agentData.knowledge_base_id)) : null
 
             const response = await put(`/agents/${id}`, formData, {
                 headers: {
@@ -254,10 +259,10 @@ export default function Agent() {
                 maximumTrackTintColor="#000000"
                 thumbTintColor="#FF7F50"
             />
-            {/* <View style={globalStyles.flexRow}>
-                <Text style={globalStyles.orangeText}>Status</Text>
+            <View style={globalStyles.flexRow}>
+                <Text style={[globalStyles.orangeText, styles.inputText]}>Status</Text>
                 <Switch value={isEnabled} onValueChange={toggleSwitch} />
-            </View> */}
+            </View>
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Salvar</Text>
             </TouchableOpacity>
