@@ -28,6 +28,8 @@ export function Users() {
     const [, setError] = useState<string | null>(null)
     const { get } = useAxios()
 
+    const enableUsers = users.filter((user) => user.enabled);
+
     const fetchUsers = async () => {
         try {
             setLoading(true)
@@ -92,7 +94,7 @@ export function Users() {
                 </View>
 
                 <View style={styles.usersList}>
-                    {users.map((user) => (
+                    {enableUsers.map((user) => (
                         <UserCard key={user.id} user={user} />
                     ))}
                 </View>
