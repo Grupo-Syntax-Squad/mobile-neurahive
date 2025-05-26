@@ -35,7 +35,6 @@ export default function CreateUser() {
     useEffect(() => {
         const fetchAgents = async () => {
             const response = await get("/agents/")
-            console.log(response.data)
             setAgents(response.data)
         }
         fetchAgents()
@@ -71,7 +70,6 @@ export default function CreateUser() {
         <>
             <Division />
             <ScrollView contentContainerStyle={[styles.scrollContainer]}>
-                <Text style={globalStyles.textCenter}>Novo Usuário</Text>
                 <View style={globalStyles.imageContainer}>
                     <Image source={require("../../assets/images/bees-background.png")} />
                 </View>
@@ -105,13 +103,12 @@ export default function CreateUser() {
                     </View>
                 </FormField>
                 <Text style={globalStyles.orangeText}>Agentes Permitidos</Text>
-                <ScrollView style={{ flex: 1 }}>
-                    <MultiSelect
-                        data={agents}
-                        selectedItems={selectedAgents}
-                        setSelectedItems={setSelectedAgents}
-                    ></MultiSelect>
-                </ScrollView>
+                <MultiSelect
+                    data={agents}
+                    selectedItems={selectedAgents}
+                    setSelectedItems={setSelectedAgents}
+                    placeholder="Filtrar agentes"
+                ></MultiSelect>
                 <Text style={globalStyles.orangeText}>Senha</Text>
                 <CustomInput
                     placeholder="Senha"

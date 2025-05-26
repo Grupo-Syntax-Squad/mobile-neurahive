@@ -81,7 +81,6 @@ const UserDetails: React.FC = () => {
                     })
                     setSelectedAgents(response.data.agents.map((agent: any) => agent.id))
                     setIsLoading(false)
-                    console.log('user', response.data)
                 }
             } catch (error: any) {
                 Alert.alert(
@@ -125,7 +124,7 @@ const UserDetails: React.FC = () => {
                 selected_agents: selectedAgents,
             })
             Alert.alert("Sucesso", "Usuário atualizado com sucesso!")
-            router.replace("/users/")
+            router.replace("/users/page")
         } catch (error: any) {
             Alert.alert("Erro", getErrorMessage(error) || "Erro ao salvar usuário")
             console.error(error)
@@ -217,6 +216,7 @@ const UserDetails: React.FC = () => {
                             data={agents}
                             selectedItems={selectedAgents}
                             setSelectedItems={setSelectedAgents}
+                            placeholder="Filtrar agentes"
                         ></MultiSelect>
                     </ScrollView>
 
