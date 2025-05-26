@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Picker } from '@react-native-picker/picker';
 import { useAxios } from "@/contexts/axiosContext"
@@ -90,6 +90,10 @@ const ManageChats = () => {
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.scrollContainer}
         >
+            <Image
+                source={require("../../../assets/images/chatbot-flat-image.png")}
+                style={styles.apicultoraImage}
+            />
             <View style={styles.filterContainer}>
                 <Text style={styles.label}>Usuário:</Text>
                 <View style={styles.pickerContainer}>
@@ -169,6 +173,12 @@ const ManageChats = () => {
 };
 
 const styles = StyleSheet.create({
+    apicultoraImage: {
+        width: 100,
+        height: 150,
+        resizeMode: "contain",
+        marginLeft: 10,
+    },
     scrollContainer: {
         padding: 16,
     },

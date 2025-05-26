@@ -74,7 +74,6 @@ export function Users() {
                 contentContainerStyle={styles.scrollContainer}
             >
                 <View style={globalStyles.header}>
-                    <Text>Seus Usuários</Text>
                     <Image source={require("../../assets/images/usuarios.png")}></Image>
                 </View>
 

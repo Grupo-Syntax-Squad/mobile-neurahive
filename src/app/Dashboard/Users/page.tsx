@@ -133,7 +133,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete }) => (
         <Text style={styles.userName}>{user.name}</Text>
         <View style={{ flexDirection: "row", gap: 8 }}>
             <TouchableOpacity style={styles.keyButton}>
-                <Link href={{ pathname: "/permissions/[id]", params: { id: user.id } }}>
+                <Link href={{ pathname: "/users/[id]", params: { id: user.id } }}>
                     <Entypo name="key" size={24} color="white" />
                 </Link>
             </TouchableOpacity>
