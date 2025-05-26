@@ -14,6 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons"
 
 export function HomeScreen() {
     const { logout, isAuthenticated, login } = useAuth()
+    console.log(useAuth())
     const actionButtons: HomeActionButton[] = [
         {
             [HomeActionButtonKeys.ID]: "1",
@@ -46,6 +47,14 @@ export function HomeScreen() {
             [HomeActionButtonKeys.ROUTE]: "/Chat/page",
             [HomeActionButtonKeys.TEST_ID]: "chat-button",
             [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.CLIENT],
+        },
+        {
+            [HomeActionButtonKeys.ID]: "8",
+            [HomeActionButtonKeys.TITLE]: "Dashboard",
+            [HomeActionButtonKeys.ICON]: require("../assets/images/dashboard-icon.png"),
+            [HomeActionButtonKeys.ROUTE]: "/Dashboard/page",
+            [HomeActionButtonKeys.TEST_ID]: "chat-button",
+            [HomeActionButtonKeys.ALLOWED_ROLES]: [Role.ADMIN, Role.ADMIN],
         },
         // {
         //     [HomeActionButtonKeys.ID]: "4",

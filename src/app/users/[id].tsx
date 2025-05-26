@@ -82,11 +82,8 @@ const UserDetails: React.FC = () => {
                     setSelectedAgents(response.data.agents.map((agent: any) => agent.id))
                     setIsLoading(false)
                 }
-            } catch (error: any) {
-                Alert.alert(
-                    "Erro",
-                    `Não foi possível carregar os dados do usuário: ${getErrorMessage(error)}`
-                )
+            } catch (error) {
+                Alert.alert("Erro", `Não foi possível carregar os dados do usuário: ${error}`)
                 console.error(error)
             } finally {
                 setIsLoading(false)

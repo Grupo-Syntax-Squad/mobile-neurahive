@@ -1,4 +1,13 @@
-import { Alert, StyleSheet, Switch, Text, View, ScrollView, TouchableOpacity, Image } from "react-native"
+import {
+    Alert,
+    StyleSheet,
+    Switch,
+    Text,
+    View,
+    ScrollView,
+    TouchableOpacity,
+    Image,
+} from "react-native"
 import globalStyles from "../styles/globalStyles"
 import CustomInput from "@/components/CustomInput"
 import { useEffect, useState } from "react"
@@ -6,7 +15,6 @@ import * as FileSystem from "expo-file-system"
 import * as DocumentPicker from "expo-document-picker"
 import Slider from "@react-native-community/slider"
 
-//import { Access, AccessKeys } from "@/interfaces/Services/Access"
 import { KnowledgeBase, KnowledgeBaseKeys } from "@/interfaces/Services/KnowledgeBase"
 import { useAxios } from "@/contexts/axiosContext"
 import { router } from "expo-router"
@@ -54,29 +62,6 @@ const defaultForm: Form = {
     [FormKeys.KNOWLEDGE_BASE_ID]: undefined,
 }
 
-// const MockAccess: Access[] = [
-//     {
-//         [AccessKeys.ID]: 1,
-//         [AccessKeys.NAME]: "Recursos humanos",
-//     },
-//     {
-//         [AccessKeys.ID]: 2,
-//         [AccessKeys.NAME]: "Estoque",
-//     },
-//     {
-//         [AccessKeys.ID]: 3,
-//         [AccessKeys.NAME]: "TI",
-//     },
-//     {
-//         [AccessKeys.ID]: 4,
-//         [AccessKeys.NAME]: "Vendas",
-//     },
-//     {
-//         [AccessKeys.ID]: 5,
-//         [AccessKeys.NAME]: "Administrativo",
-//     },
-// ]
-
 const defaultFormErrors: Record<FormKeys, string> = {
     [FormKeys.ACCESS]: "",
     [FormKeys.EXISTENT_KNOWLEDGE]: "",
@@ -93,7 +78,6 @@ const defaultFormErrors: Record<FormKeys, string> = {
 export default function CreateAgent() {
     const [selectedFile, setSelectedFile] = useState<DocumentPicker.DocumentPickerAsset>()
     const [form, setForm] = useState<Form>(defaultForm)
-    //const [accesses, setAccesses] = useState<Access[]>(MockAccess)
     const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([])
     const [formErrors, setFormErrors] = useState<Record<FormKeys, string>>(defaultFormErrors)
     const { get, post } = useAxios()
@@ -127,10 +111,6 @@ export default function CreateAgent() {
     const setTopP = (value: number): void => {
         setForm({ ...form, [FormKeys.TOP_P]: value })
     }
-
-    // const setAccess = (value: number | undefined): void => {
-    //     setForm({ ...form, [FormKeys.ACCESS]: value })
-    // }
 
     const setExistentKnowledgeBase = (value: boolean): void => {
         setForm({ ...form, [FormKeys.EXISTENT_KNOWLEDGE]: value })
@@ -180,7 +160,7 @@ export default function CreateAgent() {
                         behavior: form[FormKeys.BEHAVIOR],
                         temperature: String(form[FormKeys.TEMPERATURE]),
                         top_p: String(form[FormKeys.TOP_P]),
-                        image_id: String(selectedImage)
+                        image_id: String(selectedImage),
                     },
                 }
             )
@@ -193,7 +173,7 @@ export default function CreateAgent() {
     }
 
     const handleSubmit = () => {
-        if(selectedFile && !form[FormKeys.EXISTENT_KNOWLEDGE]) {
+        if (selectedFile && !form[FormKeys.EXISTENT_KNOWLEDGE]) {
             submitWithFile(selectedFile)
         } else {
             submitWithoutFile()
@@ -208,25 +188,24 @@ export default function CreateAgent() {
 
         try {
             const formData = new FormData()
-            formData.append('name', form[FormKeys.NAME])
-            formData.append('theme', form[FormKeys.THEME])
-            formData.append('behavior', form[FormKeys.BEHAVIOR])
-            formData.append('temperature', String(form[FormKeys.TEMPERATURE]))
-            formData.append('top_p', String(form[FormKeys.TOP_P]))
-            formData.append('image_id', String(selectedImage))
+            formData.append("name", form[FormKeys.NAME])
+            formData.append("theme", form[FormKeys.THEME])
+            formData.append("behavior", form[FormKeys.BEHAVIOR])
+            formData.append("temperature", String(form[FormKeys.TEMPERATURE]))
+            formData.append("top_p", String(form[FormKeys.TOP_P]))
+            formData.append("image_id", String(selectedImage))
             if (form[FormKeys.KNOWLEDGE_BASE_ID]) {
-                formData.append('knowledge_base_id', String(form[FormKeys.KNOWLEDGE_BASE_ID]))
+                formData.append("knowledge_base_id", String(form[FormKeys.KNOWLEDGE_BASE_ID]))
             }
 
             const response = await post("/agents/", formData, {
                 headers: {
-                    "Content-Type": 'multipart/form-data'
-                }
+                    "Content-Type": "multipart/form-data",
+                },
             })
             Alert.alert("Sucesso", response.data.message)
         } catch (error) {
-            console.log(`Erro ao cadastrar agente: ${getErrorMessage(error)}`)
-            Alert.alert("Cadastrar agente", 'Erro ao cadastrar agente')
+            Alert.alert("Cadastrar agente", String(error))
         } finally {
             router.replace("/Agents/page")
         }
@@ -305,9 +284,12 @@ export default function CreateAgent() {
                 multiline
                 numberOfLines={3}
             />
-            <Text style={[globalStyles.orangeText, styles.inputText]}>Temperature: {form[FormKeys.TEMPERATURE].toFixed(1)}</Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>
+                Temperature: {form[FormKeys.TEMPERATURE].toFixed(1)}
+            </Text>
             <Text style={styles.sliderTip}>
-                Controla a criatividade da resposta. Valores baixos geram respostas mais conservadoras, altos geram mais variedade.
+                Controla a criatividade da resposta. Valores baixos geram respostas mais
+                conservadoras, altos geram mais variedade.
             </Text>
             <Slider
                 style={styles.slider}
@@ -320,9 +302,12 @@ export default function CreateAgent() {
                 maximumTrackTintColor="#000000"
                 thumbTintColor="#FF7F50"
             />
-            <Text style={[globalStyles.orangeText, styles.inputText]}>Top-p: {form[FormKeys.TOP_P].toFixed(1)}</Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>
+                Top-p: {form[FormKeys.TOP_P].toFixed(1)}
+            </Text>
             <Text style={styles.sliderTip}>
-                Controla a diversidade das palavras usadas. Valores baixos geram respostas mais focadas, altos geram respostas mais diversas.
+                Controla a diversidade das palavras usadas. Valores baixos geram respostas mais
+                focadas, altos geram respostas mais diversas.
             </Text>
             <Slider
                 style={styles.slider}
@@ -349,7 +334,7 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         flexGrow: 1,
-        padding: 20
+        padding: 20,
     },
     input: {
         width: "100%",
@@ -375,7 +360,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontStyle: "italic",
         color: "#666",
-        padding: 5
+        padding: 5,
     },
     imagesContainer: {
         flexDirection: "row",

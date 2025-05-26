@@ -1,4 +1,5 @@
 export interface Agent {
-    id: number
+    id: string
     name: string
+    enabled: boolean
 }

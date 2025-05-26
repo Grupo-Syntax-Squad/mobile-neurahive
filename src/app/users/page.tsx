@@ -9,12 +9,26 @@ import { User } from "@/types/User"
 import { Division } from "@/components/Division"
 import { getErrorMessage } from "@/utils/getErrorMessage"
 
+enum ActionButtonKeys {
+    LABEL = "label",
+    ON_PRESS = "onPress",
+    TEST_ID = "testID",
+}
+
+interface ActionButton {
+    [ActionButtonKeys.LABEL]: string
+    [ActionButtonKeys.ON_PRESS]: () => void
+    [ActionButtonKeys.TEST_ID]: string
+}
+
 export function Users() {
     const router = useRouter()
     const [users, setUsers] = useState<User[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    const [, setLoading] = useState(true)
+    const [, setError] = useState<string | null>(null)
     const { get } = useAxios()
+
+    const enableUsers = users.filter((user) => user.enabled);
 
     const fetchUsers = async () => {
         try {
@@ -33,22 +47,23 @@ export function Users() {
         fetchUsers()
     }, [])
 
-    const actionButtons = [
+    const actionButtons: ActionButton[] = [
+        // TODO: Verify if this pages will be used
+        // {
+        //     [ActionButtonKeys.LABEL]: "Acessos",
+        //     [ActionButtonKeys.ON_PRESS]: () => router.push("/accesses/page"),
+        //     [ActionButtonKeys.TEST_ID]: "accesses-button",
+        // },
         {
-            text: "Acessos",
-            onPress: () => router.push("/accesses/page"),
-            testID: "accesses-button",
+            [ActionButtonKeys.LABEL]: "Criar novo usuário",
+            [ActionButtonKeys.ON_PRESS]: () => router.push("/users/create"),
+            [ActionButtonKeys.TEST_ID]: "create-user-button",
         },
-        {
-            text: "Criar novo usuário",
-            onPress: () => router.push("/users/create"),
-            testID: "create-user-button",
-        },
-        {
-            text: "Permissões dos Usuários",
-            onPress: () => router.push("/permissions/page"),
-            testID: "permissions-button",
-        },
+        // {
+        //     [ActionButtonKeys.LABEL]: "Permissões dos Usuários",
+        //     [ActionButtonKeys.ON_PRESS]: () => router.push("/permissions/page"),
+        //     [ActionButtonKeys.TEST_ID]: "permissions-button",
+        // },
     ]
 
     return (
@@ -68,16 +83,18 @@ export function Users() {
                         <TouchableOpacity
                             key={index}
                             style={globalStyles.orangeButton}
-                            onPress={button.onPress}
-                            testID={button.testID}
+                            onPress={button[ActionButtonKeys.ON_PRESS]}
+                            testID={button[ActionButtonKeys.TEST_ID]}
                         >
-                            <Text style={globalStyles.WhiteText}>{button.text}</Text>
+                            <Text style={globalStyles.WhiteText}>
+                                {button[ActionButtonKeys.LABEL]}
+                            </Text>
                         </TouchableOpacity>
                     ))}
                 </View>
 
                 <View style={styles.usersList}>
-                    {users.map((user) => (
+                    {enableUsers.map((user) => (
                         <UserCard key={user.id} user={user} />
                     ))}
                 </View>
