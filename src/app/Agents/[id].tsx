@@ -7,7 +7,7 @@ import {
     Switch,
     Alert,
     Image,
-    ScrollView
+    ScrollView,
 } from "react-native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import CustomInput from "../../components/CustomInput"
@@ -21,6 +21,8 @@ import * as FileSystem from "expo-file-system"
 import * as DocumentPicker from "expo-document-picker"
 import { useAuth } from "@/contexts/authContext"
 import Slider from "@react-native-community/slider"
+import Constants from "expo-constants"
+const extra = Constants.expoConfig?.extra ?? {}
 
 type AgentData = {
     name: string
@@ -61,7 +63,7 @@ export default function Agent() {
         behavior: "",
         temperature: 0.5,
         top_p: 0.5,
-        knowledge_base_id: null
+        knowledge_base_id: null,
     })
 
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
@@ -81,7 +83,7 @@ export default function Agent() {
     }
 
     const handleSave = async () => {
-        if(selectedFile && !useExistingKnowledge) {
+        if (selectedFile && !useExistingKnowledge) {
             saveWithFile(selectedFile)
         } else {
             saveWithoutFile()
@@ -89,9 +91,9 @@ export default function Agent() {
     }
 
     const saveWithFile = async (file: DocumentPicker.DocumentPickerAsset) => {
-        try {   
+        try {
             const response = await FileSystem.uploadAsync(
-                `${process.env.EXPO_PUBLIC_API_URL}/agents/${id}`,
+                `${extra.API_URL}/agents/${id}`,
                 file.uri,
                 {
                     fieldName: "file",
@@ -108,12 +110,12 @@ export default function Agent() {
                         temperature: String(agentData.temperature),
                         top_p: String(agentData.top_p),
                         image_id: String(selectedImage),
-                        enabled: String(isEnabled)
+                        enabled: String(isEnabled),
                     },
                 }
             )
             const json = JSON.parse(response.body)
-            if(response.status === 200) {
+            if (response.status === 200) {
                 Alert.alert("Sucesso", json.message)
                 router.replace("/Agents/page")
             } else {
@@ -128,25 +130,27 @@ export default function Agent() {
     const saveWithoutFile = async () => {
         try {
             const formData = new FormData()
-            formData.append('name', agentData.name)
-            formData.append('theme', agentData.theme)
-            formData.append('behavior', agentData.behavior)
-            formData.append('temperature', String(agentData.temperature))
-            formData.append('top_p', String(agentData.top_p))
-            formData.append('image_id', String(selectedImage))
-            formData.append('enabled', String(isEnabled))
-            agentData.knowledge_base_id ? formData.append('knowledge_base_id', String(agentData.knowledge_base_id)) : null
+            formData.append("name", agentData.name)
+            formData.append("theme", agentData.theme)
+            formData.append("behavior", agentData.behavior)
+            formData.append("temperature", String(agentData.temperature))
+            formData.append("top_p", String(agentData.top_p))
+            formData.append("image_id", String(selectedImage))
+            formData.append("enabled", String(isEnabled))
+            agentData.knowledge_base_id
+                ? formData.append("knowledge_base_id", String(agentData.knowledge_base_id))
+                : null
 
             const response = await put(`/agents/${id}`, formData, {
                 headers: {
-                    "Content-Type": 'multipart/form-data'
-                }
+                    "Content-Type": "multipart/form-data",
+                },
             })
             Alert.alert("Sucesso", response.data.message)
         } catch (error) {
             console.log(error)
             console.log(`Erro ao cadastrar agente: ${getErrorMessage(error)}`)
-            Alert.alert("Cadastrar agente", 'Erro ao cadastrar agente')
+            Alert.alert("Cadastrar agente", "Erro ao cadastrar agente")
         } finally {
             router.replace("/Agents/page")
         }
@@ -189,7 +193,9 @@ export default function Agent() {
                 value={agentData.theme}
                 onChangeText={(text) => setAgentData((prev) => ({ ...prev, theme: text }))}
             />
-            <Text style={[globalStyles.orangeText, styles.inputText]}>Comportamento <Text style={globalStyles.textMuted}>(Opcional)</Text></Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>
+                Comportamento <Text style={globalStyles.textMuted}>(Opcional)</Text>
+            </Text>
             <CustomInput
                 placeholder="Comportamento"
                 value={agentData.behavior}
@@ -215,11 +221,11 @@ export default function Agent() {
                     style={styles.input}
                     selectedValue={agentData.knowledge_base_id}
                     onValueChange={(value: any) => {
-                        const selectedValue = value === 'none' ? undefined : value
+                        const selectedValue = value === "none" ? undefined : value
                         setAgentData((prev) => ({ ...prev, knowledge_base_id: selectedValue }))
                     }}
                 >
-                    <Picker.Item label="Selecione a base de conhecimento" value={'none'} />
+                    <Picker.Item label="Selecione a base de conhecimento" value={"none"} />
                     {knowledgeBases.map((knowledgeBase) => (
                         <Picker.Item
                             key={knowledgeBase.id}
@@ -229,9 +235,12 @@ export default function Agent() {
                     ))}
                 </Picker>
             )}
-            <Text style={[globalStyles.orangeText, styles.inputText]}>Temperature: {agentData.temperature.toFixed(1)}</Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>
+                Temperature: {agentData.temperature.toFixed(1)}
+            </Text>
             <Text style={styles.sliderTip}>
-                Controla a criatividade da resposta. Valores baixos geram respostas mais conservadoras, altos geram mais variedade.
+                Controla a criatividade da resposta. Valores baixos geram respostas mais
+                conservadoras, altos geram mais variedade.
             </Text>
             <Slider
                 style={styles.slider}
@@ -239,14 +248,19 @@ export default function Agent() {
                 maximumValue={1}
                 step={0.1}
                 value={agentData.temperature}
-                onSlidingComplete={(value) => setAgentData((prev) => ({ ...prev, temperature: value }))}
+                onSlidingComplete={(value) =>
+                    setAgentData((prev) => ({ ...prev, temperature: value }))
+                }
                 minimumTrackTintColor="#FF7F50"
                 maximumTrackTintColor="#000000"
                 thumbTintColor="#FF7F50"
             />
-            <Text style={[globalStyles.orangeText, styles.inputText]}>Top-p: {agentData.top_p.toFixed(1)}</Text>
+            <Text style={[globalStyles.orangeText, styles.inputText]}>
+                Top-p: {agentData.top_p.toFixed(1)}
+            </Text>
             <Text style={styles.sliderTip}>
-                Controla a diversidade das palavras usadas. Valores baixos geram respostas mais focadas, altos geram respostas mais diversas.
+                Controla a diversidade das palavras usadas. Valores baixos geram respostas mais
+                focadas, altos geram respostas mais diversas.
             </Text>
             <Slider
                 style={styles.slider}
@@ -276,7 +290,7 @@ export default function Agent() {
 const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
-        padding: 20
+        padding: 20,
     },
     inputText: {
         fontWeight: "bold",
@@ -380,6 +394,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontStyle: "italic",
         color: "#666",
-        padding: 5
+        padding: 5,
     },
 })

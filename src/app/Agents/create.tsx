@@ -22,6 +22,8 @@ import { Picker } from "@react-native-picker/picker"
 import { DocumentSelect } from "@/components/DocumentSelect"
 import { getErrorMessage } from "@/utils/getErrorMessage"
 import { useAuth } from "@/contexts/authContext"
+import Constants from "expo-constants"
+const extra = Constants.expoConfig?.extra ?? {}
 
 enum FormKeys {
     NAME = "name",
@@ -143,27 +145,23 @@ export default function CreateAgent() {
 
     const submitWithFile = async (file: DocumentPicker.DocumentPickerAsset) => {
         try {
-            const response = await FileSystem.uploadAsync(
-                `${process.env.EXPO_PUBLIC_API_URL}/agents/`,
-                file.uri,
-                {
-                    fieldName: "file",
-                    httpMethod: "POST",
-                    uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    parameters: {
-                        knowledge_base_name: file.name,
-                        name: form[FormKeys.NAME],
-                        theme: form[FormKeys.THEME],
-                        behavior: form[FormKeys.BEHAVIOR],
-                        temperature: String(form[FormKeys.TEMPERATURE]),
-                        top_p: String(form[FormKeys.TOP_P]),
-                        image_id: String(selectedImage),
-                    },
-                }
-            )
+            const response = await FileSystem.uploadAsync(`${extra.API_URL}/agents/`, file.uri, {
+                fieldName: "file",
+                httpMethod: "POST",
+                uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                parameters: {
+                    knowledge_base_name: file.name,
+                    name: form[FormKeys.NAME],
+                    theme: form[FormKeys.THEME],
+                    behavior: form[FormKeys.BEHAVIOR],
+                    temperature: String(form[FormKeys.TEMPERATURE]),
+                    top_p: String(form[FormKeys.TOP_P]),
+                    image_id: String(selectedImage),
+                },
+            })
             const json = JSON.parse(response.body)
             Alert.alert("Sucesso", json.message)
             router.replace("/Agents/page")

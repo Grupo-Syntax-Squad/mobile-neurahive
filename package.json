@@ -1,129 +1,140 @@
 {
-  "name": "mobile-neurahive",
-  "main": "expo-router/entry",
-  "version": "1.0.0",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "changelog": "git fetch --tags && auto-changelog -v $(sed -n '/VERSION/p' version.json  | head -n 1 | cut -d '\"' -f2)",
-    "changelog-windows": "git fetch --tags && auto-changelog -v $(powershell \"(Get-Content version.json | Select-Object -First 1) -replace '\"', ''\")",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "test": "jest --watchAll",
-    "lint": "expo lint",
-    "rebuild": "expo prebuild && echo 'sdk.dir=$ANDROID_HOME' > android/local.properties",
-    "format": "prettier --config prettierrc.json --write \"src/**/*.{ts,tsx,html,css,scss,jon,md}\"",
-    "verify": "tsc -b",
-    "prepare": "husky"
-  },
-  "jest": {
-    "preset": "jest-expo"
-  },
-  "auto-changelog": {
-    "output": "CHANGELOG.md",
-    "template": "changelog-template.hbs",
-    "unreleased": true,
-    "commitLimit": false,
-    "tagPattern": ".+",
-    "replaceText": {
-      "^fix: |^feature: |^refactor: |^ci: |^test: |^docs: |^security: |^deprecated: |^remove: ": "",
-      "#([a-zA-Z0-9]+)": "[#$1](https://tree.taiga.io/project/b4hia-api-5/taskboard/sprint1-3290)"
-    },
-    "ignoreCommitPattern": ".*?(\\[skip [Cc][Ii]\\]|\\[skip [Cc]hangelog\\]).*?"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
-            {
-              "path": "dist/*.zip",
-              "label": "Build"
+    "name": "mobile-neurahive",
+    "main": "expo-router/entry",
+    "version": "1.0.0",
+    "expo": {
+        "doctor": {
+            "reactNativeDirectoryCheck": {
+                "exclude": [
+                    "react-native-svg-charts"
+                ],
+                "listUnknownPackages": false
             }
-          ]
         }
-      ],
-      "@semantic-release/npm",
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "CHANGELOG.md"
-          ],
-          "message": "chore(release): 🤖 ${nextRelease.version} [skip ci]"
-        }
-      ]
-    ],
-    "preset": "angular"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@expo/vector-icons": "^14.0.2",
-    "@react-native-community/datetimepicker": "8.2.0",
-    "@react-native-picker/picker": "2.9.0",
-    "@react-navigation/bottom-tabs": "^7.2.0",
-    "@react-navigation/native": "^7.0.14",
-    "autoprefixer": "^10.4.21",
-    "axios": "^1.8.4",
-    "base-64": "^1.0.0",
-    "expo": "~52.0.46",
-    "expo-blur": "~14.0.3",
-    "expo-checkbox": "~4.0.1",
-    "expo-constants": "~17.0.8",
-    "expo-document-picker": "~13.0.3",
-    "expo-file-system": "~18.0.12",
-    "expo-font": "~13.0.4",
-    "expo-haptics": "~14.0.1",
-    "expo-linking": "~7.0.5",
-    "expo-router": "~4.0.19",
-    "expo-secure-store": "~14.0.1",
-    "expo-splash-screen": "~0.29.24",
-    "expo-status-bar": "~2.0.1",
-    "expo-symbols": "~0.2.2",
-    "expo-system-ui": "~4.0.8",
-    "expo-web-browser": "~14.0.2",
-    "postcss": "^8.5.3",
-    "prettier": "^3.5.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-native": "0.76.9",
-    "react-native-gesture-handler": "~2.20.2",
-    "react-native-modal-datetime-picker": "^18.0.0",
-    "react-native-paper": "^5.13.1",
-    "react-native-reanimated": "~3.16.1",
-    "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.4.0",
-    "react-native-svg": "15.8.0",
-    "react-native-svg-charts": "^5.4.0",
-    "react-native-vector-icons": "^10.2.0",
-    "react-native-web": "~0.19.13",
-    "react-native-webview": "13.12.5",
-    "react-navigation": "^5.0.0",
-    "tailwindcss": "3",
-    "@react-native-community/slider": "4.5.5"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
-    "@types/axios": "^0.14.4",
-    "@types/base-64": "^1.0.2",
-    "@types/jest": "^29.5.12",
-    "@types/react": "~18.3.12",
-    "@types/react-native-vector-icons": "^6.4.18",
-    "@types/react-test-renderer": "^18.3.0",
-    "conventional-changelog": "^6.0.0",
-    "husky": "^9.1.7",
-    "jest": "~29.7.0",
-    "jest-expo": "^52.0.0",
-    "react-test-renderer": "18.3.1",
-    "typescript": "^5.3.3"
-  },
-  "private": true
+    },
+    "scripts": {
+        "start": "expo start",
+        "android": "expo start --android",
+        "changelog": "git fetch --tags && auto-changelog -v $(sed -n '/VERSION/p' version.json  | head -n 1 | cut -d '\"' -f2)",
+        "changelog-windows": "git fetch --tags && auto-changelog -v $(powershell \"(Get-Content version.json | Select-Object -First 1) -replace '\"', ''\")",
+        "ios": "expo start --ios",
+        "web": "expo start --web",
+        "test": "jest --watchAll",
+        "lint": "expo lint",
+        "rebuild": "expo prebuild && echo 'sdk.dir=$ANDROID_HOME' > android/local.properties",
+        "format": "prettier --config prettierrc.json --write \"src/**/*.{ts,tsx,html,css,scss,jon,md}\"",
+        "verify": "tsc -b",
+        "prepare": "husky"
+    },
+    "jest": {
+        "preset": "jest-expo"
+    },
+    "auto-changelog": {
+        "output": "CHANGELOG.md",
+        "template": "changelog-template.hbs",
+        "unreleased": true,
+        "commitLimit": false,
+        "tagPattern": ".+",
+        "replaceText": {
+            "^fix: |^feature: |^refactor: |^ci: |^test: |^docs: |^security: |^deprecated: |^remove: ": "",
+            "#([a-zA-Z0-9]+)": "[#$1](https://tree.taiga.io/project/b4hia-api-5/taskboard/sprint1-3290)"
+        },
+        "ignoreCommitPattern": ".*?(\\[skip [Cc][Ii]\\]|\\[skip [Cc]hangelog\\]).*?"
+    },
+    "release": {
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/changelog",
+            [
+                "@semantic-release/github",
+                {
+                    "assets": [
+                        {
+                            "path": "dist/*.zip",
+                            "label": "Build"
+                        }
+                    ]
+                }
+            ],
+            "@semantic-release/npm",
+            [
+                "@semantic-release/git",
+                {
+                    "assets": [
+                        "package.json",
+                        "CHANGELOG.md"
+                    ],
+                    "message": "chore(release): 🤖 ${nextRelease.version} [skip ci]"
+                }
+            ]
+        ],
+        "preset": "angular"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@expo/vector-icons": "^14.0.2",
+        "@react-native-community/datetimepicker": "8.2.0",
+        "@react-native-community/slider": "4.5.5",
+        "@react-native-picker/picker": "2.9.0",
+        "@react-navigation/bottom-tabs": "^7.2.0",
+        "@react-navigation/native": "^7.0.14",
+        "autoprefixer": "^10.4.21",
+        "axios": "^1.8.4",
+        "base-64": "^1.0.0",
+        "dotenv": "^16.5.0",
+        "expo": "~52.0.46",
+        "expo-blur": "~14.0.3",
+        "expo-checkbox": "~4.0.1",
+        "expo-constants": "~17.0.8",
+        "expo-document-picker": "~13.0.3",
+        "expo-file-system": "~18.0.12",
+        "expo-font": "~13.0.4",
+        "expo-haptics": "~14.0.1",
+        "expo-linking": "~7.0.5",
+        "expo-router": "~4.0.21",
+        "expo-secure-store": "~14.0.1",
+        "expo-splash-screen": "~0.29.24",
+        "expo-status-bar": "~2.0.1",
+        "expo-symbols": "~0.2.2",
+        "expo-system-ui": "~4.0.8",
+        "expo-web-browser": "~14.0.2",
+        "postcss": "^8.5.3",
+        "prettier": "^3.5.3",
+        "react": "18.3.1",
+        "react-dom": "18.3.1",
+        "react-native": "0.76.9",
+        "react-native-gesture-handler": "~2.20.2",
+        "react-native-modal-datetime-picker": "^18.0.0",
+        "react-native-paper": "^5.13.1",
+        "react-native-reanimated": "~3.16.1",
+        "react-native-safe-area-context": "4.12.0",
+        "react-native-screens": "~4.4.0",
+        "react-native-svg": "15.8.0",
+        "react-native-svg-charts": "^5.4.0",
+        "react-native-vector-icons": "^10.2.0",
+        "react-native-web": "~0.19.13",
+        "react-native-webview": "13.12.5",
+        "react-navigation": "^5.0.0",
+        "tailwindcss": "3"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.25.2",
+        "@commitlint/cli": "^19.8.0",
+        "@commitlint/config-conventional": "^19.8.0",
+        "@types/axios": "^0.14.4",
+        "@types/base-64": "^1.0.2",
+        "@types/jest": "^29.5.12",
+        "@types/react": "~18.3.12",
+        "@types/react-native-vector-icons": "^6.4.18",
+        "@types/react-test-renderer": "^18.3.0",
+        "conventional-changelog": "^6.0.0",
+        "husky": "^9.1.7",
+        "jest": "~29.7.0",
+        "jest-expo": "^52.0.0",
+        "react-test-renderer": "18.3.1",
+        "typescript": "^5.3.3"
+    },
+    "private": true
 }

@@ -1,0 +1,9 @@
+{
+    "build": {
+        "testapk": {
+            "android": {
+                "buildType": "apk"
+            }
+        }
+    }
+}

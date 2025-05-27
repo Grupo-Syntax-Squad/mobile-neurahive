@@ -1,6 +1,8 @@
 import React, { createContext, useContext, ReactNode } from "react"
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import { useAuth } from "./authContext"
+import Constants from "expo-constants"
+const extra = Constants.expoConfig?.extra ?? {}
 
 interface APIError {
     detail: string
@@ -29,7 +31,7 @@ const AxiosContext = createContext<Props | undefined>(undefined)
 export const AxiosProvider = ({ children }: { children: ReactNode }) => {
     const { token } = useAuth()
     const client = axios.create({
-        baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
+        baseURL: `${extra.API_URL}`,
         headers: { Authorization: `Bearer ${token}` },
     })
 

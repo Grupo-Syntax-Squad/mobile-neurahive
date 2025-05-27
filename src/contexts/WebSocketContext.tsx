@@ -2,6 +2,8 @@ import { Message } from "@/interfaces/Services/Message"
 import convertToSaoPauloUTC from "@/utils/convertToBrasiliaDate"
 import { createContext, useContext, useRef, useState } from "react"
 import { Alert } from "react-native"
+import Constants from "expo-constants"
+const extra = Constants.expoConfig?.extra ?? {}
 
 interface WebSocketContextType {
     connect: () => void
@@ -30,7 +32,7 @@ export default function WebSocketProvider({
     const [isConnected, setIsConnected] = useState(false)
     const [messages, setMessages] = useState<Message[]>([])
     const getWebSocketUrl = () => {
-        return `${process.env.EXPO_PUBLIC_WEBSOCKET_URL}/ws/chat`
+        return `${extra.WEBSOCKET_URL}/ws/chat`
     }
 
     const connect = async () => {
