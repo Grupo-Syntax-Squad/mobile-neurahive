@@ -81,7 +81,7 @@
     "expo-font": "~13.0.4",
     "expo-haptics": "~14.0.1",
     "expo-linking": "~7.0.5",
-    "expo-router": "~4.0.19",
+    "expo-router": "~4.0.21",
     "expo-secure-store": "~14.0.1",
     "expo-splash-screen": "~0.29.24",
     "expo-status-bar": "~2.0.1",
@@ -125,5 +125,21 @@
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3"
   },
-  "private": true
+  "private": true,
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-svg-charts",
+          "autoprefixer",
+          "base-64",
+          "expo-checkbox",
+          "postcss",
+          "prettier",
+          "react-native-vector-icons",
+          "react-navigation"
+        ]
+      }
+    }
+  }
 }
